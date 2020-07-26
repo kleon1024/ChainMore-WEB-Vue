@@ -1,4 +1,4 @@
-# ch
+# ChainMore
 
 ## Project setup
 ```

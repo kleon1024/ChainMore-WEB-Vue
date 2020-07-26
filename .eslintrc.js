@@ -4,8 +4,8 @@ module.exports = {
     node: true
   },
   extends: [
-    'plugin:vue/essential',
     '@vue/standard',
+    'plugin:vue/essential',
     '@vue/typescript/recommended'
   ],
   parserOptions: {
@@ -13,7 +13,8 @@ module.exports = {
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'space-before-function-paren': 0,
   },
   overrides: [
     {

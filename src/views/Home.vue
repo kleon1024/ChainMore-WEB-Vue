@@ -1,18 +1,23 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class='home'>
+    <AggregateCard />
+    <!-- <DependCard /> -->
+    <DomainGroup />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import AggregateCard from '@/components/AggregateCard.vue'
+// import DependCard from '@/components/DependCard.vue'
+import DomainGroup from '@/components/DomainGroup.vue'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    AggregateCard,
+    // DependCard,
+    DomainGroup
   }
 }
 </script>

@@ -3,13 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+// export interface RootState { }
+
+// // Declare empty store first, dynamically register all modules later.
+// export default new Vuex.Store<RootState>({})
+export default new Vuex.Store({})
