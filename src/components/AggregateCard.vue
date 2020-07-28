@@ -2,7 +2,7 @@
   <v-container>
     <v-row class='text-center' align='center' justify='center'>
       <v-card elevation='0'>
-        <svg width='960' height='960' />
+        <svg/>
       </v-card>
     </v-row>
   </v-container>
@@ -22,18 +22,22 @@ export default Vue.extend({
       name: 'infinity',
       children: [
         {
-          name: 'a',
-          value: 123
+          name: 'a'
         },
         {
-          name: 'b',
-          value: 1245,
-          children: [
-            {
-              name: 'c',
-              value: 1234
-            }
-          ]
+          name: 'b'
+        },
+        {
+          name: 'c'
+        },
+        {
+          name: 'd'
+        },
+        {
+          name: 'e'
+        },
+        {
+          name: 'f'
         }
       ]
     }

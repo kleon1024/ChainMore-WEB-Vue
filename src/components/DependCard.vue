@@ -2,14 +2,13 @@
   <v-container>
     <v-row class='text-center' align='center' justify='center'>
       <v-card elevation='0'>
-        <svg width='960' height='960' />
+        <svg />
       </v-card>
     </v-row>
   </v-container>
 </template>
 
 <script>
-/* eslint-disable no-mixed-operators */
 import Vue from 'vue'
 import * as d3 from 'd3'
 import { getDomainDepends } from '@/api/domains'
@@ -23,18 +22,22 @@ export default Vue.extend({
       name: 'infinity',
       children: [
         {
-          name: 'a',
-          value: 123
+          name: 'a'
         },
         {
-          name: 'b',
-          value: 1245,
-          children: [
-            {
-              name: 'c',
-              value: 1234
-            }
-          ]
+          name: 'b'
+        },
+        {
+          name: 'c'
+        },
+        {
+          name: 'd'
+        },
+        {
+          name: 'e'
+        },
+        {
+          name: 'f'
         }
       ]
     }

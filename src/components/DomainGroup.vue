@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align='center' justify='center'>
-      <v-card v-for='(domain, index) in domains' :key='index' width='60%' style='margin-top:20px'>
+      <v-card v-for='(domain, index) in domains' :key='index' :width='width' style='margin-top:20px'>
         <v-card-text>
           <p class='display-1 text--primary'>{{ domain.title }}</p>
           <div class='text--primary'>{{ domain.intro }}</div>
@@ -27,6 +27,16 @@ export default Vue.extend({
     this.loadData().then(() => {
       console.log('Data loaded')
     })
+  },
+  computed: {
+    width() {
+      let width = window.innerWidth
+      const height = window.innerHeight
+      if (width > height) {
+        width = height
+      }
+      return width * 0.9
+    }
   },
   methods: {
     loadData() {

@@ -3,8 +3,17 @@ import * as d3 from 'd3'
 
 export const
   drawRadicalDendrogram = (svg, data) => {
-    const width = +svg.attr('width')
-    const height = +svg.attr('height')
+    const refWidth = 960
+    let width = window.innerWidth
+    let height = window.innerHeight
+    if (width > height) {
+      width = height
+    } else {
+      height = width
+    }
+
+    width = width
+
     const radius = width / 2
     const tree = d3.cluster().size([2 * Math.PI, radius - 100])
     const root = tree(
@@ -13,11 +22,14 @@ export const
         .sort((a, b) => d3.ascending(a.data.name, b.data.name))
     )
     svg
+      .attr('width', width)
+      .attr('height', height)
+    svg
       .append('g')
       .attr('fill', 'none')
       .attr('stroke', '#555')
       .attr('stroke-opacity', 0.4)
-      .attr('stroke-width', 1.5)
+      .attr('stroke-width', 1.5 * width / refWidth )
       .selectAll('path')
       .data(root.links())
       .join('path')
@@ -46,9 +58,9 @@ export const
     svg
       .append('g')
       .attr('font-family', 'sans-serif')
-      .attr('font-size', 10)
+      .attr('font-size', 12 * width / refWidth)
       .attr('stroke-linejoin', 'round')
-      .attr('stroke-width', 3)
+      .attr('stroke-width', 3 * width / refWidth)
       .selectAll('text')
       .data(root.descendants())
       .join('text')
@@ -69,7 +81,8 @@ export const
       .clone(true)
       .lower()
       .attr('stroke', 'white')
-    svg.attr('viewBox', [-480, -480, width, height])
+
+    svg.attr('viewBox', [-width/2, -height/2, width, height])
   }
 
 export const drawClearTree = (svg, data) => {
