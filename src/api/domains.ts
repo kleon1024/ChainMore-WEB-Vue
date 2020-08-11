@@ -7,6 +7,13 @@ export const getDomains = (params: any) =>
     params
   })
 
+export const getDomain = (params: any) =>
+  request({
+    url: '/domain',
+    method: 'get',
+    params
+  })
+
 export const getDomainDepends = (params: any) =>
   request({
     url: '/domain/depend/all',
@@ -14,9 +21,23 @@ export const getDomainDepends = (params: any) =>
     params
   })
 
+export const getDomainRootDepends = (params: any) =>
+  request({
+    url: '/domain/depend/root',
+    method: 'get',
+    params
+  })
+
 export const getDomainAggregates = (params: any) =>
   request({
     url: '/domain/aggregate/all',
+    method: 'get',
+    params
+  })
+
+export const getDomainCollections = (params: any) =>
+  request({
+    url: '/domain/collections',
     method: 'get',
     params
   })

@@ -3,18 +3,21 @@ import * as d3 from 'd3'
 
 export const
   drawRadicalDendrogram = (svg, data) => {
-    const refWidth = 960
+    const refWidth = 1080
     let width = window.innerWidth
     let height = window.innerHeight
+    let windowWidth = 0
     if (width > height) {
-      width = height
-    } else {
+      windowWidth = height * 0.85
+      width = height * 0.85
       height = width
+    } else {
+      windowWidth = width
+      height = width * 1.2
+      width = height
     }
 
-    width = width
-
-    const radius = width / 2
+    const radius = width / 2.1
     const tree = d3.cluster().size([2 * Math.PI, radius - 100])
     const root = tree(
       d3
@@ -54,7 +57,7 @@ export const
   `
       )
       .attr('fill', (d) => (d.children ? '#555' : '#999'))
-      .attr('r', 2.5)
+      .attr('r', 2.5 * width / refWidth)
     svg
       .append('g')
       .attr('font-family', 'sans-serif')
@@ -82,7 +85,7 @@ export const
       .lower()
       .attr('stroke', 'white')
 
-    svg.attr('viewBox', [-width/2, -height/2, width, height])
+    svg.attr('viewBox', [-windowWidth/2, -height/2, width, height])
   }
 
 export const drawClearTree = (svg, data) => {

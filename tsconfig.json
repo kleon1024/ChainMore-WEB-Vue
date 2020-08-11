@@ -36,7 +36,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "src/utils/d3-drawer.js"
+    "tests/**/*.tsx", "src/utils/d3-drawer.js", "src/store/modules/user.js", "src/utils/d3utils.js"
   ],
   "exclude": [
     "node_modules"

@@ -1,10 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" hide-on-scroll>
-      <v-toolbar-title>Chain More</v-toolbar-title>
-      <div class='d-flex align-center'></div>
-      <v-spacer></v-spacer>
-    </v-app-bar>
     <v-main>
       <router-view />
     </v-main>
