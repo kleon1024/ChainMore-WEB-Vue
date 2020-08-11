@@ -18,5 +18,5 @@ jobs:
         name: dockerkleon/chainmore
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        context: frontend
+        context: .
         tags: "frontend"
