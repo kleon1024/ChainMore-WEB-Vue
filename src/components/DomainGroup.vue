@@ -3,13 +3,11 @@
     <v-row
       align='center'
       justify='center'
+      v-for='(domain, index) in domains'
+      :key='index'
+      style='margin-top:20px'
     >
-      <v-card
-        v-for='(domain, index) in domains'
-        :key='index'
-        :width='width'
-        style='margin-top:20px'
-      >
+      <v-card :width='width'>
         <v-card-text>
           <p class='display-1 text--primary'>{{ domain.title }}</p>
           <div class='text--primary'>{{ domain.intro }}</div>

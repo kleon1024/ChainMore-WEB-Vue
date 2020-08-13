@@ -8,8 +8,8 @@ export const
     let height = window.innerHeight
     let windowWidth = 0
     if (width > height) {
-      windowWidth = height * 0.85
-      width = height * 0.85
+      windowWidth = height * 0.8
+      width = height * 0.8
       height = width
     } else {
       windowWidth = width

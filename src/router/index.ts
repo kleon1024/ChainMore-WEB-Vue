@@ -48,6 +48,14 @@ const routes: Array<RouteConfig> = [
     meta: {
       requiresAuth: false
     }
+  },
+  {
+    path: '/person',
+    name: 'Person',
+    component: () => import(/* webpackChunkName: "person" */ '../views/Person.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

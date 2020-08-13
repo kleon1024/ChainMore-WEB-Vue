@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <AppBar />
     <v-row
       align='center'
       justify='center'
@@ -86,9 +87,13 @@
 <script>
 import Vue from 'vue'
 import { getDomainCollections, getDomain } from '@/api/domains'
+import AppBar from '@/components/AppBar.vue'
 
 export default Vue.extend({
   name: 'Domain',
+  components: {
+    AppBar
+  },
   data() {
     return {
       collections: [],
