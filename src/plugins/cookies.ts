@@ -11,7 +11,7 @@ export const getAccessToken = () => Cookies.get(accessTokenKey)
 export const setAccessToken = (token: string) => Cookies.set(accessTokenKey, token)
 export const removeAccessToken = () => Cookies.remove(accessTokenKey)
 
-const refreshTokenKey = 'cm_access_token'
+const refreshTokenKey = 'cm_refresh_token'
 export const getRefreshToken = () => Cookies.get(refreshTokenKey)
 export const setRefreshToken = (token: string) => Cookies.set(refreshTokenKey, token)
 export const removeRefreshToken = () => Cookies.remove(refreshTokenKey)

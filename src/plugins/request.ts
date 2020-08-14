@@ -11,7 +11,7 @@ service.interceptors.request.use(
   (config) => {
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (!('Authorization' in config.headers)) {
-      config.headers.Authorization = UserModule.accessToken
+      config.headers.Authorization = 'Bearer ' + UserModule.accessToken
     }
     return config
   },
@@ -25,7 +25,6 @@ service.interceptors.response.use(
   (response) => {
     // You can change this part for your own usage.
     const res = response.data
-    console.log(res)
     return response.data
   },
   (error) => {

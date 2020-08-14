@@ -13,3 +13,10 @@ export const getCollectionResources = (params: any) =>
     method: 'get',
     params
   })
+
+export const getCollectedCollections = (params: any) =>
+  request({
+    url: '/collection/collected',
+    method: 'get',
+    params
+  })

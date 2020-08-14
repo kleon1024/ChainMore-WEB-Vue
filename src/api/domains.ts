@@ -41,3 +41,10 @@ export const getDomainCollections = (params: any) =>
     method: 'get',
     params
   })
+
+export const getMarkedDomains = (params: any) =>
+  request({
+    url: '/domain/marked',
+    method: 'get',
+    params
+  })

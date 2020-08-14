@@ -10,13 +10,14 @@
         :width="width"
       >
         <v-card-text>
+          <p> 领域 </p>
           <p class='display-1 text--primary'>{{ domain.title }}</p>
           <div class='text--primary'>{{ domain.intro }}</div>
         </v-card-text>
         <v-card-actions>
           <v-btn text x-small>
             <v-icon color='teal'> {{ starIcon }} </v-icon>
-            标记
+            收藏
           </v-btn>
         </v-card-actions>
       </v-card>

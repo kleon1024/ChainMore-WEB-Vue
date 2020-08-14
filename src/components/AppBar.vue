@@ -4,9 +4,10 @@
     color="white"
     hide-on-scroll
     elevation="0"
+    dense
   >
     <a href="/">
-      <v-toolbar-title style="font-weight: bold;font-size: 150%">阡陌</v-toolbar-title>
+      <v-toolbar-title>阡陌</v-toolbar-title>
     </a>
     <div class='d-flex align-center'></div>
     <v-spacer></v-spacer>

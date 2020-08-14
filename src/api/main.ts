@@ -6,3 +6,10 @@ export const search = (params: Record<string, string>) =>
     method: 'get',
     params
   })
+
+export const getResourceType = (params: Record<string, string>) =>
+  request({
+    url: '/type',
+    method: 'get',
+    params
+  })

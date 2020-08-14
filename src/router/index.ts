@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
 import { UserModule } from '@/store/modules/user'
 
 Vue.use(VueRouter)
@@ -8,8 +7,8 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'Default',
+    component: () => import(/* webpackChunkName: "default" */ '../views/Default.vue'),
     meta: {
       requiresAuth: false
     }
@@ -50,12 +49,53 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
+    path: '/resource/:id',
+    name: 'Resource',
+    component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/create/resource',
+    name: 'ResourceCreate',
+    component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
     path: '/person',
     name: 'Person',
     component: () => import(/* webpackChunkName: "person" */ '../views/Person.vue'),
     meta: {
       requiresAuth: true
-    }
+    },
+    children: [
+      {
+        path: '/',
+        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'collection',
+        name: 'Person\'s Collection',
+        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'resource',
+        name: 'Person\'s Resource',
+        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
   }
 ]
 
@@ -66,7 +106,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, _from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (UserModule.username === '' && UserModule.refreshToken === '') {
+    if (UserModule.username === '' || UserModule.refreshToken === '') {
       next({
         path: '/login',
         query: { nextUrl: to.fullPath }

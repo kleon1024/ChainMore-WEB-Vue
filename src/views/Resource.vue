@@ -5,13 +5,18 @@
       justify='center'
     >
       <v-card
-        v-if="collection"
+        v-if="resource"
         :width="width"
       >
         <v-card-text>
-          <p> 合集 </p>
-          <p class='display-1 text--primary'>{{ collection.title }}</p>
-          <div class='text--primary'>{{ collection.description }}</div>
+          <p> 资源 </p>
+          <p class='display-1 text--primary'>{{ resource.title }}</p>
+          <a
+            :href="resource.url"
+            target="_blank"
+          >
+            <div>{{ resource.url }}</div>
+          </a>
         </v-card-text>
       </v-card>
       <v-card
@@ -34,33 +39,25 @@
 
 <script>
 import Vue from 'vue'
-import { getCollectionResources, getCollection } from '@/api/collections'
+import { getResource } from '@/api/resources'
 
 export default Vue.extend({
-  name: 'Collection',
+  name: 'Resource',
   data() {
     return {
       resources: [],
-      collection: null
+      resource: null
     }
   },
   mounted() {
-    this.loadResources()
-    this.loadCollection()
+    this.loadResource()
   },
   methods: {
-    loadResources() {
-      getCollectionResources({
+    loadResource() {
+      getResource({
         id: this.$route.params.id
       }).then((res) => {
-        this.resources.push(...res.items)
-      })
-    },
-    loadCollection() {
-      getCollection({
-        id: this.$route.params.id
-      }).then((res) => {
-        this.collection = res.items[0]
+        this.resource = res.items[0]
       })
     }
   },
