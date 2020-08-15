@@ -17,6 +17,7 @@
               :rules="rules.url"
               label="Url"
               outlined
+              dense
               required
               @blur="checkUrl"
             ></v-text-field>
@@ -26,6 +27,7 @@
               :rules="rules.title"
               label="标题"
               outlined
+              dense
               required
               @blur="checkUrl"
             ></v-text-field>
@@ -95,13 +97,13 @@ export default Vue.extend({
       urlExist: false,
       rules: {
         url: [
-          (v) => !!v || 'Url不能为空',
+          (v) => !!v.trim() || 'Url不能为空',
           (v) => (v && v.length <= 512) || 'Url必须小于512个字符',
           (v) => (v && v.startsWith('http')) || 'Url不合法',
           (v) => !this.urlExist || 'Url已存在'
         ],
         title: [
-          (v) => !!v || '标题不能为空',
+          (v) => !!v.trim() || '标题不能为空',
           (v) => (v && v.length <= 64) || '标题必须小于64个字符'
         ]
       },
@@ -242,12 +244,13 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      let width = window.innerWidth
+      const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        width = height
+        return width * 0.382
+      } else {
+        return width * 0.9
       }
-      return width * 0.9
     }
   }
 })

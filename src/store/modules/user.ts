@@ -24,6 +24,10 @@ class User extends VuexModule implements UserBean {
   public refreshToken = getRefreshToken() || ''
   public username = getUsername() || ''
 
+  public get isLoggedIn() {
+    return this.accessToken !== '' && this.refreshToken !== '' && this.username !== ''
+  }
+
   @Mutation
   private SET_ACCESS_TOKEN(token: string) {
     this.accessToken = token
@@ -42,9 +46,7 @@ class User extends VuexModule implements UserBean {
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     try {
-      console.log(userInfo)
       const data = await signIn(userInfo)
-      console.log(data.access_token)
       setAccessToken(data.access_token)
       setRefreshToken(data.refresh_token)
       setUsername(data.username)

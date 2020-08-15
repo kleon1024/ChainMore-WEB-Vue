@@ -7,7 +7,10 @@
       :key='index'
       style='margin-top:20px'
     >
-      <v-card :width='width'>
+      <v-card
+        :width='width'
+        :to="{ path: '/domain/' + domain.id.toString() }"
+      >
         <v-card-text>
           <p class='display-1 text--primary'>{{ domain.title }}</p>
           <div class='text--primary'>{{ domain.intro }}</div>
@@ -15,7 +18,6 @@
         <v-card-actions>
           <v-btn
             text
-            x-small
             color='teal'
             :to="{ path: '/domain/' + domain.id.toString() }"
           >Learn More</v-btn>
@@ -41,7 +43,7 @@ export default Vue.extend({
       const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        return width * 0.618
+        return width * 0.382
       } else {
         return width * 0.9
       }

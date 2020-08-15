@@ -8,7 +8,7 @@
         :elevation="0"
         :width="width"
       >
-        <v-form>
+        <v-form @submit.native.prevent>
           <v-text-field
             v-model="searchInput"
             label="我想学"
@@ -45,12 +45,13 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      let width = window.innerWidth
+      const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        width = height
+        return width * 0.382
+      } else {
+        return width * 0.9
       }
-      return width * 0.9
     }
   },
   methods: {

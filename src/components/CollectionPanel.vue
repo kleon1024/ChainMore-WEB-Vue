@@ -4,30 +4,40 @@
       <v-row>
         <v-subheader class="padding-horizontal">合集</v-subheader>
         <v-spacer> </v-spacer>
-        <v-btn
-          text
-          color='teal'
-          class="padding-horizontal"
-        >
-          <v-icon> mdi-plus </v-icon>
-        </v-btn>
+        <v-card-actions>
+          <v-btn
+            text
+            color='teal'
+            class="padding-horizontal"
+            :to="{ path: '/create/collection', query: { nextUrl: $route.path } }"
+          >
+            <v-icon> mdi-plus </v-icon>
+          </v-btn>
+          <v-btn
+            text
+            color='teal'
+            class="padding-horizontal"
+            :to="{ path: '/person/collection'}"
+          >
+            <v-icon> mdi-menu </v-icon>
+          </v-btn>
+        </v-card-actions>
       </v-row>
       <v-row
         v-for="(collection, index) in collections"
         :key="index"
       >
-      <a :href="'/collection/' + collection.id">
         <v-card
           :elevation="0"
           color="transparent"
           :width="width"
+          :to="{ path: '/collection/' + collection.id}"
         >
           <v-card-text class="padding-horizontal">
             <div class='title text--primary'> {{ collection.title }} </div>
             <div> 收藏于 {{ collection.collect_time }} </div>
           </v-card-text>
         </v-card>
-      </a>
       </v-row>
     </v-card>
   </v-container>
@@ -55,7 +65,7 @@ export default Vue.extend({
       const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        return width * 0.618
+        return width * 0.382
       } else {
         return width * 0.9
       }

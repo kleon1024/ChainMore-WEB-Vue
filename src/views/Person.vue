@@ -71,7 +71,7 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <a href="/"> <span class="title">阡陌</span> </a>
+        <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-row
@@ -168,7 +168,7 @@ export default Vue.extend({
       const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        return width * 0.618
+        return width * 0.382
       } else {
         return width * 0.9
       }

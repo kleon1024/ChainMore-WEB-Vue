@@ -7,6 +7,13 @@ export const getCollection = (params: any) =>
     params
   })
 
+export const createCollection = (data: any) =>
+  request({
+    url: '/collection',
+    method: 'post',
+    data
+  })
+
 export const getCollectionResources = (params: any) =>
   request({
     url: '/collection/referenceds',
@@ -18,5 +25,26 @@ export const getCollectedCollections = (params: any) =>
   request({
     url: '/collection/collected',
     method: 'get',
+    params
+  })
+
+export const isCollectCollection = (params: any) =>
+  request({
+    url: '/collection/collect',
+    method: 'get',
+    params
+  })
+
+export const collectCollection = (data: any) =>
+  request({
+    url: '/collection/collect',
+    method: 'post',
+    data
+  })
+
+export const uncollectCollection = (params: any) =>
+  request({
+    url: '/collection/collect',
+    method: 'delete',
     params
   })

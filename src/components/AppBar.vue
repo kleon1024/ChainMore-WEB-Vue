@@ -7,7 +7,7 @@
     dense
   >
     <a href="/">
-      <v-toolbar-title>阡陌</v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-bold">阡陌</v-toolbar-title>
     </a>
     <div class='d-flex align-center'></div>
     <v-spacer></v-spacer>
@@ -15,7 +15,7 @@
       icon
       to="/person"
     >
-      <v-icon>person_outline</v-icon>
+      <v-icon color="teal">person_outline</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

@@ -1,6 +1,39 @@
 <template>
   <v-container>
     <AppBar />
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      clipped
+      right
+    >
+      <v-stepper
+        vertical
+        v-model="step"
+        class="elevation-0"
+      >
+        <template v-for="(domain, index) in dependDomains">
+          <v-stepper-step
+            :key="`${index}-step`"
+            :complete="step > index"
+            :step="index"
+          >
+            {{ domain.title }}
+          </v-stepper-step>
+          <v-stepper-content
+            :key="`${index}-content`"
+            :step="index"
+          >
+            {{ domain.description}}
+          </v-stepper-content>
+        </template>
+      </v-stepper>
+      <!-- <v-card elevation="0">
+        <v-card-actions>
+          <v-btn block outlined color="primary"> 开始学习 </v-btn>
+        </v-card-actions>
+      </v-card> -->
+    </v-navigation-drawer>
     <v-row
       align='center'
       justify='center'
@@ -15,9 +48,25 @@
           <div class='text--primary'>{{ domain.intro }}</div>
         </v-card-text>
         <v-card-actions>
-          <v-btn text x-small>
-            <v-icon color='teal'> {{ starIcon }} </v-icon>
-            收藏
+          <v-btn
+            text
+            @click="onClickMark"
+          >
+            <v-icon
+              left
+              :color='loginColor()'
+            > {{ loginIcon() }} </v-icon>
+            {{ loginIndicator() }}
+          </v-btn>
+          <v-btn
+            text
+            @click="drawer = !drawer"
+          >
+            <v-icon
+              left
+              color="teal"
+            > mdi-transit-connection-variant </v-icon>
+            学习路线
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -62,6 +111,7 @@
       <v-card
         :width='width'
         style='margin-top:20px'
+        :to="{ path: '/collection/' + collection.id.toString() }"
       >
         <v-card-text>
           <div class='text--primary'> {{ collection.domain_title }}</div>
@@ -87,8 +137,16 @@
 
 <script>
 import Vue from 'vue'
-import { getDomainCollections, getDomain } from '@/api/domains'
+import {
+  getDomainCollections,
+  getDomain,
+  isMarkDomain,
+  markDomain,
+  unmarkDomain,
+  getDependedDomains
+} from '@/api/domains'
 import AppBar from '@/components/AppBar.vue'
+import { UserModule } from '@/store/modules/user'
 
 export default Vue.extend({
   name: 'Domain',
@@ -100,6 +158,7 @@ export default Vue.extend({
       collections: [],
       domain: null,
       showMenu: false,
+      step: 0,
       orderOptions: [
         {
           order: 'time_desc',
@@ -109,18 +168,93 @@ export default Vue.extend({
       ],
       orderDesc: '最新',
       order: 'time_desc',
-      starIcon: 'star_border'
+      starIcon: 'star_border',
+      marked: false,
+      marking: false,
+      drawer: false,
+      dependDomains: []
     }
   },
   mounted() {
     this.loadCollections()
     this.loadDomain()
+    this.checkMark()
+    this.loadDependDomains()
+    console.log(this.step)
   },
   methods: {
+    checkComplete() {
+      return this.step > 1
+    },
+    onClickMark() {
+      if (UserModule.isLoggedIn) {
+        if (!this.marking) {
+          this.marking = true
+          if (this.marked) {
+            unmarkDomain({ id: this.$route.params.id }).then((res) => {
+              if (res.items.length === 1) {
+                this.marked = false
+              }
+              this.marking = false
+            })
+          } else {
+            markDomain({ id: this.$route.params.id }).then((res) => {
+              if (res.items.length === 1) {
+                this.marked = true
+              }
+              this.marking = false
+            })
+          }
+        }
+      } else {
+        this.$route.push({
+          path: '/login',
+          query: { nextUrl: this.$route.path }
+        })
+      }
+    },
+    loginColor() {
+      if (UserModule.isLoggedIn && this.marked) {
+        return 'teal'
+      } else {
+        return 'grey'
+      }
+    },
+    loginIndicator() {
+      if (UserModule.isLoggedIn && this.marked) {
+        return '已收藏'
+      } else {
+        return '收藏'
+      }
+    },
+    loginIcon() {
+      if (UserModule.isLoggedIn && this.marked) {
+        return 'star'
+      } else {
+        return 'star_border'
+      }
+    },
+    checkMark() {
+      isMarkDomain({ id: this.$route.params.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.marked = true
+        } else {
+          this.marked = false
+        }
+      })
+    },
     refresh(order, orderDesc) {
       this.order = order
       this.orderDesc = orderDesc
       this.loadCollections()
+    },
+    loadDependDomains() {
+      getDependedDomains({ id: this.$route.params.id, distance: 999 }).then(
+        (res) => {
+          this.dependDomains.splice(0, this.dependDomains.length)
+          this.dependDomains.push(...res.items)
+        }
+      )
     },
     loadCollections() {
       getDomainCollections({
@@ -143,12 +277,13 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      let width = window.innerWidth
+      const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        width = height
+        return width * 0.382
+      } else {
+        return width * 0.9
       }
-      return width * 0.9
     }
   }
 })

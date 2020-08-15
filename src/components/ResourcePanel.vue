@@ -4,43 +4,44 @@
       <v-row>
         <v-subheader class="padding-horizontal">资源</v-subheader>
         <v-spacer> </v-spacer>
-        <v-btn
-          text
-          color='teal'
-          class="padding-horizontal"
-          :to="{ path: '/create/resource', query: { nextUrl: '/person'} }"
-        >
-          <v-icon> mdi-plus </v-icon>
-        </v-btn>
-        <v-btn
-          text
-          color='teal'
-          class="padding-horizontal"
-          :to="{ path: '/person/resource'}"
-        >
-          <v-icon> mdi-menu </v-icon>
-        </v-btn>
+        <v-card-actions>
+          <v-btn
+            text
+            color='teal'
+            class="padding-horizontal"
+            :to="{ path: '/create/resource', query: { nextUrl: '/person'} }"
+          >
+            <v-icon> mdi-plus </v-icon>
+          </v-btn>
+          <v-btn
+            text
+            color='teal'
+            class="padding-horizontal"
+            :to="{ path: '/person/resource'}"
+          >
+            <v-icon> mdi-menu </v-icon>
+          </v-btn>
+        </v-card-actions>
       </v-row>
       <v-row
         v-for="(resource, index) in resources"
         :key="index"
       >
-        <a :href="'/resource/' + resource.id">
-          <v-card
-            :elevation="0"
-            color="transparent"
-            :width="width"
-          >
-            <v-card-text class="padding-horizontal">
-              <div class='title text--primary'> {{ resource.title }} </div>
-              <div class='text--primary'><a
-                  target='_blank'
-                  :href="resource.url"
-                >{{ resource.url }}</a></div>
-              <div> 收藏于 {{ resource.star_time }} </div>
-            </v-card-text>
-          </v-card>
-        </a>
+        <v-card
+          :elevation="0"
+          color="transparent"
+          :width="width"
+          :to="{ path: '/resource/' + resource.id}"
+        >
+          <v-card-text class="padding-horizontal">
+            <div class='title text--primary'> {{ resource.title }} </div>
+            <div class='text--primary'><a
+                target='_blank'
+                :href="resource.url"
+              >{{ resource.url }}</a></div>
+            <div> 收藏于 {{ resource.star_time }} </div>
+          </v-card-text>
+        </v-card>
       </v-row>
     </v-card>
   </v-container>
@@ -68,7 +69,7 @@ export default Vue.extend({
       const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        return width * 0.618
+        return width * 0.382
       } else {
         return width * 0.9
       }

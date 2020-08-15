@@ -48,3 +48,52 @@ export const getMarkedDomains = (params: any) =>
     method: 'get',
     params
   })
+
+export const isMarkDomain = (params: any) =>
+  request({
+    url: '/domain/mark',
+    method: 'get',
+    params
+  })
+
+export const markDomain = (data: any) =>
+  request({
+    url: '/domain/mark',
+    method: 'post',
+    data
+  })
+
+export const unmarkDomain = (params: any) =>
+  request({
+    url: '/domain/mark',
+    method: 'delete',
+    params
+  })
+
+export const getDependedDomains = (params: any) =>
+  request({
+    url: '/domain/i/dependeds',
+    method: 'get',
+    params
+  })
+
+export const createDomain = (data: any) =>
+  request({
+    url: '/domain',
+    method: 'post',
+    data
+  })
+
+export const updateDomain = (data: any) =>
+  request({
+    url: '/domain',
+    method: 'put',
+    data
+  })
+
+export const checkDomainExist = (params: any) =>
+  request({
+    url: '/domain/exist',
+    method: 'get',
+    params
+  })

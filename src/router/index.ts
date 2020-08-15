@@ -61,7 +61,23 @@ const routes: Array<RouteConfig> = [
     name: 'ResourceCreate',
     component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),
     meta: {
-      requiresAuth: false
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/create/domain',
+    name: 'DomainCreate',
+    component: () => import(/* webpackChunkName: "domain_create" */ '../views/DomainCreate.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/create/collection',
+    name: 'CollectionCreate',
+    component: () => import(/* webpackChunkName: "colletion_create" */ '../views/CollectionCreate.vue'),
+    meta: {
+      requiresAuth: true
     }
   },
   {
@@ -109,7 +125,14 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 router.beforeEach((to, _from, next) => {

@@ -30,12 +30,21 @@ export default {
     AppBar
     // DependCard
   },
+  mounted() {
+    console.log('hhhh')
+    this.scrollToTop()
+  },
   computed: {
     height() {
       return window.innerHeight
     }
   },
   methods: {
+    scrollToTop() {
+      this.$nextTick(() => {
+        window.scrollTo(0, 0)
+      })
+    },
     onFocused() {
       const options = {
         offset: -window.innerHeight / 12

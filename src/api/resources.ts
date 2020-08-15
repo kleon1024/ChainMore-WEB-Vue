@@ -34,3 +34,24 @@ export const starResource = (data: any) =>
     method: 'post',
     data
   })
+
+export const unstarResource = (params: any) =>
+  request({
+    url: '/resource/star',
+    method: 'delete',
+    params
+  })
+
+export const isStarResource = (params: any) =>
+  request({
+    url: '/resource/star',
+    method: 'get',
+    params
+  })
+
+export const getRefCollections = (params: any) =>
+  request({
+    url: '/resource/collections',
+    method: 'get',
+    params
+  })
