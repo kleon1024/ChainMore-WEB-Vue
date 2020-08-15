@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-row align="center">
+    <v-row
+      align='center'
+      justify='center'
+    >
       <v-card :width="width">
         <v-row>
           <v-subheader class="padding-horizontal">领域</v-subheader>
@@ -19,6 +22,8 @@
       </v-card>
     </v-row>
     <v-row
+      align='center'
+      justify='center'
       v-for="(domain, index) in domains"
       :key="index"
     >

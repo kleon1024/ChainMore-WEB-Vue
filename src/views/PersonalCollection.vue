@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-row align="center">
+    <v-row
+      align="center"
+      justify='center'
+    >
       <v-card :width="width">
-        <v-row justify="center">
+        <v-row>
           <v-subheader class="padding-horizontal">合集</v-subheader>
           <v-spacer> </v-spacer>
           <v-card-actions>
@@ -19,6 +22,8 @@
       </v-card>
     </v-row>
     <v-row
+      align="center"
+      justify='center'
       v-for="(collection, index) in collections"
       :key="index"
     >
