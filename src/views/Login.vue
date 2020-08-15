@@ -80,7 +80,6 @@ export default Vue.extend({
           password: this.password
         })
         if (UserModule.username !== '' && UserModule.refreshToken !== '') {
-          console.log('router replace to ' + this.$route.query.nextUrl)
           this.$router.replace(this.$route.query.nextUrl)
         }
       }

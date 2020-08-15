@@ -9,34 +9,29 @@
         flat
         dense
       >
-        <v-list-item-group
-          v-model="selectedTag"
-          active-class="active"
+        <v-list-item
+          v-for="item in items"
+          :key="item.text"
+          :to="{ path: item.to }"
+          :value="item.text"
+          :class="activeClass(item.to)"
         >
-          <v-list-item
-            v-for="item in items"
-            :key="item.text"
-            :to="{ path: item.to }"
-            link
-          >
-            <v-row class="padding-horizontal">
-              <v-list-item-action>
-                <a :href="item.to">
-                  <v-icon>{{ item.icon }}</v-icon>
-                </a>
-              </v-list-item-action>
+          <v-row class="padding-horizontal">
+            <v-list-item-action>
+              <v-icon :color="activeColor(item.to)">{{ item.icon }}</v-icon>
+            </v-list-item-action>
 
-              <v-list-item-content>
-                <v-list-item-title class="text--primary">
-                  {{ item.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-row>
-          </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
 
-          <!-- <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader> -->
+        <!-- <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader> -->
 
-          <!-- <v-list-item
+        <!-- <v-list-item
             v-for="item in items2"
             :key="item.text"
             link
@@ -64,7 +59,6 @@
             </v-list-item-action>
             <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
           </v-list-item> -->
-        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -109,12 +103,31 @@ export default Vue.extend({
   props: {
     source: String
   },
+  methods: {
+    active(path) {
+      return path === this.$route.path
+    },
+    activeColor(path) {
+      if (this.active(path)) {
+        return 'teal'
+      } else {
+        return 'grey'
+      }
+    },
+    activeClass(path) {
+      if (this.active(path)) {
+        return 'active'
+      } else {
+        return ''
+      }
+    }
+  },
   data() {
     return {
       collections: [],
       domain: null,
       drawer: null,
-      selectedTag: '',
+      selectedTag: 0,
       items: [
         {
           icon: 'mdi-infinity',
@@ -138,8 +151,8 @@ export default Vue.extend({
         }
       ],
       remap: {
-        '/person': '个人主页',
-        '/person/resource': '收藏资源'
+        '/person': 0,
+        '/person/resource': 1
       },
       items2: [
         { picture: 28, text: 'Joseph' },
@@ -152,17 +165,13 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      let width = window.innerWidth
+      const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        width = height
+        return width * 0.618
+      } else {
+        return width * 0.9
       }
-      return width * 0.9
-    }
-  },
-  watch: {
-    selectedTag(val) {
-      console.log(val)
     }
   }
 })

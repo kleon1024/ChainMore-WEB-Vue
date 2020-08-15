@@ -80,17 +80,25 @@ const routes: Array<RouteConfig> = [
         }
       },
       {
-        path: 'collection',
-        name: 'Person\'s Collection',
-        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        path: 'resource',
+        name: 'Person\'s Resource',
+        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalResource.vue'),
         meta: {
           requiresAuth: true
         }
       },
       {
-        path: 'resource',
-        name: 'Person\'s Resource',
-        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        path: 'collection',
+        name: 'Person\'s Collection',
+        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalCollection.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'domain',
+        name: 'Person\'s Domain',
+        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalDomain.vue'),
         meta: {
           requiresAuth: true
         }

@@ -38,12 +38,13 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      let width = window.innerWidth
+      const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
-        width = height
+        return width * 0.618
+      } else {
+        return width * 0.9
       }
-      return width * 0.9
     }
   }
 })
