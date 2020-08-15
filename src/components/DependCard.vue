@@ -64,7 +64,7 @@ export default Vue.extend({
   },
   computed: {
     width() {
-      return window.innerWidth * this.levels.length / 8
+      return 210 * this.levels.length
     },
     bundleDatas() {
       return this.data.bundles.map((b) =>
