@@ -14,6 +14,14 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
+    path: '/roadmap',
+    name: 'Roadmap',
+    component: () => import(/* webpackChunkName: "roadmap" */ '../views/Roadmap.vue'),
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting

@@ -13,6 +13,12 @@
     <v-spacer></v-spacer>
     <v-btn
       icon
+      to="/roadmap"
+    >
+      <v-icon color="teal">mdi-transit-connection-variant</v-icon>
+    </v-btn>
+    <v-btn
+      icon
       to="/person"
     >
       <v-icon color="teal">person_outline</v-icon>
