@@ -10,21 +10,25 @@
         :width="width"
       >
         <v-card-text>
-          <p> 资源 </p>
-          <p class='display-1 text--primary'>{{ resource.title }}</p>
+          <div> 资源 </div>
+          <div class='title text--primary'>{{ resource.title }}</div>
           <a
             :href="resource.url"
             target="_blank"
           >
             <div>{{ resource.url }}</div>
           </a>
+          <div> {{ readableTime(resource.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
             text
-            @click="onClickMark"
+            @click="onClickStar"
           >
-            <v-icon left :color='loginColor()'> {{ loginIcon() }} </v-icon>
+            <v-icon
+              left
+              :color='loginColor()'
+            > {{ loginIcon() }} </v-icon>
             {{ loginIndicator() }}
           </v-btn>
         </v-card-actions>
@@ -36,9 +40,9 @@
     >
       <v-card
         :width='width'
-        style='margin-top:20px'
+        style='margin-top:0px'
+        color="transparent"
         elevation="0"
-        dense
       >
         <v-card-text> 相关集合 </v-card-text>
       </v-card>
@@ -47,21 +51,18 @@
       align='center'
       justify='center'
       v-for='(collection, index) in collections'
-      :key='index'
+      :key='`${index}-collection`'
     >
       <v-card
         :width='width'
-        style='margin-top:20px'
+        style='margin-bottom:20px'
         :to="{ path: '/collection/' + collection.id.toString() }"
       >
         <v-card-text>
           <div class='text--primary'> {{ collection.domain_title }}</div>
-          <p> </p>
-          <p class='headline text--primary'>{{ collection.title }}</p>
-          <p> </p>
+          <div class='title text--primary'>{{ collection.title }}</div>
           <div class='text--primary'>{{ collection.description }}</div>
-          <p> </p>
-          <p class="text--primary"> {{ collection.modify_time }} </p>
+          <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -87,6 +88,7 @@ import {
 } from '@/api/resources'
 import { UserModule } from '@/store/modules/user'
 import AppBar from '@/components/AppBar.vue'
+import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Resource',
@@ -102,10 +104,13 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.loadResource()
     this.loadCollections()
+    this.loadResource()
   },
   methods: {
+    readableTime(val) {
+      return readableTimestamp(val)
+    },
     onClickStar() {
       if (UserModule.isLoggedIn) {
         if (!this.staring) {
@@ -127,7 +132,7 @@ export default Vue.extend({
           }
         }
       } else {
-        this.$route.push({
+        this.$router.push({
           path: '/login',
           query: { nextUrl: this.$route.path }
         })
@@ -155,13 +160,15 @@ export default Vue.extend({
       }
     },
     checkStar() {
-      isStarResource({ id: this.$route.params.id }).then((res) => {
-        if (res.items.length === 1) {
-          this.stared = true
-        } else {
-          this.stared = false
-        }
-      })
+      if (UserModule.isLoggedIn) {
+        isStarResource({ id: this.$route.params.id }).then((res) => {
+          if (res.items.length === 1) {
+            this.stared = true
+          } else {
+            this.stared = false
+          }
+        })
+      }
     },
     loadResource() {
       getResource({

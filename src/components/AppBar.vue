@@ -7,7 +7,7 @@
     dense
   >
     <a href="/">
-      <v-toolbar-title class="headline font-weight-bold">阡陌</v-toolbar-title>
+      <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
     </a>
     <div class='d-flex align-center'></div>
     <v-spacer></v-spacer>
@@ -20,17 +20,38 @@
     <v-btn
       icon
       to="/person"
+      color="teal"
     >
-      <v-icon color="teal">person_outline</v-icon>
+      <v-icon
+        v-if="!loggedIn"
+        color="teal"
+      >person_outline</v-icon>
+      <div
+        v-if="loggedIn"
+        class="font-weight-bold headline"
+      > {{ capital }} </div>
     </v-btn>
   </v-app-bar>
 </template>
 
 <script>
-export default {
+import Vue from 'vue'
+import { UserModule } from '@/store/modules/user'
+
+export default Vue.extend({
   name: 'AppBar',
   components: {},
-  computed: {},
-  methods: {}
-}
+  computed: {
+    loggedIn() {
+      return UserModule.isLoggedIn
+    },
+    capital() {
+      if (UserModule.isLoggedIn) {
+        return UserModule.username[0]
+      } else {
+        return ''
+      }
+    }
+  }
+})
 </script>

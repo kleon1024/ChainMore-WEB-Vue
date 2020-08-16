@@ -10,12 +10,13 @@
     >
       <AggregateCard />
       <v-overlay>
-        <v-card>
+        <v-card light>
           <v-card-text class="pt-4">
             <div>
-              <v-toolbar flat>
-                <v-toolbar-title>阡陌</v-toolbar-title>
-              </v-toolbar>
+              <p
+                class="text--primary headline font-weight-bold"
+                align="center"
+              > 阡陌 </p>
               <v-form
                 v-model="valid"
                 ref="form"
@@ -25,6 +26,8 @@
                   v-model="username"
                   :rules="usernameRules"
                   required
+                  outlined
+                  dense
                 ></v-text-field>
                 <v-text-field
                   label="密码"
@@ -35,12 +38,16 @@
                   :type="e1 ? 'password' : 'text'"
                   :rules="passwordRules"
                   counter
+                  outlined
+                  dense
                   required
                 ></v-text-field>
                 <v-layout justify-space-between>
                   <v-btn
                     @click="submit"
-                    :class=" { 'blue darken-4 white--text' : valid, disabled: !valid }"
+                    :class=" { 'teal white--text' : valid, disabled: !valid }"
+                    block
+                    outlined
                   >登录</v-btn>
                 </v-layout>
               </v-form>

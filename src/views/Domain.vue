@@ -40,12 +40,16 @@
     >
       <v-card
         v-if="domain"
-        :width="width"
+        :width="width()"
       >
         <v-card-text>
-          <p> 领域 </p>
-          <p class='display-1 text--primary'>{{ domain.title }}</p>
-          <div class='text--primary'>{{ domain.intro }}</div>
+          <div> 领域 </div>
+          <div class='title font-weight-bold text--primary'>{{ domain.title }}</div>
+          <div
+            v-if="domain.intro != ''"
+            class='text--primary'
+          >{{ domain.intro }}</div>
+          <div> {{ readableTime(domain.create_time) }} 创建 </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -76,8 +80,9 @@
       justify='center'
     >
       <v-card
-        :width='width'
-        style='margin-top:20px'
+        :width='width()'
+        style='margin-top:10px'
+        color="transparent"
         elevation="0"
       >
         <v-menu v-model="showMenu">
@@ -86,7 +91,9 @@
               text
               v-bind="attrs"
               v-on="on"
+              left
             >
+              <v-icon> mdi-chevron-down </v-icon>
               {{ orderDesc }}
             </v-btn>
           </template>
@@ -109,18 +116,15 @@
       :key='index'
     >
       <v-card
-        :width='width'
-        style='margin-top:20px'
+        :width='width()'
+        style='margin-top:10px'
         :to="{ path: '/collection/' + collection.id.toString() }"
       >
         <v-card-text>
           <div class='text--primary'> {{ collection.domain_title }}</div>
-          <p> </p>
-          <p class='headline text--primary'>{{ collection.title }}</p>
-          <p> </p>
+          <div class='title text--primary'>{{ collection.title }}</div>
           <div class='text--primary'>{{ collection.description }}</div>
-          <p> </p>
-          <p class="text--primary"> {{ collection.modify_time }} </p>
+          <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -147,6 +151,7 @@ import {
 } from '@/api/domains'
 import AppBar from '@/components/AppBar.vue'
 import { UserModule } from '@/store/modules/user'
+import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Domain',
@@ -180,9 +185,11 @@ export default Vue.extend({
     this.loadDomain()
     this.checkMark()
     this.loadDependDomains()
-    console.log(this.step)
   },
   methods: {
+    readableTime(val) {
+      return readableTimestamp(val)
+    },
     checkComplete() {
       return this.step > 1
     },
@@ -207,7 +214,7 @@ export default Vue.extend({
           }
         }
       } else {
-        this.$route.push({
+        this.$router.push({
           path: '/login',
           query: { nextUrl: this.$route.path }
         })
@@ -235,13 +242,15 @@ export default Vue.extend({
       }
     },
     checkMark() {
-      isMarkDomain({ id: this.$route.params.id }).then((res) => {
-        if (res.items.length === 1) {
-          this.marked = true
-        } else {
-          this.marked = false
-        }
-      })
+      if (UserModule.isLoggedIn) {
+        isMarkDomain({ id: this.$route.params.id }).then((res) => {
+          if (res.items.length === 1) {
+            this.marked = true
+          } else {
+            this.marked = false
+          }
+        })
+      }
     },
     refresh(order, orderDesc) {
       this.order = order
@@ -273,9 +282,7 @@ export default Vue.extend({
       }).then((res) => {
         this.domain = res.items[0]
       })
-    }
-  },
-  computed: {
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight

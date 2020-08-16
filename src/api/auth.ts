@@ -13,8 +13,9 @@ export const signOut = () =>
     method: 'delete'
   })
 
-export const refreshToken = () =>
+export const refreshToken = (headers: any) =>
   request({
     url: '/auth/refresh',
-    method: 'get'
+    method: 'get',
+    headers
   })

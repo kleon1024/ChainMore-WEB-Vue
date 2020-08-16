@@ -1,9 +1,7 @@
 <template>
   <v-container>
-    <v-row class='text-center' align='center' justify='center'>
-      <v-card elevation='0'>
+    <v-row  align='center' justify='center'>
         <svg/>
-      </v-card>
     </v-row>
   </v-container>
 </template>

@@ -12,8 +12,7 @@
         :to="{ path: '/domain/' + domain.id.toString() }"
       >
         <v-card-text>
-          <p class='display-1 text--primary'>{{ domain.title }}</p>
-          <div class='text--primary'>{{ domain.intro }}</div>
+          <div class='title text--primary'>{{ domain.title }}</div>
         </v-card-text>
         <v-card-actions>
           <v-btn

@@ -1,39 +1,37 @@
 <template>
   <v-container>
-    <v-card :width="width">
-      <v-row>
-        <v-subheader class="padding-horizontal">合集</v-subheader>
-        <v-spacer> </v-spacer>
-        <v-card-actions>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/create/collection', query: { nextUrl: $route.path } }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/person/collection'}"
-          >
-            <v-icon> mdi-menu </v-icon>
-          </v-btn>
-        </v-card-actions>
+    <v-card :width="width" color="transparent" elevation="0">
+      <v-row
+        align="center"
+        justify='center'
+      >
+        <v-card :width="width">
+          <v-row>
+            <v-subheader class="padding-horizontal">合集</v-subheader>
+            <v-spacer> </v-spacer>
+            <v-card-actions>
+              <v-btn
+                text
+                color='teal'
+                class="padding-horizontal"
+                :to="{ path: '/create/collection', query: { nextUrl: $route.path } }"
+              >
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-row>
+        </v-card>
       </v-row>
       <v-row
         v-for="(collection, index) in collections"
         :key="index"
         align="center"
-        justify="center"
+        justify='center'
       >
         <v-card
-          :elevation="0"
-          color="transparent"
           :width="width"
-          :to="{ path: '/collection/' + collection.id}"
+          :to="{ path:'/collection/' + collection.id}"
+          style="margin-top: 1em"
         >
           <v-card-text>
             <div class='text--primary'> {{ collection.domain_title }}</div>
@@ -64,7 +62,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    getCollectedCollections({ limit: 3 }).then((res) => {
+    getCollectedCollections({ limit: 999 }).then((res) => {
       this.collections.splice(0, this.collections.length)
       this.collections.push(...res.items)
     })
@@ -76,7 +74,7 @@ export default Vue.extend({
       if (width > height) {
         return width * 0.382
       } else {
-        return width * 0.93
+        return width * 0.9
       }
     }
   }

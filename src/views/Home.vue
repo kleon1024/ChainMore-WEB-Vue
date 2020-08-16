@@ -1,8 +1,14 @@
 <template>
   <v-container>
-    <ResourcePanel />
-    <CollectionPanel />
-    <DomainPanel />
+    <v-row>
+      <ResourcePanel />
+    </v-row>
+    <v-row>
+      <CollectionPanel />
+    </v-row>
+    <v-row>
+      <DomainPanel />
+    </v-row>
   </v-container>
 </template>
 

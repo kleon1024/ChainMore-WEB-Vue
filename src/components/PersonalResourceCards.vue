@@ -1,39 +1,37 @@
 <template>
   <v-container>
-    <v-card :width="width">
-      <v-row>
-        <v-subheader class="padding-horizontal">资源</v-subheader>
-        <v-spacer> </v-spacer>
-        <v-card-actions>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/create/resource', query: { nextUrl: '/person'} }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/person/resource'}"
-          >
-            <v-icon> mdi-menu </v-icon>
-          </v-btn>
-        </v-card-actions>
+    <v-card :width="width" color="transparent" elevation="0">
+      <v-row
+        align="center"
+        justify='center'
+      >
+        <v-card :width="width">
+          <v-row>
+            <v-subheader class="padding-horizontal">资源</v-subheader>
+            <v-spacer> </v-spacer>
+            <v-card-actions>
+              <v-btn
+                text
+                color='teal'
+                class="padding-horizontal"
+                :to="{ path: '/create/resource', query: { nextUrl: '/person'} }"
+              >
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-row>
+        </v-card>
       </v-row>
       <v-row
+        align="center"
+        justify='center'
         v-for="(resource, index) in resources"
         :key="index"
-        align="center"
-        justify="center"
       >
         <v-card
-          :elevation="0"
-          color="transparent"
           :width="width"
-          :to="{ path: '/resource/' + resource.id}"
+          :to="{path: '/resource/' + resource.id}"
+          style="margin-top: 1em"
         >
           <v-card-text>
             <div class='title text--primary'> {{ resource.title }} </div>
@@ -67,7 +65,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    getStaredResources({ limit: 3 }).then((res) => {
+    getStaredResources({ limit: 999 }).then((res) => {
       this.resources.splice(0, this.resources.length)
       this.resources.push(...res.items)
     })
@@ -79,7 +77,7 @@ export default Vue.extend({
       if (width > height) {
         return width * 0.382
       } else {
-        return width * 0.93
+        return width * 0.9
       }
     }
   }

@@ -10,16 +10,23 @@
         :width="width"
       >
         <v-card-text>
-          <p> 合集 </p>
-          <p class='display-1 text--primary'>{{ collection.title }}</p>
-          <div class='text--primary'>{{ collection.description }}</div>
+          <div> 合集 </div>
+          <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
+          <div
+            v-if="collection.description!==''"
+            class='text--primary'
+          >{{ collection.description }}</div>
+          <div> {{ readableTime(collection.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
             text
             @click="onClickcollect"
           >
-            <v-icon left :color='loginColor()'> {{ loginIcon() }} </v-icon>
+            <v-icon
+              left
+              :color='loginColor()'
+            > {{ loginIcon() }} </v-icon>
             {{ loginIndicator() }}
           </v-btn>
         </v-card-actions>
@@ -31,9 +38,9 @@
     >
       <v-card
         :width='width'
-        style='margin-top:20px'
+        style='margin-top:0px'
+        color="transparent"
         elevation="0"
-        dense
       >
         <v-card-text> 资源列表 </v-card-text>
       </v-card>
@@ -44,19 +51,20 @@
       align='center'
       justify='center'
     >
-        <v-card
-          :width='width'
-          style='margin-top:20px'
-          :to="{ path: '/resource/' + resource.id.toString() }"
-        >
-          <v-card-text>
-            <p class='title text--primary'>{{ resource.title }}</p>
-            <div class='text--primary'><a
-                target='_blank'
-                :href="resource.url"
-              >{{ resource.url }}</a></div>
-          </v-card-text>
-        </v-card>
+      <v-card
+        :width='width'
+        style='margin-bottom:10px'
+        :to="{ path: '/resource/' + resource.id.toString() }"
+      >
+        <v-card-text>
+          <div class='title text--primary'>{{ resource.title }}</div>
+          <div class='text--primary'><a
+              target='_blank'
+              :href="resource.url"
+            >{{ resource.url }}</a></div>
+          <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+        </v-card-text>
+      </v-card>
     </v-row>
   </v-container>
 </template>
@@ -72,6 +80,7 @@ import {
 } from '@/api/collections'
 import { UserModule } from '@/store/modules/user'
 import AppBar from '@/components/AppBar.vue'
+import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Collection',
@@ -89,9 +98,12 @@ export default Vue.extend({
   mounted() {
     this.loadResources()
     this.loadCollection()
-    this.checkCollct()
+    this.checkCollect()
   },
   methods: {
+    readableTime(val) {
+      return readableTimestamp(val)
+    },
     onClickcollect() {
       if (UserModule.isLoggedIn) {
         if (!this.collecting) {
@@ -113,7 +125,7 @@ export default Vue.extend({
           }
         }
       } else {
-        this.$route.push({
+        this.$router.push({
           path: '/login',
           query: { nextUrl: this.$route.path }
         })
@@ -140,14 +152,16 @@ export default Vue.extend({
         return 'star_border'
       }
     },
-    checkCollct() {
-      isCollectCollection({ id: this.$route.params.id }).then((res) => {
-        if (res.items.length === 1) {
-          this.collected = true
-        } else {
-          this.collected = false
-        }
-      })
+    checkCollect() {
+      if (UserModule.isLoggedIn) {
+        isCollectCollection({ id: this.$route.params.id }).then((res) => {
+          if (res.items.length === 1) {
+            this.collected = true
+          } else {
+            this.collected = false
+          }
+        })
+      }
     },
     loadResources() {
       getCollectionResources({

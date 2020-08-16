@@ -20,3 +20,13 @@ const usernameKey = 'cm_username'
 export const getUsername = () => Cookies.get(usernameKey)
 export const setUsername = (username: string) => Cookies.set(usernameKey, username)
 export const removeUsername = () => Cookies.remove(usernameKey)
+
+const timestampKey = 'cm_timestamp'
+export const getTimestamp = () => Cookies.get(timestampKey)
+export const setTimestamp = (timestamp: string) => Cookies.set(timestampKey, timestamp)
+export const removeTimestamp = () => Cookies.remove(timestampKey)
+
+const userIdKey = 'cm_userId'
+export const getUserId = () => Cookies.get(userIdKey)
+export const setUserId = (userId: string) => Cookies.set(userIdKey, userId)
+export const removeUserId = () => Cookies.remove(userIdKey)

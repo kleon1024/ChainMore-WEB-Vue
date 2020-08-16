@@ -3,7 +3,9 @@ import { signIn, signOut, refreshToken } from '@/api/auth'
 import {
   getAccessToken, setAccessToken, removeAccessToken,
   getRefreshToken, setRefreshToken, removeRefreshToken,
-  getUsername, setUsername, removeUsername
+  getUsername, setUsername, removeUsername,
+  getTimestamp, setTimestamp, removeTimestamp,
+  getUserId, setUserId, removeUserId
 } from '@/plugins/cookies'
 import store from '@/store'
 
@@ -23,9 +25,35 @@ class User extends VuexModule implements UserBean {
   public accessToken = getAccessToken() || ''
   public refreshToken = getRefreshToken() || ''
   public username = getUsername() || ''
+  public timestamp = getTimestamp() || ''
+  public userId = getUserId() || ''
+
+  public get UserId() {
+    return parseInt(this.userId)
+  }
+
+  @Action
+  public async GetLoginAccessToken() {
+    if (this.timestamp === '') {
+      await this.RefreshToken()
+      return this.accessToken
+    }
+    const oldTime = parseInt(this.timestamp)
+    const newTime = Math.floor(Date.now() / 1000 / 60)
+    if (newTime - oldTime > 30 || newTime < oldTime) {
+      await this.RefreshToken()
+    }
+    return this.accessToken
+  }
 
   public get isLoggedIn() {
-    return this.accessToken !== '' && this.refreshToken !== '' && this.username !== ''
+    return (
+      this.accessToken !== '' &&
+      this.refreshToken !== '' &&
+      this.username !== '' &&
+      this.timestamp !== '' &&
+      this.userId !== ''
+    )
   }
 
   @Mutation
@@ -43,6 +71,16 @@ class User extends VuexModule implements UserBean {
     this.username = username
   }
 
+  @Mutation
+  private SET_TIMESTAMP(timestamp: string) {
+    this.timestamp = timestamp
+  }
+
+  @Mutation
+  private SET_USE_ID(useId: string) {
+    this.userId = useId
+  }
+
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     try {
@@ -50,9 +88,14 @@ class User extends VuexModule implements UserBean {
       setAccessToken(data.access_token)
       setRefreshToken(data.refresh_token)
       setUsername(data.username)
+      setUserId(data.id)
+      const timestamp = Math.floor(Date.now() / 1000 / 60).toString()
+      setTimestamp(timestamp)
       this.SET_USERNAME(data.username)
       this.SET_ACCESS_TOKEN(data.access_token)
       this.SET_REFRESH_TOKEN(data.refresh_token)
+      this.SET_TIMESTAMP(timestamp)
+      this.SET_USE_ID(data.id.toString())
     } catch (error) {
       console.log(error)
     }
@@ -64,7 +107,14 @@ class User extends VuexModule implements UserBean {
       if (this.refreshToken === '') {
         throw Error('RefreshToken: cannot find refresh token')
       }
-      await refreshToken()
+      const data = await refreshToken({ Authorization: 'Bearer ' + this.refreshToken })
+      setAccessToken(data.access_token)
+      setRefreshToken(data.refresh_token)
+      const timestamp = Math.floor(Date.now() / 1000 / 60).toString()
+      setTimestamp(timestamp)
+      this.SET_ACCESS_TOKEN(data.access_token)
+      this.SET_REFRESH_TOKEN(data.refresh_token)
+      this.SET_TIMESTAMP(timestamp)
     } catch (error) {
       console.log(error)
     }
@@ -74,22 +124,31 @@ class User extends VuexModule implements UserBean {
   public ResetToken() {
     removeAccessToken()
     removeRefreshToken()
+    removeTimestamp()
     this.SET_ACCESS_TOKEN('')
     this.SET_REFRESH_TOKEN('')
   }
 
   @Action
   public async LogOut() {
-    if (this.accessToken === '') {
-      throw Error('LogOut: accessToken is undefined!')
+    try {
+      if (this.accessToken === '') {
+        throw Error('LogOut: accessToken is undefined!')
+      }
+      await signOut()
+      removeAccessToken()
+      removeRefreshToken()
+      removeUsername()
+      removeUserId()
+      removeTimestamp()
+      this.SET_ACCESS_TOKEN('')
+      this.SET_REFRESH_TOKEN('')
+      this.SET_USERNAME('')
+      this.SET_TIMESTAMP('')
+      this.SET_USE_ID('')
+    } catch (err) {
+      console.log(err)
     }
-    await signOut()
-    removeAccessToken()
-    removeRefreshToken()
-    removeUsername()
-    this.SET_ACCESS_TOKEN('')
-    this.SET_REFRESH_TOKEN('')
-    this.SET_USERNAME('')
   }
 }
 

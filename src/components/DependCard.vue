@@ -120,8 +120,6 @@ export default Vue.extend({
         }
       })
 
-      console.log(childNodeMap)
-
       const depthMap = {}
       this.rootDepends.forEach((dep) => {
         if (dep.distance in depthMap) {
@@ -157,7 +155,6 @@ export default Vue.extend({
       // console.log(this.levels)
     },
     prepareData() {
-      console.log('----------prepareData----------')
       // precompute level depth
       const levels = this.levels
 
@@ -322,7 +319,6 @@ export default Vue.extend({
       }
 
       this.data = { levels, nodes, nodes_index, links, bundles, layout }
-      console.log(this.data)
     }
   }
 })

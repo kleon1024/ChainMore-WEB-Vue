@@ -1,39 +1,37 @@
 <template>
   <v-container>
-    <v-card :width="width">
-      <v-row>
-        <v-subheader class="padding-horizontal">领域</v-subheader>
-        <v-spacer> </v-spacer>
-        <v-card-actions>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/create/domain', query: { nextUrl: $route.path } }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-          <v-btn
-            text
-            color='teal'
-            class="padding-horizontal"
-            :to="{ path: '/person/domain'}"
-          >
-            <v-icon> mdi-menu </v-icon>
-          </v-btn>
-        </v-card-actions>
+    <v-card :width="width" color="transparent" elevation="0">
+      <v-row
+        align='center'
+        justify='center'
+      >
+        <v-card :width="width">
+          <v-row>
+            <v-subheader class="padding-horizontal">领域</v-subheader>
+            <v-spacer> </v-spacer>
+            <v-card-actions>
+              <v-btn
+                text
+                color='teal'
+                class="padding-horizontal"
+                :to="{ path: '/create/domain', query: { nextUrl: $route.path } }"
+              >
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-row>
+        </v-card>
       </v-row>
       <v-row
-        align="center"
-        justify="center"
+        align='center'
+        justify='center'
         v-for="(domain, index) in domains"
         :key="index"
       >
         <v-card
-          :elevation="0"
-          color="transparent"
           :width="width"
           :to="{ path: '/domain/' + domain.id}"
+          style="margin-top: 1em"
         >
           <v-card-text>
             <div class='title text--primary'> {{ domain.title }} </div>
@@ -63,7 +61,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    getMarkedDomains({ limit: 3 }).then((res) => {
+    getMarkedDomains({ limit: 999 }).then((res) => {
       this.domains.splice(0, this.domains.length)
       this.domains.push(...res.items)
     })
@@ -71,12 +69,11 @@ export default Vue.extend({
   computed: {
     width() {
       const width = window.innerWidth
-      console.log(width)
       const height = window.innerHeight
       if (width > height) {
         return width * 0.382
       } else {
-        return width * 0.93
+        return width * 0.9
       }
     }
   }

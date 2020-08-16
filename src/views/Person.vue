@@ -28,6 +28,19 @@
             </v-list-item-content>
           </v-row>
         </v-list-item>
+        <v-divider> </v-divider>
+        <v-list-item @click="onClickLogOut">
+          <v-row class="padding-horizontal">
+            <v-list-item-action>
+              <v-icon color="grey"> mdi-logout </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                退出登录
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
 
         <!-- <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader> -->
 
@@ -74,11 +87,21 @@
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-row
-        align="center"
-        style="max-width: 650px"
+
+      <v-btn
+        icon
+        color="teal"
       >
-        <!-- <v-text-field
+        <v-icon
+          v-if="!loggedIn"
+          color="teal"
+        >person_outline</v-icon>
+        <div
+          v-if="loggedIn"
+          class="font-weight-bold headline"
+        > {{ capital }} </div>
+      </v-btn>
+      <!-- <v-text-field
           :append-icon-cb="() => {}"
           placeholder="Search..."
           single-line
@@ -86,7 +109,6 @@
           color="white"
           hide-details
         ></v-text-field> -->
-      </v-row>
     </v-app-bar>
     <v-main>
       <router-view />
@@ -96,6 +118,7 @@
 
 <script>
 import Vue from 'vue'
+import { UserModule } from '@/store/modules/user'
 
 export default Vue.extend({
   name: 'Person',
@@ -120,13 +143,20 @@ export default Vue.extend({
       } else {
         return ''
       }
+    },
+    onClickLogOut() {
+      this.drawer = !this.drawer
+      this.$router.replace({ path: '/' })
+      if (UserModule.isLoggedIn) {
+        UserModule.LogOut()
+      }
     }
   },
   data() {
     return {
       collections: [],
       domain: null,
-      drawer: null,
+      drawer: false,
       selectedTag: 0,
       items: [
         {
@@ -164,6 +194,17 @@ export default Vue.extend({
     }
   },
   computed: {
+    loggedIn() {
+      return UserModule.isLoggedIn
+    },
+    capital() {
+      if (UserModule.isLoggedIn) {
+        console.log(UserModule.username)
+        return UserModule.username[0]
+      } else {
+        return ''
+      }
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight

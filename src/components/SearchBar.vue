@@ -6,7 +6,7 @@
     >
       <v-card
         :elevation="0"
-        :width="width"
+        :width="width()"
       >
         <v-form @submit.native.prevent>
           <v-text-field
@@ -43,7 +43,7 @@ export default Vue.extend({
       this.domains.push(...res.items)
     })
   },
-  computed: {
+  methods: {
     width() {
       const width = window.innerWidth
       const height = window.innerHeight
@@ -52,9 +52,7 @@ export default Vue.extend({
       } else {
         return width * 0.9
       }
-    }
-  },
-  methods: {
+    },
     onSearchBarFocused() {
       this.$emit('focus')
     }

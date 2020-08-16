@@ -14,10 +14,10 @@ export const
     } else {
       windowWidth = width
       height = width * 1.2
-      width = height
+      width = width * 0.95
     }
 
-    const radius = width / 2.1
+    const radius = width / 2 + refWidth / width * 15
     const tree = d3.cluster().size([2 * Math.PI, radius - 100])
     const root = tree(
       d3
