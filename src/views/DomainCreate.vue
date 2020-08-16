@@ -111,8 +111,16 @@ export default Vue.extend({
   mounted() {
     this.loadMarkedDomains()
     this.loadDomain()
+    this.checkDomainName()
   },
   methods: {
+    checkDomainName() {
+      if (this.create) {
+        if (this.$route.query.domainName) {
+          this.form.title = this.$route.query.domainName
+        }
+      }
+    },
     loadDomain() {
       if (!this.modfy) return
 

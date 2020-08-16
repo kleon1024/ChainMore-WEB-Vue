@@ -34,7 +34,7 @@
           <v-btn
             text
             v-if="isModifiable"
-            :to="{ path: '/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
+            :to="{ path: '/op/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
           >
             <v-icon
               left

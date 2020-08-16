@@ -8,6 +8,7 @@
       style='margin-top:20px'
     >
       <v-card
+        v-if="!domain.noResult"
         :width='width'
         :to="{ path: '/domain/' + domain.id.toString() }"
       >
@@ -20,6 +21,21 @@
             color='teal'
             :to="{ path: '/domain/' + domain.id.toString() }"
           >Learn More</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card
+        v-if="domain.noResult"
+        :width='width'
+      >
+        <v-card-text>
+          <div class='title text--primary font-weight-bold'>{{ domain.desc }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            text
+            color='teal'
+            :to="{ path: '/op/create/domain', query: { nextUrl: $route.path, domainName: domain.query }}"
+          >立即创建</v-btn>
         </v-card-actions>
       </v-card>
     </v-row>

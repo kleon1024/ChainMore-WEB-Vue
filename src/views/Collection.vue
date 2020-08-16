@@ -32,7 +32,7 @@
           <v-btn
             text
             v-if="isModifiable"
-            :to="{ path: '/modify/collection', query: { nextUrl: $route.path, id: collection.id }}"
+            :to="{ path: '/op/modify/collection', query: { nextUrl: $route.path, id: collection.id }}"
           >
             <v-icon
               left

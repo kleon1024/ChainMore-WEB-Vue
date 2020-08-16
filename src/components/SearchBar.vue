@@ -35,12 +35,14 @@ export default Vue.extend({
   },
   data: () => ({
     domains: [],
+    recDomains: [],
     searchInput: ''
   }),
   mounted() {
     getDomains().then((res) => {
-      this.domains.splice(0, this.domains.length)
-      this.domains.push(...res.items)
+      this.recDomains.splice(0, this.domains.length)
+      this.recDomains.push(...res.items)
+      this.domains.push(...this.recDomains)
     })
   },
   methods: {
@@ -59,15 +61,30 @@ export default Vue.extend({
   },
   watch: {
     searchInput(newVal) {
-      search({
-        query: newVal.trim(),
-        type: 'domain',
-        limit: 10,
-        offset: 1
-      }).then((res) => {
+      if (newVal.trim() !== '') {
+        search({
+          query: newVal.trim(),
+          type: 'domain',
+          limit: 10,
+          offset: 1
+        }).then((res) => {
+          console.log(res.items)
+          if (res.items.length === 0) {
+            this.domains.splice(0, this.domains.length)
+            this.domains.push({
+              noResult: true,
+              desc: '暂无匹配领域',
+              query: newVal.trim()
+            })
+          } else {
+            this.domains.splice(0, this.domains.length)
+            this.domains.push(...res.items)
+          }
+        })
+      } else {
         this.domains.splice(0, this.domains.length)
-        this.domains.push(...res.items)
-      })
+        this.domains.push(...this.recDomains)
+      }
     }
   }
 })

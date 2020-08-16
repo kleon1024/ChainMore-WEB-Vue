@@ -24,7 +24,7 @@
               v-model="form.description"
               :counter="1024"
               :rules="rules.description"
-              label="正文"
+              label="描述或评论"
               outlined
               dense
               required
@@ -32,6 +32,7 @@
             <v-autocomplete
               v-model="form.domain"
               :items="markedDomains"
+              :rules="rules.domain"
               item-text="title"
               item-value="id"
               dense
@@ -43,6 +44,7 @@
             <v-autocomplete
               v-model="form.resources"
               :items="staredResources"
+              :rules="rules.resources"
               item-text="title"
               item-value="id"
               dense
@@ -115,7 +117,10 @@ export default Vue.extend({
           (v) => !!v.trim() || '标题不能为空',
           (v) => (v && v.length <= 32) || '标题必须小于32个字符'
         ],
-        description: [(v) => v.length <= 1024 || '正文必须小于1024个字符']
+        description: [
+          (v) => v.length <= 1024 || '描述或评论必须小于1024个字符'
+        ],
+        domain: [(v) => this.checkDomain() || '请选择一个聚合领域']
       },
       staredResources: [],
       markedDomains: [],
@@ -126,8 +131,24 @@ export default Vue.extend({
     this.loadStaredResources()
     this.loadMarkedDomains()
     this.loadCollection()
+    this.checkDomainID()
   },
   methods: {
+    checkDomainID() {
+      if (this.create) {
+        if (this.$route.query.domain) {
+          this.form.domain = this.$route.query.domain
+        }
+      }
+    },
+    checkDomain() {
+      for (let i = 0; i < this.markedDomains.length; i++) {
+        if (this.markedDomains[i].id === this.form.domain) {
+          return true
+        }
+      }
+      return false
+    },
     submit() {
       if (this.$refs.form.validate()) {
         if (this.modify) {

@@ -65,7 +65,7 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/:operation/resource',
+    path: '/op/:operation/resource',
     name: 'ResourceCreate',
     component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),
     meta: {
@@ -73,7 +73,7 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/:operation/domain',
+    path: '/op/:operation/domain',
     name: 'DomainCreate',
     component: () => import(/* webpackChunkName: "domain_create" */ '../views/DomainCreate.vue'),
     meta: {
@@ -81,7 +81,7 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/:operation/collection',
+    path: '/op/:operation/collection',
     name: 'CollectionCreate',
     component: () => import(/* webpackChunkName: "colletion_create" */ '../views/CollectionCreate.vue'),
     meta: {

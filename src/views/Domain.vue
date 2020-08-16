@@ -75,13 +75,24 @@
           <v-btn
             text
             v-if="isModifiable"
-            :to="{ path: '/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
+            :to="{ path: '/op/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
           >
             <v-icon
               left
               color="teal"
             > mdi-pencil-outline </v-icon>
             修改
+          </v-btn>
+          <v-btn
+            text
+            v-if="marked"
+            :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, domain: domain.id }}"
+          >
+            <v-icon
+              left
+              color="teal"
+            > mdi-playlist-plus </v-icon>
+            创建合集
           </v-btn>
         </v-card-actions>
       </v-card>

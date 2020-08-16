@@ -176,7 +176,7 @@ export default Vue.extend({
         },
         {
           icon: 'mdi-google-circles-communities',
-          text: '标记领域',
+          text: '收藏领域',
           to: '/person/domain'
         }
       ],
