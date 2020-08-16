@@ -6,7 +6,7 @@
     >
       <v-card :width="width">
         <v-card-text>
-          <p class='display-1 text--primary'> 创建资源 </p>
+          <p class='display-1 text--primary'> {{ title }}资源 </p>
           <v-form
             ref="form"
             v-model="valid"
@@ -67,7 +67,7 @@
               color="primary"
               @click="submit"
             >
-              创建
+              {{ title }}
             </v-btn>
           </v-form>
         </v-card-text>
@@ -80,13 +80,20 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import Vue from 'vue'
 import { getResourceType } from '@/api/main'
-import { checkUrlExsit, createResource, starResource } from '@/api/resources'
+import {
+  checkUrlExsit,
+  createResource,
+  starResource,
+  getResource,
+  modifyResource
+} from '@/api/resources'
 
 export default Vue.extend({
   name: 'ResourceCreate',
   data() {
     return {
       valid: true,
+      resource: null,
       form: {
         title: '',
         url: '',
@@ -161,27 +168,62 @@ export default Vue.extend({
   },
   mounted() {
     this.loadType()
+    this.loadResource()
   },
   methods: {
+    loadResource() {
+      if (!this.modify) return
+      getResource({ id: this.$route.query.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.resource = res.items[0]
+          this.form.url = this.resource.url
+          this.form.title = this.resource.title
+          this.form.paid = !this.resource.free
+          this.form.resourceTypeId = this.resource.resource_type_id
+          this.form.mediaTypeId = this.resource.media_type_id
+        }
+      })
+    },
     submit() {
       if (this.$refs.form.validate()) {
-        createResource({
-          url: this.form.url,
-          title: this.form.title,
-          external: true,
-          free: !this.form.paid,
-          resource_type_id: this.form.resourceTypeId,
-          media_type_id: this.form.mediaTypeId
-        }).then((res) => {
-          if (res.items.length === 1) {
-            const resource = res.items[0]
-            starResource({
-              id: resource.id
-            }).then((res) => {
-              this.$router.replace(this.$route.query.nextUrl)
-            })
-          }
-        })
+        if (this.modify) {
+          modifyResource({
+            id: this.resource.id,
+            url: this.form.url,
+            title: this.form.title,
+            external: true,
+            free: !this.form.paid,
+            resource_type_id: this.form.resourceTypeId,
+            media_type_id: this.form.mediaTypeId
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const resource = res.items[0]
+              starResource({
+                id: resource.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        } else {
+          createResource({
+            url: this.form.url,
+            title: this.form.title,
+            external: true,
+            free: !this.form.paid,
+            resource_type_id: this.form.resourceTypeId,
+            media_type_id: this.form.mediaTypeId
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const resource = res.items[0]
+              starResource({
+                id: resource.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        }
       }
     },
     mediaItems() {
@@ -229,6 +271,11 @@ export default Vue.extend({
       })
     },
     checkUrl() {
+      if (this.resource && this.modify && this.resource.url === this.form.url) {
+        this.urlExist = false
+        this.$refs.form.validate()
+        return
+      }
       const url = this.form.url.trim()
       if (url !== '') {
         checkUrlExsit({ url: url }).then((res) => {
@@ -243,6 +290,18 @@ export default Vue.extend({
     }
   },
   computed: {
+    title() {
+      if (this.modify) {
+        return '修改'
+      }
+      return '创建'
+    },
+    modify() {
+      return this.$route.params.operation === 'modify'
+    },
+    create() {
+      return this.$route.params.operation === 'create'
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight

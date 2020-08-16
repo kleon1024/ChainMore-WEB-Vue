@@ -40,7 +40,7 @@ class User extends VuexModule implements UserBean {
     }
     const oldTime = parseInt(this.timestamp)
     const newTime = Math.floor(Date.now() / 1000 / 60)
-    if (newTime - oldTime > 30 || newTime < oldTime) {
+    if (newTime - oldTime > 15 || newTime < oldTime) {
       await this.RefreshToken()
     }
     return this.accessToken

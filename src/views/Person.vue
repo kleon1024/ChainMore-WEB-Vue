@@ -156,7 +156,7 @@ export default Vue.extend({
     return {
       collections: [],
       domain: null,
-      drawer: false,
+      drawer: true,
       selectedTag: 0,
       items: [
         {

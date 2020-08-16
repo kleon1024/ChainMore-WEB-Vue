@@ -77,6 +77,13 @@ export const getDependedDomains = (params: any) =>
     params
   })
 
+export const getAggregatorDomains = (params: any) =>
+  request({
+    url: '/domain/i/aggregators',
+    method: 'get',
+    params
+  })
+
 export const createDomain = (data: any) =>
   request({
     url: '/domain',

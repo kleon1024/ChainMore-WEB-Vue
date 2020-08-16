@@ -31,6 +31,17 @@
             > {{ loginIcon() }} </v-icon>
             {{ loginIndicator() }}
           </v-btn>
+          <v-btn
+            text
+            v-if="isModifiable"
+            :to="{ path: '/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
+          >
+            <v-icon
+              left
+              color="teal"
+            > mdi-pencil-outline </v-icon>
+            修改
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-row>
@@ -187,6 +198,13 @@ export default Vue.extend({
     }
   },
   computed: {
+    isModifiable() {
+      return (
+        this.resource &&
+        UserModule.isLoggedIn &&
+        UserModule.UserId === this.resource.author_id
+      )
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight

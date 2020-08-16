@@ -7,6 +7,20 @@ export const getResource = (params: any) =>
     params
   })
 
+export const createResource = (data: any) =>
+  request({
+    url: '/resource',
+    method: 'post',
+    data
+  })
+
+export const modifyResource = (data: any) =>
+  request({
+    url: '/resource',
+    method: 'put',
+    data
+  })
+
 export const getStaredResources = (params: any) =>
   request({
     url: '/resource/stared',
@@ -17,13 +31,6 @@ export const getStaredResources = (params: any) =>
 export const checkUrlExsit = (data: any) =>
   request({
     url: '/resource/exist',
-    method: 'post',
-    data
-  })
-
-export const createResource = (data: any) =>
-  request({
-    url: '/resource',
     method: 'post',
     data
   })

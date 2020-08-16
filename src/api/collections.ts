@@ -14,6 +14,13 @@ export const createCollection = (data: any) =>
     data
   })
 
+export const modifyCollection = (data: any) =>
+  request({
+    url: '/collection',
+    method: 'put',
+    data
+  })
+
 export const getCollectionResources = (params: any) =>
   request({
     url: '/collection/referenceds',

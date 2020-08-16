@@ -72,6 +72,17 @@
             > mdi-transit-connection-variant </v-icon>
             学习路线
           </v-btn>
+          <v-btn
+            text
+            v-if="isModifiable"
+            :to="{ path: '/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
+          >
+            <v-icon
+              left
+              color="teal"
+            > mdi-pencil-outline </v-icon>
+            修改
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-row>
@@ -291,6 +302,14 @@ export default Vue.extend({
       } else {
         return width * 0.9
       }
+    }
+  },
+  computed: {
+    isModifiable() {
+      return (
+        this.domain &&
+        UserModule.isLoggedIn
+      )
     }
   }
 })

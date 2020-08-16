@@ -6,7 +6,7 @@
     >
       <v-card :width="width">
         <v-card-text>
-          <p class='display-1 text--primary'> 创建领域 </p>
+          <p class='display-1 text--primary'> {{ title }}领域 </p>
           <v-form
             ref="form"
             v-model="valid"
@@ -59,7 +59,7 @@
               color="primary"
               @click="submit"
             >
-              创建
+              {{ title }}
             </v-btn>
           </v-form>
         </v-card-text>
@@ -75,7 +75,11 @@ import {
   createDomain,
   markDomain,
   checkDomainExist,
-  getMarkedDomains
+  getMarkedDomains,
+  getDomain,
+  updateDomain,
+  getDependedDomains,
+  getAggregatorDomains
 } from '@/api/domains'
 
 export default Vue.extend({
@@ -100,13 +104,42 @@ export default Vue.extend({
         ],
         intro: [(v) => v.length <= 128 || '标题必须小于128个字符']
       },
-      markedDomains: []
+      markedDomains: [],
+      domain: null
     }
   },
   mounted() {
     this.loadMarkedDomains()
+    this.loadDomain()
   },
   methods: {
+    loadDomain() {
+      if (!this.modfy) return
+
+      getDomain({ id: this.$route.query.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.domain = res.items[0]
+          this.form.title = this.domain.title
+          this.form.intro = this.domain.intro
+        }
+      })
+      getDependedDomains({
+        id: this.$route.query.id,
+        distance: 1,
+        lower: 1
+      }).then((res) => {
+        for (let i = 0; i < res.items.length; i++) {
+          this.form.depDomains.push(res.items[i].id)
+        }
+      })
+      getAggregatorDomains({
+        id: this.$route.query.id,
+        distance: 1,
+        lower: 1
+      }).then((res) => {
+        this.form.aggDomain = res.items[0].id
+      })
+    },
     loadMarkedDomains() {
       getMarkedDomains({ limit: 999 }).then((res) => {
         let i = 0
@@ -130,6 +163,11 @@ export default Vue.extend({
       this.depDrawer = !this.depDrawer
     },
     checkDomain() {
+      if (this.domain && this.modify && this.form.title === this.domain.title) {
+        this.domainExist = false
+        this.$refs.form.validate()
+        return
+      }
       checkDomainExist({ title: this.form.title }).then((res) => {
         if (res.items.length === 1) {
           this.domainExist = true
@@ -141,25 +179,56 @@ export default Vue.extend({
     },
     submit() {
       if (this.$refs.form.validate()) {
-        createDomain({
-          title: this.form.title,
-          intro: this.form.intro,
-          aggregators: [this.form.aggDomain],
-          dependeds: this.form.depDomains
-        }).then((res) => {
-          if (res.items.length === 1) {
-            const domain = res.items[0]
-            markDomain({
-              id: domain.id
-            }).then((res) => {
-              this.$router.replace(this.$route.query.nextUrl)
-            })
-          }
-        })
+        if (this.modify) {
+          updateDomain({
+            id: this.domain.id,
+            title: this.form.title,
+            intro: this.form.intro,
+            aggregators: [this.form.aggDomain],
+            dependeds: this.form.depDomains
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const domain = res.items[0]
+              markDomain({
+                id: domain.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        } else {
+          createDomain({
+            title: this.form.title,
+            intro: this.form.intro,
+            aggregators: [this.form.aggDomain],
+            dependeds: this.form.depDomains
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const domain = res.items[0]
+              markDomain({
+                id: domain.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        }
       }
     }
   },
   computed: {
+    title() {
+      if (this.modify) {
+        return '修改'
+      }
+      return '创建'
+    },
+    modify() {
+      return this.$route.params.operation === 'modify'
+    },
+    create() {
+      return this.$route.params.operation === 'create'
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight

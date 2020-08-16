@@ -6,7 +6,7 @@
     >
       <v-card :width="width">
         <v-card-text>
-          <p class='display-1 text--primary'> 创建合集 </p>
+          <p class='display-1 text--primary'> {{ title }}合集 </p>
           <v-form
             ref="form"
             v-model="valid"
@@ -63,7 +63,10 @@
                   @click="data.select"
                   @click:close="remove(data.item)"
                 >
-                  <div class="text--primary subtitle-2 display: inline-block text-truncate" style="padding: 0.5em"> {{ data.item.title }} </div>
+                  <div
+                    class="text--primary subtitle-2 display: inline-block text-truncate"
+                    style="padding: 0.5em"
+                  > {{ data.item.title }} </div>
                 </v-card>
               </template>
 
@@ -74,7 +77,7 @@
               color="primary"
               @click="submit"
             >
-              创建
+              {{ title }}
             </v-btn>
           </v-form>
         </v-card-text>
@@ -87,7 +90,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import Vue from 'vue'
 import { getStaredResources } from '@/api/resources'
-import { createCollection, collectCollection } from '@/api/collections'
+import {
+  createCollection,
+  collectCollection,
+  getCollection,
+  getCollectionResources,
+  modifyCollection
+} from '@/api/collections'
 import { getMarkedDomains } from '@/api/domains'
 
 export default Vue.extend({
@@ -109,31 +118,52 @@ export default Vue.extend({
         description: [(v) => v.length <= 1024 || '正文必须小于1024个字符']
       },
       staredResources: [],
-      markedDomains: []
+      markedDomains: [],
+      collection: null
     }
   },
   mounted() {
     this.loadStaredResources()
     this.loadMarkedDomains()
+    this.loadCollection()
   },
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        createCollection({
-          title: this.form.title,
-          description: this.form.description,
-          resources: this.form.resources,
-          domain_id: this.form.domain
-        }).then((res) => {
-          if (res.items.length === 1) {
-            const collection = res.items[0]
-            collectCollection({
-              id: collection.id
-            }).then((res) => {
-              this.$router.replace(this.$route.query.nextUrl)
-            })
-          }
-        })
+        if (this.modify) {
+          modifyCollection({
+            id: this.collection.id,
+            title: this.form.title,
+            description: this.form.description,
+            resources: this.form.resources,
+            domain_id: this.form.domain
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const collection = res.items[0]
+              collectCollection({
+                id: collection.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        } else {
+          createCollection({
+            title: this.form.title,
+            description: this.form.description,
+            resources: this.form.resources,
+            domain_id: this.form.domain
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const collection = res.items[0]
+              collectCollection({
+                id: collection.id
+              }).then((res) => {
+                this.$router.replace(this.$route.query.nextUrl)
+              })
+            }
+          })
+        }
       }
     },
     loadStaredResources() {
@@ -147,9 +177,38 @@ export default Vue.extend({
         this.markedDomains.splice(0, this.markedDomains.length)
         this.markedDomains.push(...res.items)
       })
+    },
+    loadCollection() {
+      if (this.modify) {
+        getCollection({ id: this.$route.query.id }).then((res) => {
+          if (res.items.length === 1) {
+            this.collection = res.items[0]
+            this.form.title = this.collection.title
+            this.form.description = this.collection.description
+            this.form.domain = this.collection.domain_id
+          }
+        })
+        getCollectionResources({ id: this.$route.query.id }).then((res) => {
+          for (let i = 0; i < res.items.length; i++) {
+            this.form.resources.push(res.items[i].id)
+          }
+        })
+      }
     }
   },
   computed: {
+    title() {
+      if (this.modify) {
+        return '修改'
+      }
+      return '创建'
+    },
+    modify() {
+      return this.$route.params.operation === 'modify'
+    },
+    create() {
+      return this.$route.params.operation === 'create'
+    },
     width() {
       const width = window.innerWidth
       const height = window.innerHeight
