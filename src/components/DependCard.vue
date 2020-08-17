@@ -152,7 +152,6 @@ export default Vue.extend({
         })
         this.levels.push(level)
       }
-      // console.log(this.levels)
     },
     prepareData() {
       // precompute level depth

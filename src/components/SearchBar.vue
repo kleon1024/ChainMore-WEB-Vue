@@ -68,7 +68,6 @@ export default Vue.extend({
           limit: 10,
           offset: 1
         }).then((res) => {
-          console.log(res.items)
           if (res.items.length === 0) {
             this.domains.splice(0, this.domains.length)
             this.domains.push({

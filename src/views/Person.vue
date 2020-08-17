@@ -199,7 +199,6 @@ export default Vue.extend({
     },
     capital() {
       if (UserModule.isLoggedIn) {
-        console.log(UserModule.username)
         return UserModule.username[0]
       } else {
         return ''

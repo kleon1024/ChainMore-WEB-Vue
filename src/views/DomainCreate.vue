@@ -1,5 +1,8 @@
 <template>
-  <v-container>
+  <v-container
+    fluid
+    fill-height
+  >
     <v-row
       align='center'
       justify='center'
@@ -33,17 +36,19 @@
             <v-autocomplete
               v-model="form.aggDomain"
               :items="markedDomains"
+              :rules="rules.aggDomain"
               item-text="title"
               item-value="id"
               dense
               outlined
               chips
               small-chips
-              label="从收藏的领域添加聚合"
+              label="从已收藏的领域添加聚合"
             > </v-autocomplete>
             <v-autocomplete
               v-model="form.depDomains"
               :items="markedDomains"
+              :rules="rules.depDomains"
               item-text="title"
               item-value="id"
               dense
@@ -51,7 +56,7 @@
               small-chips
               chips
               multiple
-              label="从收藏的领域添加前置"
+              label="从已收藏的领域添加前置"
             > </v-autocomplete>
             <v-btn
               block
@@ -102,7 +107,14 @@ export default Vue.extend({
           (v) => (v && v.length <= 16) || 'Url必须小于16个字符',
           (v) => !this.domainExist || '领域已存在'
         ],
-        intro: [(v) => v.length <= 128 || '标题必须小于128个字符']
+        intro: [(v) => v.length <= 128 || '标题必须小于128个字符'],
+        aggDomain: [
+          (v) => this.checkAggDomain(this.form.aggDomain) || this.aggDomainTip
+        ],
+        depDomains: [
+          (v) =>
+            this.checkDepDomains(this.form.depDomains) || this.depDomainsTip
+        ]
       },
       markedDomains: [],
       domain: null
@@ -114,6 +126,29 @@ export default Vue.extend({
     this.checkDomainName()
   },
   methods: {
+    checkAggDomain(domain) {
+      if (domain === 0) {
+        return false
+      }
+      for (let i = 0; i < this.markedDomains.length; i++) {
+        if (this.markedDomains[i].id === domain) {
+          return true
+        }
+      }
+      return false
+    },
+    checkDepDomains(domains) {
+      if (domains.length === 0) {
+        return false
+      }
+      for (let j = 0; j < domains.length; j++) {
+        const domain = domains[j]
+        if (!this.checkAggDomain(domain)) {
+          return false
+        }
+      }
+      return true
+    },
     checkDomainName() {
       if (this.create) {
         if (this.$route.query.domainName) {
@@ -225,6 +260,20 @@ export default Vue.extend({
     }
   },
   computed: {
+    aggDomainTip() {
+      let title = '当前领域'
+      if (this.form.title.trim() !== '') {
+        title = this.form.title.trim()
+      }
+      return `请选择一个聚合领域，所有发布于${title}的合集将同步在聚合领域中显示`
+    },
+    depDomainsTip() {
+      let title = '当前领域'
+      if (this.form.title.trim() !== '') {
+        title = this.form.title.trim()
+      }
+      return `请至少选择一个前置领域，需要获得所有直接前置领域的认证才能参与${title}`
+    },
     title() {
       if (this.modify) {
         return '修改'

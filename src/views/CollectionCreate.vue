@@ -1,5 +1,8 @@
 <template>
-  <v-container>
+  <v-container
+    fluid
+    fill-height
+  >
     <v-row
       align='center'
       justify='center'
@@ -120,26 +123,29 @@ export default Vue.extend({
         description: [
           (v) => v.length <= 1024 || '描述或评论必须小于1024个字符'
         ],
-        domain: [(v) => this.checkDomain() || '请选择一个聚合领域']
+        domain: [(v) => this.checkDomain() || '请选择要发布的领域']
       },
       staredResources: [],
       markedDomains: [],
-      collection: null
+      collection: null,
+      domainLoaded: false,
+      markedDomainLoaded: false
     }
   },
   mounted() {
+    this.checkDomainID()
     this.loadStaredResources()
     this.loadMarkedDomains()
     this.loadCollection()
-    this.checkDomainID()
     this.checkResource()
   },
   methods: {
     checkDomainID() {
       if (this.create) {
         if (this.$route.query.domain) {
-          this.form.domain = this.$route.query.domain
+          this.form.domain = parseInt(this.$route.query.domain)
         }
+        this.domainLoaded = true
       }
     },
     checkResource() {
@@ -150,6 +156,9 @@ export default Vue.extend({
       }
     },
     checkDomain() {
+      if (this.create && (!this.domainLoaded || !this.markedDomainLoaded)) {
+        return true
+      }
       for (let i = 0; i < this.markedDomains.length; i++) {
         if (this.markedDomains[i].id === this.form.domain) {
           return true
@@ -205,6 +214,7 @@ export default Vue.extend({
       getMarkedDomains({ limit: 999 }).then((res) => {
         this.markedDomains.splice(0, this.markedDomains.length)
         this.markedDomains.push(...res.items)
+        this.markedDomainLoaded = true
       })
     },
     loadCollection() {

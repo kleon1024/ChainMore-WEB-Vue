@@ -10,7 +10,7 @@
         :width="width"
       >
         <v-card-text>
-          <div> 合集 </div>
+          <div> 合集  位于  {{ collection.domain_title }} </div>
           <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
           <div
             v-if="collection.description!==''"
