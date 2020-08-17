@@ -52,48 +52,56 @@
           <div> {{ readableTime(domain.create_time) }} 创建 </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            text
-            @click="onClickMark"
-          >
-            <v-icon
-              left
-              :color='loginColor()'
-            > {{ loginIcon() }} </v-icon>
-            {{ loginIndicator() }}
-          </v-btn>
-          <v-btn
-            text
-            @click="drawer = !drawer"
-          >
-            <v-icon
-              left
-              color="teal"
-            > mdi-transit-connection-variant </v-icon>
-            学习路线
-          </v-btn>
-          <v-btn
-            text
-            v-if="isModifiable"
-            :to="{ path: '/op/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
-          >
-            <v-icon
-              left
-              color="teal"
-            > mdi-pencil-outline </v-icon>
-            修改
-          </v-btn>
-          <v-btn
-            text
-            v-if="marked"
-            :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, domain: domain.id }}"
-          >
-            <v-icon
-              left
-              color="teal"
-            > mdi-playlist-plus </v-icon>
-            创建合集
-          </v-btn>
+          <v-row>
+            <v-col>
+              <v-btn
+                text
+                @click="onClickMark"
+              >
+                <v-icon
+                  left
+                  :color='loginColor()'
+                > {{ loginIcon() }} </v-icon>
+                {{ loginIndicator() }}
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                text
+                @click="drawer = !drawer"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-transit-connection-variant </v-icon>
+                学习路线
+              </v-btn>
+            </v-col>
+            <v-col v-if="isModifiable">
+              <v-btn
+                text
+                :to="{ path: '/op/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-pencil-outline </v-icon>
+                修改
+              </v-btn>
+            </v-col>
+            <v-col v-if="marked">
+              <v-btn
+                text
+                :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, domain: domain.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-playlist-plus </v-icon>
+                创建合集
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-row>
@@ -317,10 +325,7 @@ export default Vue.extend({
   },
   computed: {
     isModifiable() {
-      return (
-        this.domain &&
-        UserModule.isLoggedIn
-      )
+      return this.domain && UserModule.isLoggedIn
     }
   }
 })

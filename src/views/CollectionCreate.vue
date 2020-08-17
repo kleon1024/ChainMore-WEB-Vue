@@ -132,12 +132,20 @@ export default Vue.extend({
     this.loadMarkedDomains()
     this.loadCollection()
     this.checkDomainID()
+    this.checkResource()
   },
   methods: {
     checkDomainID() {
       if (this.create) {
         if (this.$route.query.domain) {
           this.form.domain = this.$route.query.domain
+        }
+      }
+    },
+    checkResource() {
+      if (this.create) {
+        if (this.$route.query.resource) {
+          this.form.resources.push(this.$route.query.resource)
         }
       }
     },

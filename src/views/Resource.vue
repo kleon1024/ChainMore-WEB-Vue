@@ -21,27 +21,45 @@
           <div> {{ readableTime(resource.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            text
-            @click="onClickStar"
-          >
-            <v-icon
-              left
-              :color='loginColor()'
-            > {{ loginIcon() }} </v-icon>
-            {{ loginIndicator() }}
-          </v-btn>
-          <v-btn
-            text
-            v-if="isModifiable"
-            :to="{ path: '/op/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
-          >
-            <v-icon
-              left
-              color="teal"
-            > mdi-pencil-outline </v-icon>
-            修改
-          </v-btn>
+          <v-row>
+            <v-col>
+              <v-btn
+                text
+                @click="onClickStar"
+              >
+                <v-icon
+                  left
+                  :color='loginColor()'
+                > {{ loginIcon() }} </v-icon>
+                {{ loginIndicator() }}
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                text
+                v-if="isModifiable"
+                :to="{ path: '/op/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-pencil-outline </v-icon>
+                修改
+              </v-btn>
+            </v-col>
+            <v-col v-if="stared">
+              <v-btn
+                text
+                :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, resource: resource.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-playlist-plus </v-icon>
+                合集引用
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-row>
@@ -117,6 +135,7 @@ export default Vue.extend({
   mounted() {
     this.loadCollections()
     this.loadResource()
+    this.checkStar()
   },
   methods: {
     readableTime(val) {
