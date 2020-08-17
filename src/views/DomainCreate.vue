@@ -122,7 +122,7 @@ export default Vue.extend({
       }
     },
     loadDomain() {
-      if (!this.modfy) return
+      if (!this.modify) return
 
       getDomain({ id: this.$route.query.id }).then((res) => {
         if (res.items.length === 1) {
