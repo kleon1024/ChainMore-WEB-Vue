@@ -8,6 +8,7 @@
       right
     >
       <v-stepper
+        v-if="isLoggedIn"
         vertical
         v-model="step"
         class="elevation-0"
@@ -15,7 +16,7 @@
         <template v-for="(domain, index) in dependDomains">
           <v-stepper-step
             :key="`${index}-step`"
-            :complete="step > index"
+            :complete="domain.certified"
             :step="index"
           >
             {{ domain.title }}
@@ -28,6 +29,42 @@
           </v-stepper-content>
         </template>
       </v-stepper>
+      <v-container>
+        <v-btn
+          v-if="isLoggedIn"
+          block
+          outlined
+          color="primary"
+          :to="{path: '/login', query: { nextUrl: $route.path}}"
+        > 开始学习 </v-btn>
+      </v-container>
+      <v-conatiner
+        fluid
+        fill-height
+        v-if="!isLoggedIn"
+      >
+        <v-card
+          elevation="0"
+          color="transparent"
+        >
+          <v-card-text>
+            <v-col align="center">
+              <v-icon size="36"> mdi-lock </v-icon>
+            </v-col>
+            <v-col align="center">
+              <div> 定制学习路线 </div>
+            </v-col>
+          </v-card-text>
+          <v-col align="center">
+            <v-btn
+              block
+              outlined
+              color="primary"
+              :to="{path: '/login', query: { nextUrl: $route.path}}"
+            > 立即登录 </v-btn>
+          </v-col>
+        </v-card>
+      </v-conatiner>
       <!-- <v-card elevation="0">
         <v-card-actions>
           <v-btn block outlined color="primary"> 开始学习 </v-btn>
@@ -86,7 +123,7 @@
                   left
                   color="teal"
                 > mdi-pencil-outline </v-icon>
-                修改
+                修改领域
               </v-btn>
             </v-col>
             <v-col v-if="marked">
@@ -99,6 +136,18 @@
                   color="teal"
                 > mdi-playlist-plus </v-icon>
                 创建合集
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                text
+                :to="{ path: '/certify', query: { nextUrl: $route.path, domain: domain.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-certificate-outline </v-icon>
+                获得认证
               </v-btn>
             </v-col>
           </v-row>
@@ -288,12 +337,14 @@ export default Vue.extend({
       this.loadCollections()
     },
     loadDependDomains() {
-      getDependedDomains({ id: this.$route.params.id, distance: 999 }).then(
-        (res) => {
-          this.dependDomains.splice(0, this.dependDomains.length)
-          this.dependDomains.push(...res.items)
-        }
-      )
+      if (UserModule.isLoggedIn) {
+        getDependedDomains({ id: this.$route.params.id, distance: 999 }).then(
+          (res) => {
+            this.dependDomains.splice(0, this.dependDomains.length)
+            this.dependDomains.push(...res.items)
+          }
+        )
+      }
     },
     loadCollections() {
       getDomainCollections({
@@ -324,6 +375,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    isLoggedIn() {
+      return UserModule.isLoggedIn
+    },
     isModifiable() {
       return this.domain && UserModule.isLoggedIn
     }

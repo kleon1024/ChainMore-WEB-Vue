@@ -42,7 +42,7 @@
                   left
                   color="teal"
                 > mdi-pencil-outline </v-icon>
-                修改
+                修改集合
               </v-btn>
             </v-col>
           </v-row>

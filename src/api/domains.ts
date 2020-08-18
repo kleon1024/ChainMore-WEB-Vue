@@ -104,3 +104,66 @@ export const checkDomainExist = (params: any) =>
     method: 'get',
     params
   })
+
+export const getCertificationGroups = (params: any) =>
+  request({
+    url: '/domain/groups',
+    method: 'get',
+    params
+  })
+
+export const getCertificationGroup = (params: any) =>
+  request({
+    url: '/domain/group',
+    method: 'get',
+    params
+  })
+
+export const getCertifications = (params: any) =>
+  request({
+    url: '/domain/certifications',
+    method: 'get',
+    params
+  })
+
+export const getMCP = (params: any) =>
+  request({
+    url: '/domain/mcp',
+    method: 'get',
+    params
+  })
+
+export const getMCPChoices = (params: any) =>
+  request({
+    url: '/domain/groups',
+    method: 'get',
+    params
+  })
+
+export const getMCPAnswers = (params: any) =>
+  request({
+    url: '/domain/groups',
+    method: 'get',
+    params
+  })
+
+export const certificate = (data: any) =>
+  request({
+    url: '/domain/certificate',
+    method: 'post',
+    data
+  })
+
+export const certify = (data: any) =>
+  request({
+    url: '/domain/certify',
+    method: 'post',
+    data
+  })
+
+export const checkCertify = (params: any) =>
+  request({
+    url: '/domain/certify',
+    method: 'get',
+    params
+  })

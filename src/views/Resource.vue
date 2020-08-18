@@ -44,7 +44,7 @@
                   left
                   color="teal"
                 > mdi-pencil-outline </v-icon>
-                修改
+                修改资源
               </v-btn>
             </v-col>
             <v-col v-if="stared">
