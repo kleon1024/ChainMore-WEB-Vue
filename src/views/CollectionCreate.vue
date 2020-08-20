@@ -181,7 +181,9 @@ export default Vue.extend({
               collectCollection({
                 id: collection.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                if (res.items.length === 1) {
+                  this.$router.back()
+                }
               })
             }
           })
@@ -197,7 +199,9 @@ export default Vue.extend({
               collectCollection({
                 id: collection.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                if (res.items.length === 1) {
+                  this.$router.back()
+                }
               })
             }
           })

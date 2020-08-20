@@ -38,7 +38,7 @@
               <v-btn
                 text
                 v-if="isModifiable"
-                :to="{ path: '/op/modify/resource', query: { nextUrl: $route.path, id: resource.id }}"
+                :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
               >
                 <v-icon
                   left
@@ -50,7 +50,7 @@
             <v-col v-if="stared">
               <v-btn
                 text
-                :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, resource: resource.id }}"
+                :to="{ path: '/op/create/collection', query: { resource: resource.id }}"
               >
                 <v-icon
                   left

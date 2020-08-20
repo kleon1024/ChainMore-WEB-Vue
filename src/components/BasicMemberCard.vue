@@ -10,7 +10,7 @@
       <v-col align='center'>
       </v-col>
       <v-col align='center'>
-        <span class="display-1 font-weight-bold text--primary"> 30 </span>
+        <span class="display-1 font-weight-bold text--primary"> 199 </span>
         <span class="text--primary"> 元 </span>
         <span class="text--primary"> /月 </span>
       </v-col>

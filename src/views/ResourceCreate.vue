@@ -204,7 +204,7 @@ export default Vue.extend({
               starResource({
                 id: resource.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                this.$router.back()
               })
             }
           })
@@ -222,7 +222,7 @@ export default Vue.extend({
               starResource({
                 id: resource.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                this.$router.back()
               })
             }
           })

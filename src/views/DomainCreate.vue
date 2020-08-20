@@ -235,7 +235,7 @@ export default Vue.extend({
               markDomain({
                 id: domain.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                this.$router.back()
               })
             }
           })
@@ -251,7 +251,7 @@ export default Vue.extend({
               markDomain({
                 id: domain.id
               }).then((res) => {
-                this.$router.replace(this.$route.query.nextUrl)
+                this.$router.back()
               })
             }
           })

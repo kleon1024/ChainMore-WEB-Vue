@@ -10,7 +10,7 @@
       <v-col align='center'>
       </v-col>
       <v-col align='center'>
-        <span class="display-1 font-weight-bold text--primary"> 99 </span>
+        <span class="display-1 font-weight-bold text--primary"> 999 </span>
         <span class="text--primary"> 元 </span>
         <span class="text--primary"> 每人/月 </span>
       </v-col>

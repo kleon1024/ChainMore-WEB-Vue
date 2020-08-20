@@ -1,13 +1,16 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
 import { signIn, signOut, refreshToken } from '@/api/auth'
+import { getUser } from '@/api/users'
 import {
   getAccessToken, setAccessToken, removeAccessToken,
   getRefreshToken, setRefreshToken, removeRefreshToken,
   getUsername, setUsername, removeUsername,
   getTimestamp, setTimestamp, removeTimestamp,
-  getUserId, setUserId, removeUserId
+  getUserId, setUserId, removeUserId,
+  getUserInfo, setUserInfo, removeUserInfo
 } from '@/plugins/cookies'
 import store from '@/store'
+import { remove } from 'js-cookie'
 
 export interface UserBean {
   accessToken: string
@@ -27,6 +30,7 @@ class User extends VuexModule implements UserBean {
   public username = getUsername() || ''
   public timestamp = getTimestamp() || ''
   public userId = getUserId() || ''
+  public userInfo = getUserInfo() || undefined
 
   public get UserId() {
     return parseInt(this.userId)
@@ -47,12 +51,20 @@ class User extends VuexModule implements UserBean {
   }
 
   public get isLoggedIn() {
+    console.log(this.userInfo)
     return (
       this.accessToken !== '' &&
       this.refreshToken !== '' &&
       this.username !== '' &&
       this.timestamp !== '' &&
-      this.userId !== ''
+      this.userId !== '' &&
+      this.userInfo !== undefined
+    )
+  }
+
+  public get isAdmin() {
+    return (
+      this.userInfo && this.userInfo.is_admin
     )
   }
 
@@ -81,6 +93,11 @@ class User extends VuexModule implements UserBean {
     this.userId = useId
   }
 
+  @Mutation
+  private SET_USER_INFO(userInfo: Record<string, any> | undefined) {
+    this.userInfo = userInfo
+  }
+
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     try {
@@ -96,6 +113,15 @@ class User extends VuexModule implements UserBean {
       this.SET_REFRESH_TOKEN(data.refresh_token)
       this.SET_TIMESTAMP(timestamp)
       this.SET_USE_ID(data.id.toString())
+
+      getUser({ id: data.id }, { Authorization: 'Bearer ' + data.access_token }).then((res) => {
+        if (res.items.length === 1) {
+          const user = res.items[0]
+          console.log(user)
+          setUserInfo(user)
+          this.SET_USER_INFO(user)
+        }
+      })
     } catch (error) {
       console.log(error)
     }
@@ -141,11 +167,13 @@ class User extends VuexModule implements UserBean {
       removeUsername()
       removeUserId()
       removeTimestamp()
+      removeUserInfo()
       this.SET_ACCESS_TOKEN('')
       this.SET_REFRESH_TOKEN('')
       this.SET_USERNAME('')
       this.SET_TIMESTAMP('')
       this.SET_USE_ID('')
+      this.SET_USER_INFO(undefined)
     } catch (err) {
       console.log(err)
     }

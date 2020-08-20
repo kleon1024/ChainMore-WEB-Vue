@@ -38,7 +38,7 @@
           :to="{path: '/login', query: { nextUrl: $route.path}}"
         > 开始学习 </v-btn>
       </v-container>
-      <v-conatiner
+      <v-container
         fluid
         fill-height
         v-if="!isLoggedIn"
@@ -64,7 +64,7 @@
             > 立即登录 </v-btn>
           </v-col>
         </v-card>
-      </v-conatiner>
+      </v-container>
       <!-- <v-card elevation="0">
         <v-card-actions>
           <v-btn block outlined color="primary"> 开始学习 </v-btn>
@@ -114,10 +114,10 @@
                 学习路线
               </v-btn>
             </v-col>
-            <v-col v-if="isModifiable">
+            <!-- <v-col v-if="isModifiable">
               <v-btn
                 text
-                :to="{ path: '/op/modify/domain', query: { nextUrl: $route.path, id: domain.id }}"
+                :to="{ path: '/op/modify/domain', query: { id: domain.id }}"
               >
                 <v-icon
                   left
@@ -125,11 +125,11 @@
                 > mdi-pencil-outline </v-icon>
                 修改领域
               </v-btn>
-            </v-col>
+            </v-col> -->
             <v-col v-if="marked">
               <v-btn
                 text
-                :to="{ path: '/op/create/collection', query: { nextUrl: $route.path, domain: domain.id }}"
+                :to="{ path: '/op/create/collection', query: { domain: domain.id }}"
               >
                 <v-icon
                   left
@@ -141,13 +141,25 @@
             <v-col>
               <v-btn
                 text
-                :to="{ path: '/certify', query: { nextUrl: $route.path, domain: domain.id }}"
+                :to="{ path: '/certify', query: { domain: domain.id }}"
               >
                 <v-icon
                   left
                   color="teal"
                 > mdi-certificate-outline </v-icon>
                 获得认证
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                text
+                :to="{ path: '/manage', query: { domain: domain.id }}"
+              >
+                <v-icon
+                  left
+                  color="teal"
+                > mdi-palette-outline </v-icon>
+                领域管理
               </v-btn>
             </v-col>
           </v-row>
@@ -379,7 +391,7 @@ export default Vue.extend({
       return UserModule.isLoggedIn
     },
     isModifiable() {
-      return this.domain && UserModule.isLoggedIn
+      return this.domain && UserModule.isLoggedIn && this.domain.id !== 1
     }
   }
 })

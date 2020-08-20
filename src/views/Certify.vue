@@ -95,7 +95,7 @@ export default Vue.extend({
       })
     },
     onConfirm() {
-      this.$router.replace({ path: this.$route.query.nextUrl })
+      this.$router.back()
     }
   },
   computed: {

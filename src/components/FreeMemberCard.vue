@@ -5,7 +5,7 @@
         <div class='display-1 text--primary font-weight-bold'> 免费 </div>
       </v-col>
       <v-col align='center'>
-        <div class='subheading'> 个人或团队的基础选择 </div>
+        <div class='subheading'> 什么也没有 </div>
       </v-col>
       <v-col align='center'>
       </v-col>
