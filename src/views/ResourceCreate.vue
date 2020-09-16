@@ -24,6 +24,25 @@
               required
               @blur="checkUrl"
             ></v-text-field>
+            <v-row v-if="urlExist">
+              <v-col>
+                <v-row>
+                {{ domain.title }}
+                </v-row>
+                <v-row>
+                  {{ domain.url }}
+                </v-row>
+              </v-col>
+              <v-col>
+                <v-btn @click="starFoundResource">
+                  <v-icon
+                    left
+                    color="teal"
+                  > {{ loginIcon() }} </v-icon>
+                  {{ loginIndicator() }}
+                </v-btn>
+              </v-col>
+            </v-row>
             <v-text-field
               v-model="form.title"
               :counter="64"
@@ -87,6 +106,8 @@ import {
   checkUrlExsit,
   createResource,
   starResource,
+  unstarResource,
+  isStarResource,
   getResource,
   modifyResource
 } from '@/api/resources'
@@ -105,6 +126,9 @@ export default Vue.extend({
         paid: false
       },
       urlExist: false,
+      foundResource: null,
+      urlStared: false,
+      staring: false,
       rules: {
         url: [
           (v) => !!v.trim() || 'Url不能为空',
@@ -174,8 +198,51 @@ export default Vue.extend({
     this.loadResource()
   },
   methods: {
+    starFoundResource() {
+      if (!this.staring) {
+        this.staring = true
+        if (this.urlStared) {
+          unstarResource({ id: this.foundResource.id }).then((res) => {
+            if (res.items.length === 1) {
+              this.urlStared = false
+            }
+            this.staring = false
+          })
+        } else {
+          starResource({ id: this.foundResource.id }).then((res) => {
+            if (res.items.length === 1) {
+              this.urlStared = true
+            }
+            this.staring = false
+          })
+        }
+      }
+    },
+    loginIndicator() {
+      if (this.urlStared) {
+        return '已收藏'
+      } else {
+        return '收藏'
+      }
+    },
+    loginIcon() {
+      if (this.urlStared) {
+        return 'mdi-star'
+      } else {
+        return 'mdi-star-outline'
+      }
+    },
     loadResource() {
-      if (!this.modify) return
+      if (!this.modify) {
+        if (this.$route.query.url) {
+          this.form.url = this.$route.query.url
+        }
+        if (this.$route.query.title) {
+          this.form.title = this.$route.query.title
+        }
+        this.checkUrl()
+        return
+      }
       getResource({ id: this.$route.query.id }).then((res) => {
         if (res.items.length === 1) {
           this.resource = res.items[0]
@@ -276,6 +343,7 @@ export default Vue.extend({
     checkUrl() {
       if (this.resource && this.modify && this.resource.url === this.form.url) {
         this.urlExist = false
+        this.urlStared = false
         this.$refs.form.validate()
         return
       }
@@ -284,6 +352,12 @@ export default Vue.extend({
         checkUrlExsit({ url: url }).then((res) => {
           if (res.items.length === 1) {
             this.urlExist = true
+            this.foundResource = res.items[0]
+            isStarResource({ id: this.foundResource.id }).then((res) => {
+              if (res.items.length === 1) {
+                this.urlStared = true
+              }
+            })
           } else {
             this.urlExist = false
           }

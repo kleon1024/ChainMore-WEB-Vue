@@ -34,7 +34,7 @@
           <v-btn
             text
             color='teal'
-            :to="{ path: '/op/create/domain', query: { nextUrl: $route.path, domainName: domain.query }}"
+            :to="{ path: '/op/create/domain', query: { domainName: domain.query }}"
           >立即创建</v-btn>
         </v-card-actions>
       </v-card>

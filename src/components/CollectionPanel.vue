@@ -9,7 +9,7 @@
             text
             color='teal'
             class="padding-horizontal"
-            :to="{ path: '/op/create/collection', query: { nextUrl: $route.path } }"
+            :to="{ path: '/op/create/collection' }"
           >
             <v-icon> mdi-plus </v-icon>
           </v-btn>
