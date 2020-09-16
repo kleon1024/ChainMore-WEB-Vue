@@ -114,7 +114,7 @@
                 学习路线
               </v-btn>
             </v-col>
-            <!-- <v-col v-if="isModifiable">
+            <v-col v-if="isModifiable">
               <v-btn
                 text
                 :to="{ path: '/op/modify/domain', query: { id: domain.id }}"
@@ -125,7 +125,7 @@
                 > mdi-pencil-outline </v-icon>
                 修改领域
               </v-btn>
-            </v-col> -->
+            </v-col>
             <v-col v-if="marked">
               <v-btn
                 text
