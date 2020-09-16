@@ -10,7 +10,7 @@
         :width="width"
       >
         <v-card-text>
-          <div> 合集  位于  {{ collection.domain_title }} </div>
+          <div> 合集  位于  <router-link :to="'/domain' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
           <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
           <div
             v-if="collection.description!==''"
@@ -164,9 +164,9 @@ export default Vue.extend({
     },
     loginIcon() {
       if (UserModule.isLoggedIn && this.collected) {
-        return 'star'
+        return 'mdi-star'
       } else {
-        return 'star_border'
+        return 'mdi-star-outline'
       }
     },
     checkCollect() {

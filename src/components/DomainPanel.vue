@@ -71,7 +71,6 @@ export default Vue.extend({
   computed: {
     width() {
       const width = window.innerWidth
-      console.log(width)
       const height = window.innerHeight
       if (width > height) {
         return width * 0.382

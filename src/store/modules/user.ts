@@ -51,7 +51,6 @@ class User extends VuexModule implements UserBean {
   }
 
   public get isLoggedIn() {
-    console.log(this.userInfo)
     return (
       this.accessToken !== '' &&
       this.refreshToken !== '' &&
@@ -117,7 +116,6 @@ class User extends VuexModule implements UserBean {
       getUser({ id: data.id }, { Authorization: 'Bearer ' + data.access_token }).then((res) => {
         if (res.items.length === 1) {
           const user = res.items[0]
-          console.log(user)
           setUserInfo(user)
           this.SET_USER_INFO(user)
         }

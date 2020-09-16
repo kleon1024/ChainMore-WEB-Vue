@@ -10,6 +10,17 @@
       <v-card :width="width">
         <v-card-text>
           <p class='display-1 text--primary'> {{ title }}资源 </p>
+          <v-card-actions v-if="urlExist">
+            <router-link :to="'/resource/' + foundResource.id" class="d-inline-block text-truncate">
+              {{ foundResource.title }}
+            </router-link>
+            <v-spacer/>
+            <v-btn fab small text @click="starFoundResource">
+              <v-icon
+                color="teal"
+              > {{ loginIcon() }} </v-icon>
+            </v-btn>
+          </v-card-actions>
           <v-form
             ref="form"
             v-model="valid"
@@ -24,25 +35,6 @@
               required
               @blur="checkUrl"
             ></v-text-field>
-            <v-row v-if="urlExist">
-              <v-col>
-                <v-row>
-                {{ domain.title }}
-                </v-row>
-                <v-row>
-                  {{ domain.url }}
-                </v-row>
-              </v-col>
-              <v-col>
-                <v-btn @click="starFoundResource">
-                  <v-icon
-                    left
-                    color="teal"
-                  > {{ loginIcon() }} </v-icon>
-                  {{ loginIndicator() }}
-                </v-btn>
-              </v-col>
-            </v-row>
             <v-text-field
               v-model="form.title"
               :counter="64"
@@ -396,5 +388,8 @@ export default Vue.extend({
 .padding-horizontal {
   margin-left: 0;
   margin-right: 0;
+}
+.btn {
+    text-transform: none;
 }
 </style>

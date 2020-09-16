@@ -326,10 +326,10 @@ export default Vue.extend({
       }
     },
     loginIcon() {
-      if (UserModule.isLoggedIn && this.marked) {
-        return 'star'
+      if (UserModule.isLoggedIn && this.collected) {
+        return 'mdi-star'
       } else {
-        return 'star_border'
+        return 'mdi-star-outline'
       }
     },
     checkMark() {

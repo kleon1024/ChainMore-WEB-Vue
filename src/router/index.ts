@@ -160,6 +160,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, _from, next) => {
+  if (process.env.NODE_ENV !== 'production') {
+    next()
+    return
+  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (UserModule.username === '' || UserModule.refreshToken === '') {
       next({
