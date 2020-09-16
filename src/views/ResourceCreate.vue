@@ -283,7 +283,11 @@ export default Vue.extend({
               starResource({
                 id: resource.id
               }).then((res) => {
-                this.$router.back()
+                if (window.history.length <= 1) {
+                  window.close()
+                } else {
+                  this.$router.back()
+                }
               })
             }
           })
