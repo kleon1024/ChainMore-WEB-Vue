@@ -188,8 +188,8 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.loadType()
     this.loadResource()
+    this.loadType()
   },
   methods: {
     starFoundResource() {
