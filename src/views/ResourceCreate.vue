@@ -27,7 +27,7 @@
           >
             <v-text-field
               v-model="form.url"
-              :counter="512"
+              :counter="urlCount"
               :rules="rules.url"
               label="Url"
               outlined
@@ -37,7 +37,7 @@
             ></v-text-field>
             <v-text-field
               v-model="form.title"
-              :counter="64"
+              :counter="titleCount"
               :rules="rules.title"
               label="标题"
               outlined
@@ -110,6 +110,8 @@ export default Vue.extend({
     return {
       valid: true,
       resource: null,
+      urlCount: 512,
+      titleCount: 128,
       form: {
         title: '',
         url: '',
@@ -124,13 +126,13 @@ export default Vue.extend({
       rules: {
         url: [
           (v) => !!v.trim() || 'Url不能为空',
-          (v) => (v && v.length <= 512) || 'Url必须小于512个字符',
+          (v) => (v && v.length <= this.urlCount) || 'Url必须小于512个字符',
           (v) => (v && v.startsWith('http')) || 'Url不合法',
           (v) => !this.urlExist || 'Url已存在'
         ],
         title: [
           (v) => !!v.trim() || '标题不能为空',
-          (v) => (v && v.length <= 64) || '标题必须小于64个字符'
+          (v) => (v && v.length <= this.titleCount) || '标题必须小于64个字符'
         ]
       },
       types: [],
