@@ -345,8 +345,8 @@ export default Vue.extend({
       if (url !== '') {
         checkUrlExsit({ url: url }).then((res) => {
           if (res.items.length === 1) {
-            this.urlExist = true
             this.foundResource = res.items[0]
+            this.urlExist = true
             isStarResource({ id: this.foundResource.id }).then((res) => {
               if (res.items.length === 1) {
                 this.urlStared = true
