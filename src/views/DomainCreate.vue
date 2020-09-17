@@ -16,7 +16,7 @@
           >
             <v-text-field
               v-model="form.title"
-              :counter="16"
+              :counter="titleCount"
               :rules="rules.title"
               label="标题"
               outlined
@@ -24,15 +24,17 @@
               required
               @blur="checkDomain"
             ></v-text-field>
-            <v-text-field
+            <v-textarea
               v-model="form.intro"
-              :counter="128"
+              :counter="introCount"
               :rules="rules.intro"
               label="简介"
               outlined
               dense
+              auto-grow
+              rows="1"
               required
-            ></v-text-field>
+            ></v-textarea>
             <v-autocomplete
               v-model="form.aggDomain"
               :items="markedDomains"
@@ -92,6 +94,8 @@ export default Vue.extend({
   data() {
     return {
       valid: true,
+      titleCount: 16,
+      introCount: 128,
       form: {
         title: '',
         intro: '',
@@ -104,10 +108,10 @@ export default Vue.extend({
       rules: {
         title: [
           (v) => !!v.trim() || '标题不能为空',
-          (v) => (v && v.length <= 16) || 'Url必须小于16个字符',
+          (v) => (v && v.length <= this.titleCount) || `标题必须小于${this.titleCount}个字符`,
           (v) => !this.domainExist || '领域已存在'
         ],
-        intro: [(v) => v.length <= 128 || '标题必须小于128个字符'],
+        intro: [(v) => v.length <= this.introCount || `简介必须小于${this.introCount}个字符`],
         aggDomain: [
           (v) => this.checkAggDomain(this.form.aggDomain) || this.aggDomainTip
         ],

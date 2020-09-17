@@ -16,22 +16,24 @@
           >
             <v-text-field
               v-model="form.title"
-              :counter="32"
+              :counter="titleCount"
               :rules="rules.title"
               label="标题"
               outlined
               dense
               required
             ></v-text-field>
-            <v-text-field
+            <v-textarea
               v-model="form.description"
-              :counter="1024"
+              :counter="descCount"
               :rules="rules.description"
               label="描述或评论"
               outlined
               dense
+              auto-grow
+              rows="1"
               required
-            ></v-text-field>
+            ></v-textarea>
             <v-autocomplete
               v-model="form.domain"
               :items="markedDomains"
@@ -109,6 +111,8 @@ export default Vue.extend({
   data() {
     return {
       valid: true,
+      titleCount: 32,
+      descCount: 4096,
       form: {
         title: '',
         description: '',
@@ -118,10 +122,10 @@ export default Vue.extend({
       rules: {
         title: [
           (v) => !!v.trim() || '标题不能为空',
-          (v) => (v && v.length <= 32) || '标题必须小于32个字符'
+          (v) => (v && v.length <= this.titleCount) || `标题必须小于${this.titleCount}个字符`
         ],
         description: [
-          (v) => v.length <= 1024 || '描述或评论必须小于1024个字符'
+          (v) => v.length <= this.descCount || `描述或评论必须小于${this.descCount}个字符`
         ],
         domain: [(v) => this.checkDomain() || '请选择要发布的领域']
       },

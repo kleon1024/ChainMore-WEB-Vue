@@ -126,13 +126,13 @@ export default Vue.extend({
       rules: {
         url: [
           (v) => !!v.trim() || 'Url不能为空',
-          (v) => (v && v.length <= this.urlCount) || 'Url必须小于512个字符',
+          (v) => (v && v.length <= this.urlCount) || `Url必须小于${this.urlCount}个字符`,
           (v) => (v && v.startsWith('http')) || 'Url不合法',
           (v) => !this.urlExist || 'Url已存在'
         ],
         title: [
           (v) => !!v.trim() || '标题不能为空',
-          (v) => (v && v.length <= this.titleCount) || '标题必须小于64个字符'
+          (v) => (v && v.length <= this.titleCount) || `标题必须小于${this.titleCount}个字符`
         ]
       },
       types: [],
