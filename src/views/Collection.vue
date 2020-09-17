@@ -15,6 +15,7 @@
           <div
             v-if="collection.description!==''"
             class='text--primary'
+            style='white-space: pre-wrap;'
           >{{ collection.description }}</div>
           <div> {{ readableTime(collection.modify_time) }} 修改 </div>
         </v-card-text>

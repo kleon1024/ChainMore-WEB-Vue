@@ -85,6 +85,7 @@
           <div
             v-if="domain.intro != ''"
             class='text--primary'
+            style='white-space: pre-wrap;'
           >{{ domain.intro }}</div>
           <div> {{ readableTime(domain.create_time) }} 创建 </div>
         </v-card-text>
