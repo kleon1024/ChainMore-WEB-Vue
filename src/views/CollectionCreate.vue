@@ -160,7 +160,7 @@ export default Vue.extend({
       }
     },
     checkDomain() {
-      if (this.create && (!this.domainLoaded || !this.markedDomainLoaded)) {
+      if (!this.domainLoaded || !this.markedDomainLoaded) {
         return true
       }
       for (let i = 0; i < this.markedDomains.length; i++) {

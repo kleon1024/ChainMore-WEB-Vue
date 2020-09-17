@@ -121,6 +121,7 @@ export default Vue.extend({
         ]
       },
       markedDomains: [],
+      markedDomainsLoaded: false,
       domain: null
     }
   },
@@ -133,6 +134,9 @@ export default Vue.extend({
     checkAggDomain(domain) {
       if (domain === 0) {
         return false
+      }
+      if (!this.markedDomainsLoaded) {
+        return true
       }
       for (let i = 0; i < this.markedDomains.length; i++) {
         if (this.markedDomains[i].id === domain) {
@@ -199,6 +203,7 @@ export default Vue.extend({
         this.markedDomains.splice(0, this.markedDomains.length)
         this.markedDomains.push(...rootDomains)
         this.markedDomains.push(...res.items)
+        this.markedDomainsLoaded = true
       })
     },
     onAggClicked() {
