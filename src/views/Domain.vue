@@ -327,7 +327,7 @@ export default Vue.extend({
       }
     },
     loginIcon() {
-      if (UserModule.isLoggedIn && this.collected) {
+      if (UserModule.isLoggedIn && this.marked) {
         return 'mdi-star'
       } else {
         return 'mdi-star-outline'

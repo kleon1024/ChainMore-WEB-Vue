@@ -34,10 +34,9 @@
                 {{ loginIndicator() }}
               </v-btn>
             </v-col>
-            <v-col>
+            <v-col v-if="isModifiable">
               <v-btn
                 text
-                v-if="isModifiable"
                 :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
               >
                 <v-icon
