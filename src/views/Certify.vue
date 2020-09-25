@@ -6,9 +6,10 @@
       justify='center'
     >
       <NoCertifyCard
-        v-if="!certified && groupsLoaded && groups.length === 0"
+        v-if="isCertifiable()"
         :width="width"
         :domain="domain"
+        :tips="tips()"
         @certify="onCertify"
       />
       <CertifiedCard
@@ -17,6 +18,36 @@
         :domain="domain"
         @confirm="onConfirm"
       />
+      <v-sheet
+        class="mx-auto"
+        elevation="0"
+        max-width="100%"
+      >
+        <v-slide-group v-if="!isCertifiable()" v-model="model" center-active>
+          <v-slide-item v-for="(group, index) in groups" :key="index" v-slot:default="{ active, toggle }" style="margin: 0.5em">
+            <CertifyCard
+              :emphase="active"
+              :width="width / 2"
+              :group="group"
+              :domain="domain"
+              @confirm="onConfirm"
+              :toggle="toggle"
+            />
+          </v-slide-item>
+        </v-slide-group>
+      </v-sheet>
+      <v-expand-transition>
+        <v-card
+          v-if="model != null"
+          tile
+          :width="width / 2"
+          elevation="0"
+        >
+          <v-card-text>
+            <p class="text--primary"> {{ this.groups[model].intro }} </p>
+          </v-card-text>
+        </v-card>
+      </v-expand-transition>
     </v-row>
   </v-container>
 </template>
@@ -35,6 +66,7 @@ import {
 import AppBar from '@/components/AppBar.vue'
 import NoCertifyCard from '@/components/NoCertifyCard.vue'
 import CertifiedCard from '@/components/CertifiedCard.vue'
+import CertifyCard from '@/components/CertifyCard.vue'
 import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
@@ -42,16 +74,16 @@ export default Vue.extend({
   components: {
     AppBar,
     NoCertifyCard,
-    CertifiedCard
+    CertifiedCard,
+    CertifyCard
   },
   data() {
     return {
+      model: null,
       domain: null,
       domainLoaded: false,
       groups: [],
       groupsLoaded: false,
-      group: null,
-      certfications: [],
       certified: false
     }
   },
@@ -61,6 +93,29 @@ export default Vue.extend({
     this.loadCertificationGroups()
   },
   methods: {
+    isAllFinished() {
+      if (!this.groupsLoaded) return false
+      if (this.groups.length === 0) return false
+      for (let i = 0; i < this.groups.length; i++) {
+        if (!this.groups[i].finished) {
+          return false
+        }
+      }
+      return true
+    },
+    isCertifiable() {
+      return !this.certified && this.groupsLoaded && (this.groups.length === 0 || this.isAllFinished())
+    },
+    tips() {
+      if (!this.certified && this.groupsLoaded) {
+        if (this.groups.length === 0) {
+          return '暂无认证题目，可以直接认证'
+        } else if (this.isAllFinished()) {
+          return '已完成所有题目，可以认证'
+        }
+      }
+      return ''
+    },
     readableTime(val) {
       return readableTimestamp(val)
     },

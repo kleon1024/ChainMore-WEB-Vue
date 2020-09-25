@@ -151,7 +151,7 @@
                 获得认证
               </v-btn>
             </v-col>
-            <v-col>
+            <v-col v-if="isModifiable">
               <v-btn
                 text
                 :to="{ path: '/manage', query: { domain: domain.id }}"
@@ -392,7 +392,7 @@ export default Vue.extend({
       return UserModule.isLoggedIn
     },
     isModifiable() {
-      return this.domain && UserModule.isLoggedIn && this.domain.id !== 1
+      return this.domain && UserModule.isLoggedIn && this.domain.id !== 1 && this.domain.certified
     }
   }
 })

@@ -8,7 +8,7 @@
         > {{ domain.title }} </div>
       </v-col>
       <v-col align='center'>
-        <div class='title text--primary'> 暂无认证题目，可以直接认证 </div>
+        <div class='title text--primary'> {{ tips }} </div>
       </v-col>
       <v-col align='center'>
         <v-icon
@@ -41,6 +41,10 @@ export default Vue.extend({
   props: {
     width: {
       type: Number,
+      required: true
+    },
+    tips: {
+      type: String,
       required: true
     },
     domain: {
