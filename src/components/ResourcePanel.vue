@@ -1,12 +1,11 @@
 <template>
-  <v-container>
-    <v-card :width="width">
+    <v-card>
       <v-row>
         <v-subheader class="padding-horizontal">资源</v-subheader>
-        <v-spacer> </v-spacer>
         <v-card-actions>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/op/create/resource' }"
@@ -14,39 +13,31 @@
             <v-icon> mdi-plus </v-icon>
           </v-btn>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/person/resource'}"
           >
             <v-icon> mdi-menu </v-icon>
           </v-btn>
-        </v-card-actions>
+          </v-card-actions>
       </v-row>
-      <v-row
-        v-for="(resource, index) in resources"
-        :key="index"
-        align="center"
-        justify="center"
-      >
-        <v-card
-          :elevation="0"
-          color="transparent"
-          :width="width"
-          :to="{ path: '/resource/' + resource.id}"
-        >
-          <v-card-text>
-            <div class='title text--primary'> {{ resource.title }} </div>
-            <div class='text--primary'><a
+      <v-list>
+      <template v-for="(resource, index) in resources">
+      <v-list-item :key="index">
+            <router-link :to="{ path: '/explore/resource/' + resource.id}">
+            <div class='subtitle-1 text--primary'> {{ resource.title }} </div>
+            <div class='subtitle-2 text--primary'><a
                 target='_blank'
                 :href="resource.url"
               >{{ resource.url }}</a></div>
-            <div> 收藏于 {{ readableTime(resource.star_time) }} </div>
-          </v-card-text>
-        </v-card>
-      </v-row>
+            <div class='subtitle-2 text--primary font-weight-light'>收藏于 {{ readableTime(resource.star_time) }} </div>
+            </router-link>
+      </v-list-item>
+      </template>
+      </v-list>
     </v-card>
-  </v-container>
 </template>
 
 <script>
@@ -71,17 +62,6 @@ export default Vue.extend({
       this.resources.splice(0, this.resources.length)
       this.resources.push(...res.items)
     })
-  },
-  computed: {
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.93
-      }
-    }
   }
 })
 </script>

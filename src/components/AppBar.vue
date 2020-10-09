@@ -6,31 +6,33 @@
     elevation="0"
     dense
   >
-    <a href="/">
-      <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
-    </a>
-    <div class='d-flex align-center'></div>
-    <v-spacer></v-spacer>
-    <v-btn
-      icon
-      to="/roadmap"
-    >
-      <v-icon color="teal">mdi-transit-connection-variant</v-icon>
-    </v-btn>
-    <v-btn
-      icon
-      to="/person"
-      color="teal"
-    >
-      <v-icon
-        v-if="!loggedIn"
+    <v-container class="fill-height">
+      <a href="/">
+        <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
+      </a>
+      <div class='d-flex align-center'></div>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        to="/roadmap"
+      >
+        <v-icon color="teal">mdi-transit-connection-variant</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        to="/person"
         color="teal"
-      >person_outline</v-icon>
-      <div
-        v-if="loggedIn"
-        class="font-weight-bold headline"
-      > {{ capital }} </div>
-    </v-btn>
+      >
+        <v-icon
+          v-if="!loggedIn"
+          color="teal"
+        >person_outline</v-icon>
+        <div
+          v-if="loggedIn"
+          class="font-weight-bold headline"
+        > {{ capital }} </div>
+      </v-btn>
+    </v-container>
   </v-app-bar>
 </template>
 

@@ -28,19 +28,7 @@
             </v-list-item-content>
           </v-row>
         </v-list-item>
-        <v-divider> </v-divider>
-        <v-list-item @click="onClickLogOut">
-          <v-row class="padding-horizontal">
-            <v-list-item-action>
-              <v-icon color="grey"> mdi-logout </v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title class="text--primary">
-                退出登录
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-row>
-        </v-list-item>
+        <v-divider/>
 
         <!-- <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader> -->
 
@@ -86,8 +74,19 @@
       <v-toolbar-title class="mr-12 align-center">
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
+      <v-responsive max-width="365">
+        <v-text-field
+            dense
+            flat
+            hide-details
+            rounded
+            solo-inverted>
+        </v-text-field>
+      </v-responsive>
       <v-spacer></v-spacer>
 
+      <v-menu offset-y content-class="elevation-1">
+      <template v-slot:activator="{ on }">
       <v-btn
         icon
         color="teal"
@@ -95,20 +94,33 @@
         <v-icon
           v-if="!loggedIn"
           color="teal"
+          v-on="on"
         >person_outline</v-icon>
         <div
           v-if="loggedIn"
           class="font-weight-bold headline"
         > {{ capital }} </div>
       </v-btn>
-      <!-- <v-text-field
-          :append-icon-cb="() => {}"
-          placeholder="Search..."
-          single-line
-          append-icon="mdi-magnify"
-          color="white"
-          hide-details
-        ></v-text-field> -->
+      </template>
+      <v-list flat >
+        <v-list-item-group v-model="action" color="primary">
+        <v-list-item
+          v-for="(action, index) in actions"
+          :key="index"
+          @click="action.function"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="action.icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="px-2 py-2">
+              {{ action.name }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        </v-list-item-group>
+      </v-list>
+      </v-menu>
     </v-app-bar>
     <v-main>
       <router-view />
@@ -158,6 +170,10 @@ export default Vue.extend({
       domain: null,
       drawer: null,
       selectedTag: 0,
+      action: 1,
+      actions: [
+        { name: '退出登录', function: this.onClickLogOut, icon: 'mdi-logout-variant' }
+      ],
       items: [
         {
           icon: 'mdi-infinity',

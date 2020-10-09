@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <AppBar />
     <v-row
       align='center'
       justify='center'
@@ -10,7 +9,7 @@
         :width="width"
       >
         <v-card-text>
-          <div> 合集  位于  <router-link :to="'/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
+          <div> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
           <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
           <div
             v-if="collection.description!==''"
@@ -72,7 +71,7 @@
       <v-card
         :width='width'
         style='margin-bottom:10px'
-        :to="{ path: '/resource/' + resource.id.toString() }"
+        :to="{ path: '/explore/resource/' + resource.id.toString() }"
       >
         <v-card-text>
           <div class='title text--primary'>{{ resource.title }}</div>
@@ -97,14 +96,10 @@ import {
   uncollectCollection
 } from '@/api/collections'
 import { UserModule } from '@/store/modules/user'
-import AppBar from '@/components/AppBar.vue'
 import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Collection',
-  components: {
-    AppBar
-  },
   data() {
     return {
       resources: [],

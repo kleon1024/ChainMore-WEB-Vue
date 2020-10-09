@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <AppBar />
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -210,7 +209,7 @@
       <v-card
         :width='width()'
         style='margin-top:10px'
-        :to="{ path: '/collection/' + collection.id.toString() }"
+        :to="{ path: '/explore/collection/' + collection.id.toString() }"
       >
         <v-card-text>
           <div class='text--primary'> {{ collection.domain_title }}</div>
@@ -223,7 +222,7 @@
             text
             x-small
             color='teal'
-            :to="{ path: '/collection/' + collection.id.toString() }"
+            :to="{ path: '/explore/collection/' + collection.id.toString() }"
           >LEARN MORE</v-btn>
         </v-card-actions>
       </v-card>
@@ -241,15 +240,11 @@ import {
   unmarkDomain,
   getDependedDomains
 } from '@/api/domains'
-import AppBar from '@/components/AppBar.vue'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Domain',
-  components: {
-    AppBar
-  },
   data() {
     return {
       collections: [],

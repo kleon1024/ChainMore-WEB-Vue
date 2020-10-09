@@ -1,71 +1,65 @@
 <template>
   <v-container>
-    <AppBar />
-    <v-row
-      align='center'
-      justify='center'
-    >
-      <v-card
-        v-if="resource"
-        :width="width"
-      >
-        <v-card-text>
-          <div> 资源 </div>
-          <div class='title text--primary'>{{ resource.title }}</div>
-          <a
-            :href="resource.url"
-            target="_blank"
-          >
-            <div>{{ resource.url }}</div>
-          </a>
-          <div> {{ readableTime(resource.modify_time) }} 修改 </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-row>
-            <v-col>
-              <v-btn
-                text
-                @click="onClickStar"
-              >
-                <v-icon
-                  left
-                  :color='loginColor()'
-                > {{ loginIcon() }} </v-icon>
-                {{ loginIndicator() }}
-              </v-btn>
-            </v-col>
-            <v-col v-if="isModifiable">
-              <v-btn
-                text
-                :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-pencil-outline </v-icon>
-                修改资源
-              </v-btn>
-            </v-col>
-            <v-col v-if="stared">
-              <v-btn
-                text
-                :to="{ path: '/op/create/collection', query: { resource: resource.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-playlist-plus </v-icon>
-                合集引用
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </v-card>
+    <v-row>
+      <v-container>
+        <v-card
+          v-if="resource"
+        >
+          <v-card-text>
+            <div> 资源 </div>
+            <div class='title text--primary'>{{ resource.title }}</div>
+            <a
+              :href="resource.url"
+              target="_blank"
+            >
+              <div>{{ resource.url }}</div>
+            </a>
+            <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-row>
+              <v-col>
+                <v-btn
+                  text
+                  @click="onClickStar"
+                >
+                  <v-icon
+                    left
+                    :color='loginColor()'
+                  > {{ loginIcon() }} </v-icon>
+                  {{ loginIndicator() }}
+                </v-btn>
+              </v-col>
+              <v-col v-if="isModifiable">
+                <v-btn
+                  text
+                  :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
+                >
+                  <v-icon
+                    left
+                    color="teal"
+                  > mdi-pencil-outline </v-icon>
+                  修改资源
+                </v-btn>
+              </v-col>
+              <v-col v-if="stared">
+                <v-btn
+                  text
+                  :to="{ path: '/op/create/collection', query: { resource: resource.id }}"
+                >
+                  <v-icon
+                    left
+                    color="teal"
+                  > mdi-playlist-plus </v-icon>
+                  合集引用
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-container>
     </v-row>
-    <v-row
-      align='center'
-      justify='center'
-    >
+    <v-row>
       <v-card
         :width='width'
         style='margin-top:0px'
@@ -84,7 +78,7 @@
       <v-card
         :width='width'
         style='margin-bottom:20px'
-        :to="{ path: '/collection/' + collection.id.toString() }"
+        :to="{ path: '/explore/collection/' + collection.id.toString() }"
       >
         <v-card-text>
           <div class='text--primary'> {{ collection.domain_title }}</div>
@@ -97,7 +91,7 @@
             text
             x-small
             color='teal'
-            :to="{ path: '/collection/' + collection.id.toString() }"
+            :to="{ path: '/explore/collection/' + collection.id.toString() }"
           >LEARN MORE</v-btn>
         </v-card-actions>
       </v-card>
@@ -115,14 +109,10 @@ import {
   unstarResource
 } from '@/api/resources'
 import { UserModule } from '@/store/modules/user'
-import AppBar from '@/components/AppBar.vue'
 import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
   name: 'Resource',
-  components: {
-    AppBar
-  },
   data() {
     return {
       collections: [],

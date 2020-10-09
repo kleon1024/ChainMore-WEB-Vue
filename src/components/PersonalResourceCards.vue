@@ -30,7 +30,7 @@
       >
         <v-card
           :width="width"
-          :to="{path: '/resource/' + resource.id}"
+          :to="{path: '/explore/resource/' + resource.id}"
           style="margin-top: 1em"
         >
           <v-card-text>

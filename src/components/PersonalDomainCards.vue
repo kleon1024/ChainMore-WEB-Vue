@@ -30,7 +30,7 @@
       >
         <v-card
           :width="width"
-          :to="{ path: '/domain/' + domain.id}"
+          :to="{ path: '/explore/domain/' + domain.id}"
           style="margin-top: 1em"
         >
           <v-card-text>

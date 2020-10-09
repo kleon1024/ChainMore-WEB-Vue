@@ -10,7 +10,7 @@
       <v-card
         v-if="!domain.noResult"
         :width='width'
-        :to="{ path: '/domain/' + domain.id.toString() }"
+        :to="{ path: '/explore/domain/' + domain.id.toString() }"
       >
         <v-card-text>
           <div class='title text--primary font-weight-bold'>{{ domain.title }}</div>
@@ -19,7 +19,7 @@
           <v-btn
             text
             color='teal'
-            :to="{ path: '/domain/' + domain.id.toString() }"
+            :to="{ path: '/explore/domain/' + domain.id.toString() }"
           >Learn More</v-btn>
         </v-card-actions>
       </v-card>

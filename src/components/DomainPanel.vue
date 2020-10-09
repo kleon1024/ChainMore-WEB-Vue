@@ -1,12 +1,11 @@
 <template>
-  <v-container>
-    <v-card :width="width">
+    <v-card>
       <v-row>
         <v-subheader class="padding-horizontal">领域</v-subheader>
-        <v-spacer> </v-spacer>
         <v-card-actions>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/op/create/domain' }"
@@ -14,7 +13,8 @@
             <v-icon> mdi-plus </v-icon>
           </v-btn>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/person/domain'}"
@@ -23,26 +23,17 @@
           </v-btn>
         </v-card-actions>
       </v-row>
-      <v-row
-        align="center"
-        justify="center"
-        v-for="(domain, index) in domains"
-        :key="index"
-      >
-        <v-card
-          :elevation="0"
-          color="transparent"
-          :width="width"
-          :to="{ path: '/domain/' + domain.id}"
-        >
-          <v-card-text>
-            <div class='title text--primary'> {{ domain.title }} </div>
-            <div> 收藏于 {{ readableTime(domain.mark_time) }} </div>
-          </v-card-text>
-        </v-card>
-      </v-row>
+      <v-list>
+      <template v-for="(domain, index) in domains">
+      <v-list-item :key="index">
+        <router-link :to="{ path: '/domain/' + domain.id}" >
+            <div class='subtitle-1 text--primary'> {{ domain.title }} </div>
+            <div class='subtitle-2 font-weight-light'> 收藏于 {{ readableTime(domain.mark_time) }} </div>
+        </router-link>
+      </v-list-item>
+      </template>
+      </v-list>
     </v-card>
-  </v-container>
 </template>
 
 <script>

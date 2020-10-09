@@ -30,7 +30,7 @@
       >
         <v-card
           :width="width"
-          :to="{ path:'/collection/' + collection.id}"
+          :to="{ path:'/explore/collection/' + collection.id}"
           style="margin-top: 1em"
         >
           <v-card-text>

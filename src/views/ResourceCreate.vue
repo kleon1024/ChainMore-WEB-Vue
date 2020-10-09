@@ -11,7 +11,7 @@
         <v-card-text>
           <p class='display-1 text--primary'> {{ title }}资源 </p>
           <v-card-actions v-if="urlExist">
-            <router-link :to="'/resource/' + foundResource.id" class="d-inline-block text-truncate">
+            <router-link :to="'/explore/resource/' + foundResource.id" class="d-inline-block text-truncate">
               {{ foundResource.title }}
             </router-link>
             <v-spacer/>
