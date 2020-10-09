@@ -1,24 +1,22 @@
 <template>
   <v-container>
-    <v-row
-      align='center'
-      justify='center'
-    >
-      <v-card
-        :elevation="0"
-        :width="width()"
-      >
-        <v-form @submit.native.prevent>
-          <v-text-field
-            v-model="searchInput"
-            label="我想学"
-            outlined
-            @focus="onSearchBarFocused"
-          ></v-text-field>
-        </v-form>
-      </v-card>
-    </v-row>
+    <v-row>
+    <v-col cols="12" sm="3"/>
+    <v-col cols="12" sm="6">
+    <v-form @submit.native.prevent>
+      <v-text-field
+        v-model="searchInput"
+        label="我想学"
+        outlined
+        rounded
+        @focus="onSearchBarFocused"
+        :max-width="100"
+      ></v-text-field>
+    </v-form>
     <DomainGroup :domains="domains" />
+    </v-col>
+    <v-col cols="12" sm="3"/>
+    </v-row>
   </v-container>
 </template>
 
@@ -50,6 +48,7 @@ export default Vue.extend({
       const width = window.innerWidth
       const height = window.innerHeight
       if (width > height) {
+        console.log(width * 0.382)
         return width * 0.382
       } else {
         return width * 0.9

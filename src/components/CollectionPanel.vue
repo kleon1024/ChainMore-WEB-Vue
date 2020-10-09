@@ -1,12 +1,11 @@
 <template>
-  <v-container>
-    <v-card :width="width">
+    <v-card>
       <v-row>
         <v-subheader class="padding-horizontal">合集</v-subheader>
-        <v-spacer> </v-spacer>
         <v-card-actions>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/op/create/collection' }"
@@ -14,7 +13,8 @@
             <v-icon> mdi-plus </v-icon>
           </v-btn>
           <v-btn
-            text
+            icon
+            x-small
             color='teal'
             class="padding-horizontal"
             :to="{ path: '/person/collection'}"
@@ -23,27 +23,24 @@
           </v-btn>
         </v-card-actions>
       </v-row>
-      <v-row
+      <v-list>
+      <template
         v-for="(collection, index) in collections"
-        :key="index"
-        align="center"
-        justify="center"
       >
-        <v-card
-          :elevation="0"
-          color="transparent"
-          :width="width"
+      <v-list-item
+        :key="index"
+      >
+        <router-link
           :to="{ path: '/collection/' + collection.id}"
         >
-          <v-card-text>
-            <div class='text--primary'> {{ collection.domain_title }}</div>
-            <div class='title text--primary'> {{ collection.title }} </div>
-            <div> 收藏于 {{ readableTime(collection.collect_time) }} </div>
-          </v-card-text>
-        </v-card>
-      </v-row>
+            <div class='subtitle-1 text--primary'> {{ collection.domain_title }}</div>
+            <div class='subtitle-2 text--primary'> {{ collection.title }} </div>
+            <div class='subtitle-2 font-weight-light'> 收藏于 {{ readableTime(collection.collect_time) }} </div>
+        </router-link>
+      </v-list-item>
+      </template>
+      </v-list>
     </v-card>
-  </v-container>
 </template>
 
 <script>
@@ -68,24 +65,6 @@ export default Vue.extend({
       this.collections.splice(0, this.collections.length)
       this.collections.push(...res.items)
     })
-  },
-  computed: {
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.93
-      }
-    }
   }
 })
 </script>
-
-<style>
-.padding-horizontal {
-  margin-left: 1em;
-  margin-right: 1em;
-}
-</style>

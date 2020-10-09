@@ -1,17 +1,21 @@
 <template>
-  <v-container>
+  <v-app id="explore">
     <AppBar />
-    <AggregateCard />
-    <SearchBar
-      @focus="onFocused"
-      id="search"
-    />
-    <v-card
-      :height="height"
-      :elevation="0"
-    >
-    </v-card>
-  </v-container>
+    <v-main>
+      <v-container>
+        <AggregateCard />
+        <SearchBar
+          @focus="onFocused"
+          id="search"
+        />
+        <v-card
+          :height="height"
+          :elevation="0"
+        >
+        </v-card>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>

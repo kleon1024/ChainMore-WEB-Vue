@@ -41,30 +41,6 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
-    path: '/domain/:id',
-    name: 'Domain',
-    component: () => import(/* webpackChunkName: "domain" */ '../views/Domain.vue'),
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/collection/:id',
-    name: 'Collection',
-    component: () => import(/* webpackChunkName: "collection" */ '../views/Collection.vue'),
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/resource/:id',
-    name: 'Resource',
-    component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
     path: '/op/:operation/resource',
     name: 'ResourceCreate',
     component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),
@@ -103,6 +79,47 @@ const routes: Array<RouteConfig> = [
     meta: {
       requiresAuth: false
     }
+  },
+  {
+    path: '/explore',
+    name: 'Explore',
+    component: () => import(/* webpackChunkName: "explore" */ '../views/Explore.vue'),
+    meta: {
+      requiresAuth: false
+    },
+    children: [
+      {
+        path: '/',
+        component: () => import(/* webpackChunkName: "explore" */ '../views/Domain.vue'),
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'domain/:id',
+        name: 'Domain',
+        component: () => import(/* webpackChunkName: "domain" */ '../views/Domain.vue'),
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'collection/:id',
+        name: 'Collection',
+        component: () => import(/* webpackChunkName: "collection" */ '../views/Collection.vue'),
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: 'resource/:id',
+        name: 'Resource',
+        component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
+        meta: {
+          requiresAuth: false
+        }
+      }
+    ]
   },
   {
     path: '/person',
