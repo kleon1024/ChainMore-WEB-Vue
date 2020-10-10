@@ -1,55 +1,64 @@
 <template>
-  <v-container>
-    <AppBar />
-    <v-row
-      align='center'
-      justify='center'
-    >
-      <NoCertifyCard
-        v-if="isCertifiable()"
-        :width="width"
-        :domain="domain"
-        :tips="tips()"
-        @certify="onCertify"
-      />
-      <CertifiedCard
-        v-if="certified"
-        :width="width"
-        :domain="domain"
-        @confirm="onConfirm"
-      />
-      <v-sheet
-        class="mx-auto"
-        elevation="0"
-        max-width="100%"
-      >
-        <v-slide-group v-if="!isCertifiable()" v-model="model" center-active>
-          <v-slide-item v-for="(group, index) in groups" :key="index" v-slot:default="{ active, toggle }" style="margin: 0.5em">
-            <CertifyCard
-              :emphase="active"
-              :width="width / 2"
-              :group="group"
-              :domain="domain"
-              @confirm="onConfirm"
-              :toggle="toggle"
-            />
-          </v-slide-item>
-        </v-slide-group>
-      </v-sheet>
-      <v-expand-transition>
-        <v-card
-          v-if="model != null"
-          tile
-          :width="width / 2"
-          elevation="0"
-        >
-          <v-card-text>
-            <p class="text--primary"> {{ this.groups[model].intro }} </p>
-          </v-card-text>
-        </v-card>
-      </v-expand-transition>
-    </v-row>
-  </v-container>
+  <v-app id="certify">
+    <v-main>
+      <v-app-bar flat color="white">
+        <a href="/">
+          <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
+        </a>
+        <v-spacer> </v-spacer>
+        <v-toolbar-title class="title font-weight-bold">{{ domain.title }}</v-toolbar-title>
+      </v-app-bar>
+      <v-container>
+        <v-row>
+          <v-col cols="12" sm="3"/>
+          <v-col cols="12" sm="6">
+          <NoCertifyCard
+            v-if="isCertifiable()"
+            :domain="domain"
+            :tips="tips()"
+            @certify="onCertify"
+          />
+          <CertifiedCard
+            v-if="certified"
+            :domain="domain"
+            @confirm="onConfirm"
+          />
+          </v-col>
+          <v-col cols="12" sm="3"/>
+        </v-row>
+        <v-row>
+          <v-sheet
+            class="mx-auto"
+            elevation="0"
+            max-width="100%"
+          >
+            <v-slide-group v-if="!isCertifiable()" v-model="model" center-active show-arrows>
+              <v-slide-item v-for="(group, index) in groups" :key="index" v-slot:default="{ active, toggle }" class="mx-1 my-2">
+                <CertifyCard
+                  :emphase="active"
+                  :group="group"
+                  :domain="domain"
+                  @confirm="onConfirm"
+                  :toggle="toggle"
+                />
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-expand-transition>
+            <v-sheet
+              v-if="model != null"
+            >
+              <v-card-text>
+                <p class="subtitle-1 text--primary"> {{ this.groups[model].intro }} </p>
+              </v-card-text>
+            </v-sheet>
+          </v-expand-transition>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -63,7 +72,6 @@ import {
   certify,
   checkCertify
 } from '@/api/domains'
-import AppBar from '@/components/AppBar.vue'
 import NoCertifyCard from '@/components/NoCertifyCard.vue'
 import CertifiedCard from '@/components/CertifiedCard.vue'
 import CertifyCard from '@/components/CertifyCard.vue'
@@ -72,7 +80,6 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'Resource',
   components: {
-    AppBar,
     NoCertifyCard,
     CertifiedCard,
     CertifyCard
@@ -151,17 +158,6 @@ export default Vue.extend({
     },
     onConfirm() {
       this.$router.back()
-    }
-  },
-  computed: {
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })
