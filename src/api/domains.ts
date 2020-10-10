@@ -167,3 +167,17 @@ export const checkCertify = (params: any) =>
     method: 'get',
     params
   })
+
+export const getCertifiedDomains = (params: any) =>
+  request({
+    url: '/domain/certifieds',
+    method: 'get',
+    params
+  })
+
+export const getManageCertifications = (params: any) =>
+  request({
+    url: '/domain/manage/certifications',
+    method: 'get',
+    params
+  })

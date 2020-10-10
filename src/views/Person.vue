@@ -16,10 +16,10 @@
           :value="item.text"
           :class="activeClass(item.to)"
         >
-          <v-row class="padding-horizontal">
-            <v-list-item-action>
+          <v-row class="mx-3">
+            <v-list-item-icon>
               <v-icon :color="activeColor(item.to)">{{ item.icon }}</v-icon>
-            </v-list-item-action>
+            </v-list-item-icon>
 
             <v-list-item-content>
               <v-list-item-title class="text--primary">
@@ -29,37 +29,41 @@
           </v-row>
         </v-list-item>
         <v-divider/>
+        <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">领域管理</v-subheader>
+        <v-list-item
+          v-for="item in manageDomains.slice(0, topNDomain)"
+          :key="item.text"
+          :to="{ path: item.to }"
+          :value="item.text"
+          :class="activeClass(item.to)"
+        >
+          <v-row class="mx-3">
+            <v-list-item-icon>
+              <v-icon :color="activeColor(item.to)">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-        <!-- <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader> -->
-
-        <!-- <v-list-item
-            v-for="item in items2"
-            :key="item.text"
-            link
-          >
-            <v-list-item-avatar>
-              <img
-                :src="`https://randomuser.me/api/portraits/men/${item.picture}.jpg`"
-                alt=""
-              >
-            </v-list-item-avatar>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            class="mt-4"
-            link
-          >
-            <v-list-item-action>
-              <v-icon color="grey darken-1">mdi-plus-circle-outline</v-icon>
-            </v-list-item-action>
-            <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
-          </v-list-item>
-          <v-list-item link>
-            <v-list-item-action>
-              <v-icon color="grey darken-1">mdi-cog</v-icon>
-            </v-list-item-action>
-            <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
-          </v-list-item> -->
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
+        <v-list-item
+          v-if="manageDomains.length > topNDomain || expanded"
+          @click="expandAllDomains"
+        >
+          <v-row class="mx-3">
+            <v-list-item-icon>
+                <v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'}} </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ expanded ? '收起' : `展示其他${manageDomains.length - topNDomain}条` }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -131,6 +135,7 @@
 <script>
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
+import { getCertifiedDomains } from '@/api/domains'
 
 export default Vue.extend({
   name: 'Person',
@@ -162,6 +167,27 @@ export default Vue.extend({
       if (UserModule.isLoggedIn) {
         UserModule.LogOut()
       }
+    },
+    expandAllDomains() {
+      if (!this.expanded) {
+        this.topNDomain = this.manageDomains.length
+        this.expanded = true
+      } else {
+        this.topNDomain = 1
+        this.expanded = false
+      }
+    },
+    loadCertifiedDomains() {
+      getCertifiedDomains({}).then((res) => {
+        for (let i = 0; i < res.items.length; i++) {
+          const domain = res.items[i]
+          this.manageDomains.push({
+            icon: 'mdi-shield-star-outline',
+            text: domain.title,
+            to: '/person/manage/domain/' + domain.id
+          })
+        }
+      })
     }
   },
   data() {
@@ -196,17 +222,20 @@ export default Vue.extend({
           to: '/person/domain'
         }
       ],
-      remap: {
-        '/person': 0,
-        '/person/resource': 1
-      },
-      items2: [
-        { picture: 28, text: 'Joseph' },
-        { picture: 38, text: 'Apple' },
-        { picture: 48, text: 'Xbox Ahoy' },
-        { picture: 58, text: 'Nokia' },
-        { picture: 78, text: 'MKBHD' }
-      ]
+      manageDomains: [
+        {
+          icon: 'mdi-shield-star-outline',
+          text: 'Python入门',
+          to: '/person/manage/domain/1'
+        },
+        {
+          icon: 'mdi-arrow-up',
+          text: 'Go',
+          to: '/person/manage/domain/2'
+        }
+      ],
+      expanded: false,
+      topNDomain: 1
     }
   },
   computed: {
@@ -219,15 +248,6 @@ export default Vue.extend({
       } else {
         return ''
       }
-    },
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })
@@ -236,9 +256,5 @@ export default Vue.extend({
 <style scoped>
 .active {
   background-color: lightgrey;
-}
-.padding-horizontal {
-  margin-left: 0em;
-  margin-right: 0em;
 }
 </style>

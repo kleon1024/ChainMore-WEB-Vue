@@ -268,10 +268,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped>
-.padding-horizontal {
-  margin-left: 0;
-  margin-right: 0;
-}
-</style>

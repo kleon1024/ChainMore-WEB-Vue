@@ -24,7 +24,6 @@
           color="primary"
           v-if="loggedIn"
         >
-          <v-icon color="primary">person_outline</v-icon>
           <div
             class="font-weight-bold headline"
           > {{ capital }} </div>

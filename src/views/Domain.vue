@@ -238,7 +238,8 @@ import {
   isMarkDomain,
   markDomain,
   unmarkDomain,
-  getDependedDomains
+  getDependedDomains,
+  checkCertify
 } from '@/api/domains'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
@@ -250,6 +251,7 @@ export default Vue.extend({
       collections: [],
       domain: null,
       showMenu: false,
+      certified: false,
       step: 0,
       orderOptions: [
         {
@@ -371,6 +373,13 @@ export default Vue.extend({
       }).then((res) => {
         this.domain = res.items[0]
       })
+      if (this.isLoggedIn) {
+        checkCertify({ id: this.$route.params.id }).then((res) => {
+          if (res.items.length === 1) {
+            this.certified = true
+          }
+        })
+      }
     },
     width() {
       const width = window.innerWidth
@@ -387,7 +396,7 @@ export default Vue.extend({
       return UserModule.isLoggedIn
     },
     isModifiable() {
-      return this.domain && UserModule.isLoggedIn && this.domain.id !== 1 && this.domain.certified
+      return this.domain && UserModule.isLoggedIn && this.domain.id !== 1 && this.certified
     }
   }
 })

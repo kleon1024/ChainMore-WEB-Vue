@@ -139,7 +139,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'resource',
         name: 'Person\'s Resource',
-        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalResource.vue'),
+        component: () => import(/* webpackChunkName: "presource" */ '../views/PersonalResource.vue'),
         meta: {
           requiresAuth: true
         }
@@ -147,7 +147,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'collection',
         name: 'Person\'s Collection',
-        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalCollection.vue'),
+        component: () => import(/* webpackChunkName: "pcollection" */ '../views/PersonalCollection.vue'),
         meta: {
           requiresAuth: true
         }
@@ -155,7 +155,15 @@ const routes: Array<RouteConfig> = [
       {
         path: 'domain',
         name: 'Person\'s Domain',
-        component: () => import(/* webpackChunkName: "home" */ '../views/PersonalDomain.vue'),
+        component: () => import(/* webpackChunkName: "pdomain" */ '../views/PersonalDomain.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'manage/domain/:id',
+        name: 'Manage Domain',
+        component: () => import(/* webpackChunkName: "pmdomain" */ '../views/ManageDomain.vue'),
         meta: {
           requiresAuth: true
         }

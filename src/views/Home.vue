@@ -1,8 +1,8 @@
 <template>
   <v-container fluid>
-    <ResourcePanel class="my-2 mx-2" />
-    <CollectionPanel class="my-2 mx-2"/>
-    <DomainPanel class="my-2 mx-2"/>
+    <ResourcePanel class="mb-2" />
+    <CollectionPanel class="mb-2"/>
+    <DomainPanel class="mb-2"/>
   </v-container>
 </template>
 

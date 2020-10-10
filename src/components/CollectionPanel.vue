@@ -1,13 +1,13 @@
 <template>
     <v-card>
       <v-row>
-        <v-subheader class="padding-horizontal">合集</v-subheader>
+        <v-subheader class="mx-3">合集</v-subheader>
         <v-card-actions>
           <v-btn
             icon
             x-small
             color='teal'
-            class="padding-horizontal"
+            class="mx-3"
             :to="{ path: '/op/create/collection' }"
           >
             <v-icon> mdi-plus </v-icon>
@@ -16,7 +16,7 @@
             icon
             x-small
             color='teal'
-            class="padding-horizontal"
+            class="mx-3"
             :to="{ path: '/person/collection'}"
           >
             <v-icon> mdi-menu </v-icon>

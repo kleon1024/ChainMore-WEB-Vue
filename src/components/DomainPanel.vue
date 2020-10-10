@@ -1,13 +1,13 @@
 <template>
     <v-card>
       <v-row>
-        <v-subheader class="padding-horizontal">领域</v-subheader>
+        <v-subheader class="mx-3">领域</v-subheader>
         <v-card-actions>
           <v-btn
             icon
             x-small
             color='teal'
-            class="padding-horizontal"
+            class="mx-3"
             :to="{ path: '/op/create/domain' }"
           >
             <v-icon> mdi-plus </v-icon>
@@ -16,7 +16,7 @@
             icon
             x-small
             color='teal'
-            class="padding-horizontal"
+            class="mx-3"
             :to="{ path: '/person/domain'}"
           >
             <v-icon> mdi-menu </v-icon>
@@ -74,7 +74,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.padding-horizontal {
+.mx-3 {
   margin-left: 1em;
   margin-right: 1em;
 }

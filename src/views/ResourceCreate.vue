@@ -63,10 +63,10 @@
               v-model="form.mediaTypeId"
             >
             </v-select>
-            <v-row class="padding-horizontal">
+            <v-row class="mx-3">
               <p class="subheading font-weight-bold"> {{ combinedName() }} </p>
             </v-row>
-            <v-row class="padding-horizontal">
+            <v-row class="mx-3">
               <v-checkbox
                 v-model="form.paid"
                 hide-details
@@ -391,10 +391,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.padding-horizontal {
-  margin-left: 0;
-  margin-right: 0;
-}
 .btn {
     text-transform: none;
 }
