@@ -119,6 +119,27 @@ export const getCertificationGroup = (params: any) =>
     params
   })
 
+export const putCertificationGroup = (data: any) =>
+  request({
+    url: '/domain/group',
+    method: 'put',
+    data
+  })
+
+export const postCertificationGroup = (data: any) =>
+  request({
+    url: '/domain/group',
+    method: 'post',
+    data
+  })
+
+export const deleteCertificationGroup = (params: any) =>
+  request({
+    url: '/domain/group',
+    method: 'delete',
+    params
+  })
+
 export const getCertifications = (params: any) =>
   request({
     url: '/domain/certifications',
@@ -126,10 +147,87 @@ export const getCertifications = (params: any) =>
     params
   })
 
+export const getCertification = (params: any) =>
+  request({
+    url: '/domain/certification',
+    method: 'get',
+    params
+  })
+
+export const deleteCertification = (params: any) =>
+  request({
+    url: '/domain/certification',
+    method: 'delete',
+    params
+  })
+
+export const putCertification = (data: any) =>
+  request({
+    url: '/domain/certification',
+    method: 'put',
+    data
+  })
+
+export const postCertification = (data: any) =>
+  request({
+    url: '/domain/certification',
+    method: 'post',
+    data
+  })
+
 export const getMCP = (params: any) =>
   request({
     url: '/domain/mcp',
     method: 'get',
+    params
+  })
+
+export const postMCP = (data: any) =>
+  request({
+    url: '/domain/mcp',
+    method: 'post',
+    data
+  })
+
+export const putMCP = (data: any) =>
+  request({
+    url: '/domain/mcp',
+    method: 'put',
+    data
+  })
+
+export const deleteMCP = (params: any) =>
+  request({
+    url: '/domain/mcp',
+    method: 'delete',
+    params
+  })
+
+export const getMCPChoice = (params: any) =>
+  request({
+    url: '/domain/mcp/choice',
+    method: 'get',
+    params
+  })
+
+export const postMCPChoice = (data: any) =>
+  request({
+    url: '/domain/mcp/choice',
+    method: 'post',
+    data
+  })
+
+export const putMCPChoice = (data: any) =>
+  request({
+    url: '/domain/mcp/choice',
+    method: 'put',
+    data
+  })
+
+export const deleteMCPChoice = (params: any) =>
+  request({
+    url: '/domain/mcp/choice',
+    method: 'delete',
     params
   })
 

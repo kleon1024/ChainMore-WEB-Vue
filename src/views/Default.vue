@@ -7,9 +7,10 @@
         <SearchBar
           @focus="onFocused"
           id="search"
+          class="px-5"
         />
         <v-card
-          :height="height"
+          min-height="100vh"
           :elevation="0"
         >
         </v-card>
@@ -36,11 +37,6 @@ export default {
   },
   mounted() {
     this.scrollToTop()
-  },
-  computed: {
-    height() {
-      return window.innerHeight
-    }
   },
   methods: {
     scrollToTop() {

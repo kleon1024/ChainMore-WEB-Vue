@@ -4,6 +4,12 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import Toasted from 'vue-toasted'
+import VuetifyConfirm from 'vuetify-confirm'
+
+Vue.use(VuetifyConfirm, { vuetify })
+
+Vue.use(Toasted)
 
 Vue.config.productionTip = false
 Vue.config.devtools = false

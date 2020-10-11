@@ -28,7 +28,7 @@
             </v-list-item-content>
           </v-row>
         </v-list-item>
-        <v-divider/>
+        <v-divider />
         <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">领域管理</v-subheader>
         <v-list-item
           v-for="item in manageDomains.slice(0, topNDomain)"
@@ -55,7 +55,7 @@
         >
           <v-row class="mx-3">
             <v-list-item-icon>
-                <v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'}} </v-icon>
+              <v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'}} </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title class="text--primary">
@@ -80,54 +80,60 @@
       </v-toolbar-title>
       <v-responsive max-width="365">
         <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted>
+          dense
+          flat
+          hide-details
+          rounded
+          solo-inverted
+        >
         </v-text-field>
       </v-responsive>
       <v-spacer></v-spacer>
 
-      <v-menu offset-y content-class="elevation-1">
-      <template v-slot:activator="{ on }">
-      <v-btn
-        icon
-        color="teal"
+      <v-menu
+        offset-y
+        outline
+        content-class="elevation-1"
       >
-        <v-icon
-          v-if="!loggedIn"
-          color="teal"
-          v-on="on"
-        >person_outline</v-icon>
-        <div
-          v-if="loggedIn"
-          class="font-weight-bold headline"
-        > {{ capital }} </div>
-      </v-btn>
-      </template>
-      <v-list flat >
-        <v-list-item-group v-model="action" color="primary">
-        <v-list-item
-          v-for="(action, index) in actions"
-          :key="index"
-          @click="action.function"
-        >
-          <v-list-item-icon>
-            <v-icon v-text="action.icon"></v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title class="px-2 py-2">
-              {{ action.name }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        </v-list-item-group>
-      </v-list>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            color="teal"
+            v-on="on"
+          >
+            <v-icon
+              v-if="!loggedIn"
+              color="teal"
+            >person_outline</v-icon>
+            <div
+              v-if="loggedIn"
+              class="font-weight-bold headline"
+            > {{ capital }} </div>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            dense
+            v-for="(action, index) in actions"
+            :key="index"
+            @click="action.function"
+          >
+            <v-list-item-icon>
+              <v-icon v-text="action.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ action.name }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </v-menu>
     </v-app-bar>
     <v-main>
-      <router-view />
+      <keep-alive>
+        <router-view :key="$route.fullPath" />
+      </keep-alive>
     </v-main>
   </v-app>
 </template>
@@ -198,7 +204,11 @@ export default Vue.extend({
       selectedTag: 0,
       action: 1,
       actions: [
-        { name: '退出登录', function: this.onClickLogOut, icon: 'mdi-logout-variant' }
+        {
+          name: '退出登录',
+          function: this.onClickLogOut,
+          icon: 'mdi-logout-variant'
+        }
       ],
       items: [
         {
@@ -222,20 +232,9 @@ export default Vue.extend({
           to: '/person/domain'
         }
       ],
-      manageDomains: [
-        {
-          icon: 'mdi-shield-star-outline',
-          text: 'Python入门',
-          to: '/person/manage/domain/1'
-        },
-        {
-          icon: 'mdi-arrow-up',
-          text: 'Go',
-          to: '/person/manage/domain/2'
-        }
-      ],
+      manageDomains: [],
       expanded: false,
-      topNDomain: 1
+      topNDomain: 5
     }
   },
   computed: {
@@ -249,6 +248,9 @@ export default Vue.extend({
         return ''
       }
     }
+  },
+  mounted() {
+    this.loadCertifiedDomains()
   }
 })
 </script>

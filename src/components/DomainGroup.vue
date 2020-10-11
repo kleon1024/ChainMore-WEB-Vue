@@ -1,16 +1,13 @@
 <template>
-  <v-container>
-    <v-row
-      align='center'
-      justify='center'
+  <div>
+    <div
       v-for='(domain, index) in domains'
       :key='index'
-      style='margin-top:20px'
     >
       <v-card
         v-if="!domain.noResult"
-        :width='width'
         :to="{ path: '/explore/domain/' + domain.id.toString() }"
+        class="mt-2"
       >
         <v-card-text>
           <div class='title text--primary font-weight-bold'>{{ domain.title }}</div>
@@ -38,8 +35,8 @@
           >立即创建</v-btn>
         </v-card-actions>
       </v-card>
-    </v-row>
-  </v-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -51,17 +48,6 @@ export default Vue.extend({
     domains: {
       required: false,
       default: []
-    }
-  },
-  computed: {
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })

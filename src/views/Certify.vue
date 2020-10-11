@@ -38,7 +38,7 @@
                   :emphase="active"
                   :group="group"
                   :domain="domain"
-                  @confirm="onConfirm"
+                  :to="{path: '/certify/group/' + group.id}"
                   :toggle="toggle"
                 />
               </v-slide-item>
@@ -78,7 +78,7 @@ import CertifyCard from '@/components/CertifyCard.vue'
 import { readableTimestamp } from '@/utils/time'
 
 export default Vue.extend({
-  name: 'Resource',
+  name: 'Certify',
   components: {
     NoCertifyCard,
     CertifiedCard,
@@ -155,9 +155,6 @@ export default Vue.extend({
           }
         }
       })
-    },
-    onConfirm() {
-      this.$router.back()
     }
   }
 })

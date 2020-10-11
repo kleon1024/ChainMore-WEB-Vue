@@ -1,7 +1,13 @@
 <template>
-  <v-card :elevation="emphase ? 3 : 1" @click="toggle">
+  <v-card
+    :elevation="emphase ? 3 : 1"
+    @click="toggle"
+  >
     <v-card-text class="text-center">
-      <p style='white-space: pre-wrap;' class='text-truncate'> {{ group.title }} </p>
+      <p
+        style='white-space: pre-wrap;'
+        class='text-truncate'
+      > {{ group.title }} </p>
       <v-icon
         size="180"
         color="primary"
@@ -13,7 +19,7 @@
         color="teal"
         outlined
         block
-        @click="onSubmit"
+        :to="to"
       >
         {{ buttonText }}
       </v-btn>
@@ -27,6 +33,9 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'CertifyCard',
   props: {
+    to: {
+      type: Object
+    },
     domain: {
       required: true
     },
@@ -47,11 +56,6 @@ export default Vue.extend({
     },
     iconText() {
       return this.group.finished ? 'mdi-check' : 'mdi-sword'
-    }
-  },
-  methods: {
-    onSubmit() {
-      this.$emit('confirm')
     }
   }
 })

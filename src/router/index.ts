@@ -73,6 +73,14 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
+    path: '/certify/group/:id',
+    name: 'Certify',
+    component: () => import(/* webpackChunkName: "certify" */ '../views/CertifyGroup.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/member',
     name: 'Member',
     component: () => import(/* webpackChunkName: "member" */ '../views/Member.vue'),

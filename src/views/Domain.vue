@@ -153,7 +153,7 @@
             <v-col v-if="isModifiable">
               <v-btn
                 text
-                :to="{ path: '/manage', query: { domain: domain.id }}"
+                :to="{ path: '/person/manage/domain/' + domain.id }"
               >
                 <v-icon
                   left
