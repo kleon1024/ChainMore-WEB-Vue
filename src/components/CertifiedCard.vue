@@ -1,5 +1,5 @@
 <template>
-  <v-card :width="width">
+  <v-card>
     <v-card-text>
       <v-col align="center">
         <div
@@ -39,10 +39,6 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'CertifiedCard',
   props: {
-    width: {
-      type: Number,
-      required: true
-    },
     domain: {
       required: true
     }

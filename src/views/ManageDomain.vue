@@ -559,7 +559,6 @@ export default Vue.extend({
       }
     },
     loadCertificationGroups() {
-      console.log('FFFFFFFF' + this.$route.params.id)
       getCertificationGroups({ id: this.$route.params.id }).then((res) => {
         this.groups.splice(0, this.groups.length)
         for (let i = 0; i < res.items.length; i++) {

@@ -9,6 +9,9 @@
           <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
         </a>
         <v-spacer> </v-spacer>
+        <v-btn text outlined color="primary" @click="onClickSubmit">
+          提交答案
+        </v-btn>
       </v-app-bar>
       <v-container>
         <v-form
@@ -20,9 +23,15 @@
             min-height="80vh"
             v-if="certifications.length > 0 && certifications[curPage - 1].type == 'multiple_choice_problem'"
           >
-            <v-subheader> 测试 </v-subheader>
+            <v-subheader>
+              测试 {{ curPage }}
+              <v-spacer></v-spacer>
+              <v-btn text small color="grey lighten-1">
+                {{ mcpTypeToText(certifications[curPage - 1].mcp.type) }}
+              </v-btn>
+            </v-subheader>
             <v-card-text class="py-0">
-              <div class="subtitle-1 text--primary">
+              <div class="subtitle-2 text--primary">
                 {{ certifications[curPage - 1].mcp.text }}
               </div>
             </v-card-text>
@@ -33,10 +42,11 @@
               <v-checkbox
                 v-for="(c,i) in certifications[curPage - 1].mcp.choices"
                 :key="i"
-                dense
                 hide-details
-                v-model="forms[curPage - 1].models"
+                v-model="forms[curPage - 1].answers"
                 :value="c.id"
+                :rules=" certifications[curPage - 1].mcp.type === 'any_answer' ? rules.mcp.anyAnswer : rules.mcp.multipleAnswer"
+                required
               >
                 <template v-slot:label>
                   <span class="subtitle-2 text--primary">
@@ -44,6 +54,23 @@
                   </span>
                 </template>
               </v-checkbox>
+            </v-card-text>
+            <v-card-text class="py-0" v-if="certifications[curPage - 1].mcp.type === 'single_answer'">
+              <v-radio-group v-model="forms[curPage - 1].answers" :rules="rules.mcp.singleAnswer" required>
+                <v-radio
+                  class="subtitle-2 text--primary py-1"
+                  v-for="(c, i) in certifications[curPage - 1].mcp.choices"
+                  :key="i"
+                  :label="c.text"
+                  :value="c.id"
+                >
+                  <template v-slot:label>
+                    <span class="subtitle-2 text--primary">
+                      {{ String.fromCharCode(65 + i) + '. ' +  c.text }}
+                    </span>
+                  </template>
+                </v-radio>
+              </v-radio-group>
             </v-card-text>
           </v-card>
         </v-form>
@@ -64,8 +91,7 @@ import { UserModule } from '@/store/modules/user'
 import {
   getCertificationGroup,
   getCertifications,
-  certify,
-  checkCertify
+  certificate
 } from '@/api/domains'
 import { readableTimestamp } from '@/utils/time'
 
@@ -81,7 +107,18 @@ export default Vue.extend({
       groupLoaded: false,
       certifications: [],
       certificationsLoaded: false,
-      forms: []
+      forms: [],
+      rules: {
+        mcp: {
+          anyAnswer: [],
+          multipleAnswer: [
+            (v) => v.length > 0 || '请至少选择一个选项'
+          ],
+          singleAnswer: [
+            (v) => !!v || '请选择一个选项'
+          ]
+        }
+      }
     }
   },
   mounted() {
@@ -101,13 +138,13 @@ export default Vue.extend({
           if (c.type === 'multiple_choice_problem') {
             if (c.mcp.type === 'single_answer') {
               this.forms.push({
-                model: 0,
-                label: ''
+                type: c.type,
+                answers: 0
               })
             } else {
               this.forms.push({
-                models: [],
-                labels: []
+                type: c.type,
+                answers: []
               })
             }
           }
@@ -122,8 +159,80 @@ export default Vue.extend({
         this.groupLoaded = true
       })
     },
+    mcpTypeToText(t) {
+      if (t === 'single_answer') {
+        return '单项选择题:只有一项'
+      } else if (t === 'multiple_answer') {
+        return '多项选择题:至少一项'
+      } else if (t === 'any_answer') {
+        return '任意项选择题:可能零项'
+      }
+    },
     onConfirm() {
       this.$router.back()
+    },
+    onClickSubmit() {
+      const unfinished = this.validateAllAnswer()
+      const answers = {}
+      if (unfinished === -1) {
+        this.$confirm('检查无误，确认提交？', {
+          buttonTrueText: '确认',
+          buttonFalseText: '取消'
+        }).then((res) => {
+          if (!res) return
+          for (let i = 0; i < this.certifications.length; i++) {
+            const c = this.certifications[i]
+            if (c.type === 'multiple_choice_problem') {
+              if (c.mcp.type === 'single_answer') {
+                answers[c.id] = {
+                  type: c.type,
+                  answers: [this.forms[i].answers]
+                }
+              } else {
+                answers[c.id] = {
+                  type: c.type,
+                  answers: this.forms[i].answers
+                }
+              }
+            }
+          }
+          certificate({ id: this.group.id, answers: answers }).then((res) => {
+            if (res.items.length === 1) {
+              this.$toasted.show('认证成功，请再接再厉' + (unfinished + 1), {
+                theme: 'outline',
+                position: 'top-center',
+                duration: 500
+              })
+            } else {
+              this.$toasted.show('认证失败，请重新来过' + (unfinished + 1), {
+                theme: 'outline',
+                position: 'top-center',
+                duration: 500
+              })
+            }
+            this.$router.back()
+          })
+        })
+      } else {
+        this.$toasted.show('还没有完成测试' + (unfinished + 1), {
+          theme: 'outline',
+          position: 'top-center',
+          duration: 500
+        })
+      }
+    },
+    validateAllAnswer() {
+      for (let i = 0; i < this.certifications.length; i++) {
+        const c = this.certifications[i]
+        if (c.type === 'multiple_choice_problem') {
+          if (c.mcp.type === 'single_answer') {
+            if (!this.forms[i].answers) return i
+          } else if (c.mcp.type === 'multiple_answer') {
+            if (this.forms[i].answers.length === 0) return i
+          }
+        }
+      }
+      return -1
     }
   }
 })

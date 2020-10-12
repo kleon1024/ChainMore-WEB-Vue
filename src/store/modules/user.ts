@@ -159,7 +159,6 @@ class User extends VuexModule implements UserBean {
       if (this.accessToken === '') {
         throw Error('LogOut: accessToken is undefined!')
       }
-      await signOut()
       removeAccessToken()
       removeRefreshToken()
       removeUsername()
@@ -172,6 +171,7 @@ class User extends VuexModule implements UserBean {
       this.SET_TIMESTAMP('')
       this.SET_USE_ID('')
       this.SET_USER_INFO(undefined)
+      await signOut()
     } catch (err) {
       console.log(err)
     }

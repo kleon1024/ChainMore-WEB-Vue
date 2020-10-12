@@ -6,7 +6,7 @@
           <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
         </a>
         <v-spacer> </v-spacer>
-        <v-toolbar-title class="title font-weight-bold">{{ domain.title }}</v-toolbar-title>
+        <v-toolbar-title v-if="domain" class="title font-weight-bold">{{ domain.title }}</v-toolbar-title>
       </v-app-bar>
       <v-container>
         <v-row>
@@ -26,13 +26,13 @@
           </v-col>
           <v-col cols="12" sm="3"/>
         </v-row>
-        <v-row>
+        <v-row v-if="!certified && !isCertifiable()">
           <v-sheet
             class="mx-auto"
             elevation="0"
             max-width="100%"
           >
-            <v-slide-group v-if="!isCertifiable()" v-model="model" center-active show-arrows>
+            <v-slide-group  v-model="model" center-active show-arrows>
               <v-slide-item v-for="(group, index) in groups" :key="index" v-slot:default="{ active, toggle }" class="mx-1 my-2">
                 <CertifyCard
                   :emphase="active"
@@ -45,7 +45,7 @@
             </v-slide-group>
           </v-sheet>
         </v-row>
-        <v-row align="center" justify="center">
+        <v-row v-if="!certified && !isCertifiable()" align="center" justify="center">
           <v-expand-transition>
             <v-sheet
               v-if="model != null"
@@ -155,6 +155,9 @@ export default Vue.extend({
           }
         }
       })
+    },
+    onConfirm() {
+      this.$router.back()
     }
   }
 })
