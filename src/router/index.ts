@@ -74,7 +74,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/certify/group/:id',
-    name: 'Certify',
+    name: 'Certify Group',
     component: () => import(/* webpackChunkName: "certify" */ '../views/CertifyGroup.vue'),
     meta: {
       requiresAuth: true
@@ -172,6 +172,14 @@ const routes: Array<RouteConfig> = [
         path: 'manage/domain/:id',
         name: 'Manage Domain',
         component: () => import(/* webpackChunkName: "pmdomain" */ '../views/ManageDomain.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'learn/domain/:id',
+        name: 'Learn Domain',
+        component: () => import(/* webpackChunkName: "pmdomain" */ '../views/LearnDomain.vue'),
         meta: {
           requiresAuth: true
         }

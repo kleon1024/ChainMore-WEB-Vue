@@ -279,3 +279,31 @@ export const getManageCertifications = (params: any) =>
     method: 'get',
     params
   })
+
+export const checkLearn = (params: any) =>
+  request({
+    url: '/domain/learn',
+    method: 'get',
+    params
+  })
+
+export const learn = (data: any) =>
+  request({
+    url: '/domain/learn',
+    method: 'post',
+    data
+  })
+
+export const unlearn = (params: any) =>
+  request({
+    url: '/domain/learn',
+    method: 'delete',
+    params
+  })
+
+export const getTargetDomains = (params: any) =>
+  request({
+    url: '/domain/targets',
+    method: 'get',
+    params
+  })

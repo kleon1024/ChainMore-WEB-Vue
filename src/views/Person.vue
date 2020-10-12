@@ -32,7 +32,7 @@
         <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">领域管理</v-subheader>
         <v-list-item
           v-for="item in manageDomains.slice(0, topNDomain)"
-          :key="item.text"
+          :key="'manage' + item.text"
           :to="{ path: item.to }"
           :value="item.text"
           :class="activeClass(item.to)"
@@ -60,6 +60,41 @@
             <v-list-item-content>
               <v-list-item-title class="text--primary">
                 {{ expanded ? '收起' : `展示其他${manageDomains.length - topNDomain}条` }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
+        <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">正在学习</v-subheader>
+        <v-list-item
+          v-for="item in targetDomains.slice(0, topNTargetDomain)"
+          :key="'target' + item.text"
+          :to="{ path: item.to }"
+          :value="item.text"
+          :class="activeClass(item.to)"
+        >
+          <v-row class="mx-3">
+            <v-list-item-icon>
+              <v-icon :color="activeColor(item.to)">{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
+        <v-list-item
+          v-if="targetDomains.length > topNTargetDomain || targetExpanded"
+          @click="expandAllTargetDomains"
+        >
+          <v-row class="mx-3">
+            <v-list-item-icon>
+              <v-icon>{{ targetExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'}} </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ targetExpanded ? '收起' : `展示其他${targetDomains.length - topNTargetDomain}条` }}
               </v-list-item-title>
             </v-list-item-content>
           </v-row>
@@ -183,6 +218,15 @@ export default Vue.extend({
         this.expanded = false
       }
     },
+    expandAllTargetDomains() {
+      if (!this.targetExpanded) {
+        this.topNTargetDomain = this.targetDomains.length
+        this.targetExpanded = true
+      } else {
+        this.topNTargetDomain = 1
+        this.targetExpanded = false
+      }
+    },
     loadCertifiedDomains() {
       getCertifiedDomains({}).then((res) => {
         for (let i = 0; i < res.items.length; i++) {
@@ -191,6 +235,18 @@ export default Vue.extend({
             icon: 'mdi-shield-star-outline',
             text: domain.title,
             to: '/person/manage/domain/' + domain.id
+          })
+        }
+      })
+    },
+    loadTargetDomains() {
+      getCertifiedDomains({}).then((res) => {
+        for (let i = 0; i < res.items.length; i++) {
+          const domain = res.items[i]
+          this.targetDomains.push({
+            icon: 'mdi-shield-star-outline',
+            text: domain.title,
+            to: '/person/learn/domain/' + domain.id
           })
         }
       })
@@ -233,8 +289,11 @@ export default Vue.extend({
         }
       ],
       manageDomains: [],
+      targetDomains: [],
       expanded: false,
-      topNDomain: 5
+      targetExpanded: false,
+      topNDomain: 3,
+      topNTargetDomain: 3
     }
   },
   computed: {
@@ -251,6 +310,7 @@ export default Vue.extend({
   },
   mounted() {
     this.loadCertifiedDomains()
+    this.loadTargetDomains()
   }
 })
 </script>

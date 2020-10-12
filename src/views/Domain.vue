@@ -20,12 +20,6 @@
           >
             {{ domain.title }}
           </v-stepper-step>
-          <v-stepper-content
-            :key="`${index}-content`"
-            :step="index"
-          >
-            {{ domain.description}}
-          </v-stepper-content>
         </template>
       </v-stepper>
       <v-container>
@@ -34,7 +28,7 @@
           block
           outlined
           color="primary"
-          :to="{path: '/login', query: { nextUrl: $route.path}}"
+          @click="onClickStartToStudy"
         > 开始学习 </v-btn>
       </v-container>
       <v-container
@@ -239,7 +233,8 @@ import {
   markDomain,
   unmarkDomain,
   getDependedDomains,
-  checkCertify
+  checkCertify,
+  learn
 } from '@/api/domains'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
@@ -380,6 +375,21 @@ export default Vue.extend({
           }
         })
       }
+    },
+    onClickStartToStudy() {
+      learn({ domain: this.domain.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.$router.push({
+            path: '/person/learn/domain/' + this.domain.id
+          })
+        } else {
+          this.$toasted.show('添加失败，请稍后再试', {
+            theme: 'outline',
+            position: 'top-center',
+            duration: 500
+          })
+        }
+      })
     },
     width() {
       const width = window.innerWidth
