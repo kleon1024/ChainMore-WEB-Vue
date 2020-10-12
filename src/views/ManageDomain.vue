@@ -502,37 +502,7 @@ export default Vue.extend({
       searchInput: '',
       groupValue: true,
       problemValue: true,
-      groups: [
-        {
-          title: '基础测试',
-          problems: [
-            {
-              type: 'multiple_choice_problem',
-              digest: 'text',
-              mcp: {
-                id: 1,
-                text:
-                  '小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学小明去上学',
-                choices: [
-                  { id: 1, text: '好棒啊' },
-                  { id: 2, text: '你才棒呢' }
-                ],
-                answers: [1]
-              }
-            },
-            {
-              type: 'multiple_choice_problem',
-              digest: 'acbc',
-              mcp: {
-                id: 2,
-                text: '这个不会是空',
-                choices: [{ id: 3, text: '不错啊' }],
-                answers: []
-              }
-            }
-          ]
-        }
-      ]
+      groups: []
     }
   },
   methods: {

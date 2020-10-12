@@ -51,10 +51,7 @@ export default Vue.extend({
   name: 'PersonalResource',
   components: {},
   data: () => ({
-    resources: [
-      { title: '1', url: 'https://bbb.com' },
-      { title: '2' }
-    ],
+    resources: [],
     searchInput: ''
   }),
   methods: {
