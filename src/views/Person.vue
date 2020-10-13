@@ -105,12 +105,11 @@
     <v-app-bar
       app
       clipped-left
-      dense
       elevation="0"
       color="white"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="mr-12 align-center">
+      <v-toolbar-title class="mr-3 align-center d-none d-sm-block">
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
       <v-responsive max-width="365">
@@ -118,7 +117,6 @@
           dense
           flat
           hide-details
-          rounded
           solo-inverted
         >
         </v-text-field>

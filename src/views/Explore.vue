@@ -5,7 +5,7 @@
       elevation="0"
       color="white"
     >
-      <v-toolbar-title class="mr-12 align-center">
+      <v-toolbar-title class="mr-3 align-center">
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
       <v-responsive max-width="365">
@@ -13,7 +13,6 @@
           dense
           flat
           hide-details
-          rounded
           solo-inverted
         >
         </v-text-field>
