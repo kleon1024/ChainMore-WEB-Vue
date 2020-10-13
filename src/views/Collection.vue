@@ -1,85 +1,67 @@
 <template>
   <v-container>
-    <v-row
-      align='center'
-      justify='center'
+    <v-card
+      v-if="collection"
     >
-      <v-card
-        v-if="collection"
-        :width="width"
-      >
-        <v-card-text>
-          <div> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
-          <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
-          <div v-marked class='text--primary my-4'
-          > {{ description }} </div>
-          <div> {{ readableTime(collection.modify_time) }} 修改 </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-row>
-            <v-col>
-              <v-btn
-                text
-                @click="onClickcollect"
-              >
-                <v-icon
-                  left
-                  :color='loginColor()'
-                > {{ loginIcon() }} </v-icon>
-                {{ loginIndicator() }}
-              </v-btn>
-            </v-col>
-            <v-col>
-              <v-btn
-                text
-                v-if="isModifiable"
-                :to="{ path: '/op/modify/collection', query: { id: collection.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-pencil-outline </v-icon>
-                修改集合
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </v-card>
-    </v-row>
-    <v-row
-      align='center'
-      justify='center'
+      <v-card-text>
+        <div> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
+        <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
+        <div v-marked class='text--primary my-4'
+        > {{ description }} </div>
+        <div> {{ readableTime(collection.modify_time) }} 修改 </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-row>
+          <v-col>
+            <v-btn
+              text
+              @click="onClickcollect"
+            >
+              <v-icon
+                left
+                :color='loginColor()'
+              > {{ loginIcon() }} </v-icon>
+              {{ loginIndicator() }}
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              text
+              v-if="isModifiable"
+              :to="{ path: '/op/modify/collection', query: { id: collection.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-pencil-outline </v-icon>
+              修改集合
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+    <v-card
+      style='margin-top:0px'
+      color="transparent"
+      elevation="0"
     >
-      <v-card
-        :width='width'
-        style='margin-top:0px'
-        color="transparent"
-        elevation="0"
-      >
-        <v-card-text> 资源列表 </v-card-text>
-      </v-card>
-    </v-row>
-    <v-row
+      <v-card-text> 资源列表 </v-card-text>
+    </v-card>
+    <v-card
       v-for='(resource, index) in resources'
       :key='index'
-      align='center'
-      justify='center'
+      class='mb-2'
+      :to="{ path: '/explore/resource/' + resource.id.toString() }"
     >
-      <v-card
-        :width='width'
-        style='margin-bottom:10px'
-        :to="{ path: '/explore/resource/' + resource.id.toString() }"
-      >
-        <v-card-text>
-          <div class='title text--primary'>{{ resource.title }}</div>
-          <div class='text--primary'><a
-              target='_blank'
-              :href="resource.url"
-            >{{ resource.url }}</a></div>
-          <div> {{ readableTime(resource.modify_time) }} 修改 </div>
-        </v-card-text>
-      </v-card>
-    </v-row>
+      <v-card-text>
+        <div class='title text--primary'>{{ resource.title }}</div>
+        <div class='text--primary'><a
+            target='_blank'
+            :href="resource.url"
+          >{{ resource.url }}</a></div>
+        <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -197,15 +179,6 @@ export default Vue.extend({
         UserModule.isLoggedIn &&
         UserModule.UserId === this.collection.author_id
       )
-    },
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })

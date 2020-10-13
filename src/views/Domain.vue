@@ -64,163 +64,145 @@
         </v-card-actions>
       </v-card> -->
     </v-navigation-drawer>
-    <v-row
-      align='center'
-      justify='center'
+    <v-card
+      v-if="domain"
     >
-      <v-card
-        v-if="domain"
-        :width="width()"
-      >
-        <v-card-text>
-          <div> 领域 </div>
-          <div class='title font-weight-bold text--primary'>{{ domain.title }}</div>
-          <div
-            v-if="domain.intro != ''"
-            class='text--primary'
-            style='white-space: pre-wrap;'
-          >{{ domain.intro }}</div>
-          <div> {{ readableTime(domain.create_time) }} 创建 </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-row>
-            <v-col>
-              <v-btn
-                text
-                @click="onClickMark"
-              >
-                <v-icon
-                  left
-                  :color='loginColor()'
-                > {{ loginIcon() }} </v-icon>
-                {{ loginIndicator() }}
-              </v-btn>
-            </v-col>
-            <v-col>
-              <v-btn
-                text
-                @click="drawer = !drawer"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-transit-connection-variant </v-icon>
-                学习路线
-              </v-btn>
-            </v-col>
-            <v-col v-if="isModifiable">
-              <v-btn
-                text
-                :to="{ path: '/op/modify/domain', query: { id: domain.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-pencil-outline </v-icon>
-                修改领域
-              </v-btn>
-            </v-col>
-            <v-col v-if="marked">
-              <v-btn
-                text
-                :to="{ path: '/op/create/collection', query: { domain: domain.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-playlist-plus </v-icon>
-                创建合集
-              </v-btn>
-            </v-col>
-            <v-col>
-              <v-btn
-                text
-                :to="{ path: '/certify', query: { domain: domain.id }}"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-certificate-outline </v-icon>
-                获得认证
-              </v-btn>
-            </v-col>
-            <v-col v-if="isModifiable">
-              <v-btn
-                text
-                :to="{ path: '/person/manage/domain/' + domain.id }"
-              >
-                <v-icon
-                  left
-                  color="teal"
-                > mdi-palette-outline </v-icon>
-                领域管理
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </v-card>
-    </v-row>
-    <v-row
-      align='center'
-      justify='center'
-    >
-      <v-card
-        :width='width()'
-        style='margin-top:10px'
-        color="transparent"
-        elevation="0"
-      >
-        <v-menu v-model="showMenu">
-          <template v-slot:activator="{ on, attrs }">
+      <v-card-text>
+        <div> 领域 </div>
+        <div class='title font-weight-bold text--primary'>{{ domain.title }}</div>
+        <div
+          v-if="domain.intro != ''"
+          class='text--primary'
+          style='white-space: pre-wrap;'
+        >{{ domain.intro }}</div>
+        <div> {{ readableTime(domain.create_time) }} 创建 </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-row>
+          <v-col>
             <v-btn
               text
-              v-bind="attrs"
-              v-on="on"
-              left
+              @click="onClickMark"
             >
-              <v-icon> mdi-chevron-down </v-icon>
-              {{ orderDesc }}
+              <v-icon
+                left
+                :color='loginColor()'
+              > {{ loginIcon() }} </v-icon>
+              {{ loginIndicator() }}
             </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(opt, index) in orderOptions"
-              :key="index"
-              @click="refresh(opt.order, opt.desc)"
+          </v-col>
+          <v-col>
+            <v-btn
+              text
+              @click="drawer = !drawer"
             >
-              <v-list-item-title>{{ opt.desc }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-card>
-    </v-row>
-    <v-row
-      align='center'
-      justify='center'
-      v-for='(collection, index) in collections'
-      :key='index'
+              <v-icon
+                left
+                color="teal"
+              > mdi-transit-connection-variant </v-icon>
+              学习路线
+            </v-btn>
+          </v-col>
+          <v-col v-if="isModifiable">
+            <v-btn
+              text
+              :to="{ path: '/op/modify/domain', query: { id: domain.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-pencil-outline </v-icon>
+              修改领域
+            </v-btn>
+          </v-col>
+          <v-col v-if="marked">
+            <v-btn
+              text
+              :to="{ path: '/op/create/collection', query: { domain: domain.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-playlist-plus </v-icon>
+              创建合集
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              text
+              :to="{ path: '/certify', query: { domain: domain.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-certificate-outline </v-icon>
+              获得认证
+            </v-btn>
+          </v-col>
+          <v-col v-if="isModifiable">
+            <v-btn
+              text
+              :to="{ path: '/person/manage/domain/' + domain.id }"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-palette-outline </v-icon>
+              领域管理
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+    <v-card
+      style='margin-top:10px'
+      color="transparent"
+      elevation="0"
     >
-      <v-card
-        :width='width()'
-        style='margin-top:10px'
-        :to="{ path: '/explore/collection/' + collection.id.toString() }"
-      >
-        <v-card-text>
-          <div class='text--primary'> {{ collection.domain_title }}</div>
-          <div class='title text--primary'>{{ collection.title }}</div>
-          <div class='text--primary'>{{ collection.description }}</div>
-          <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
-        </v-card-text>
-        <v-card-actions>
+      <v-menu v-model="showMenu">
+        <template v-slot:activator="{ on, attrs }">
           <v-btn
             text
-            x-small
-            color='teal'
-            :to="{ path: '/explore/collection/' + collection.id.toString() }"
-          >LEARN MORE</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+            v-bind="attrs"
+            v-on="on"
+            left
+          >
+            <v-icon> mdi-chevron-down </v-icon>
+            {{ orderDesc }}
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(opt, index) in orderOptions"
+            :key="index"
+            @click="refresh(opt.order, opt.desc)"
+          >
+            <v-list-item-title>{{ opt.desc }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-card>
+    <v-card
+      v-for='(collection, index) in collections'
+      :key='index'
+      class='mb-2'
+      :to="{ path: '/explore/collection/' + collection.id.toString() }"
+    >
+      <v-card-text>
+        <div class='text--primary'> {{ collection.domain_title }}</div>
+        <div class='title text--primary'>{{ collection.title }}</div>
+        <div class='text--primary'>{{ collection.description }}</div>
+        <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          text
+          x-small
+          color='teal'
+          :to="{ path: '/explore/collection/' + collection.id.toString() }"
+        >LEARN MORE</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
@@ -390,15 +372,6 @@ export default Vue.extend({
           })
         }
       })
-    },
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   },
   computed: {

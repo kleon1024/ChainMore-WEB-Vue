@@ -1,101 +1,87 @@
 <template>
   <v-container>
-    <v-row>
-      <v-container>
-        <v-card
-          v-if="resource"
+    <v-card
+      v-if="resource"
+    >
+      <v-card-text>
+        <div> 资源 </div>
+        <div class='title text--primary'>{{ resource.title }}</div>
+        <a
+          :href="resource.url"
+          target="_blank"
         >
-          <v-card-text>
-            <div> 资源 </div>
-            <div class='title text--primary'>{{ resource.title }}</div>
-            <a
-              :href="resource.url"
-              target="_blank"
+          <div>{{ resource.url }}</div>
+        </a>
+        <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-row>
+          <v-col>
+            <v-btn
+              text
+              @click="onClickStar"
             >
-              <div>{{ resource.url }}</div>
-            </a>
-            <div> {{ readableTime(resource.modify_time) }} 修改 </div>
-          </v-card-text>
-          <v-card-actions>
-            <v-row>
-              <v-col>
-                <v-btn
-                  text
-                  @click="onClickStar"
-                >
-                  <v-icon
-                    left
-                    :color='loginColor()'
-                  > {{ loginIcon() }} </v-icon>
-                  {{ loginIndicator() }}
-                </v-btn>
-              </v-col>
-              <v-col v-if="isModifiable">
-                <v-btn
-                  text
-                  :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
-                >
-                  <v-icon
-                    left
-                    color="teal"
-                  > mdi-pencil-outline </v-icon>
-                  修改资源
-                </v-btn>
-              </v-col>
-              <v-col v-if="stared">
-                <v-btn
-                  text
-                  :to="{ path: '/op/create/collection', query: { resource: resource.id }}"
-                >
-                  <v-icon
-                    left
-                    color="teal"
-                  > mdi-playlist-plus </v-icon>
-                  合集引用
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-container>
-    </v-row>
-    <v-row>
-      <v-card
-        :width='width'
-        style='margin-top:0px'
-        color="transparent"
-        elevation="0"
-      >
-        <v-card-text> 相关集合 </v-card-text>
-      </v-card>
-    </v-row>
-    <v-row
-      align='center'
-      justify='center'
+              <v-icon
+                left
+                :color='loginColor()'
+              > {{ loginIcon() }} </v-icon>
+              {{ loginIndicator() }}
+            </v-btn>
+          </v-col>
+          <v-col v-if="isModifiable">
+            <v-btn
+              text
+              :to="{ path: '/op/modify/resource', query: { id: resource.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-pencil-outline </v-icon>
+              修改资源
+            </v-btn>
+          </v-col>
+          <v-col v-if="stared">
+            <v-btn
+              text
+              :to="{ path: '/op/create/collection', query: { resource: resource.id }}"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-playlist-plus </v-icon>
+              合集引用
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+    <v-card
+      color="transparent"
+      elevation="0"
+    >
+      <v-card-text> 相关集合 </v-card-text>
+    </v-card>
+    <v-card
       v-for='(collection, index) in collections'
       :key='`${index}-collection`'
+      class='mb-2'
+      :to="{ path: '/explore/collection/' + collection.id.toString() }"
     >
-      <v-card
-        :width='width'
-        style='margin-bottom:20px'
-        :to="{ path: '/explore/collection/' + collection.id.toString() }"
-      >
-        <v-card-text>
-          <div class='text--primary'> {{ collection.domain_title }}</div>
-          <div class='title text--primary'>{{ collection.title }}</div>
-          <div class='text--primary'>{{ collection.description }}</div>
-          <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            text
-            x-small
-            color='teal'
-            :to="{ path: '/explore/collection/' + collection.id.toString() }"
-          >LEARN MORE</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-row>
+      <v-card-text>
+        <div class='text--primary'> {{ collection.domain_title }}</div>
+        <div class='title text--primary'>{{ collection.title }}</div>
+        <div class='text--primary'>{{ collection.description }}</div>
+        <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          text
+          x-small
+          color='teal'
+          :to="{ path: '/explore/collection/' + collection.id.toString() }"
+        >LEARN MORE</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
@@ -212,15 +198,6 @@ export default Vue.extend({
         UserModule.isLoggedIn &&
         UserModule.UserId === this.resource.author_id
       )
-    },
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })
