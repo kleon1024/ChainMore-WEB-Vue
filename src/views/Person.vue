@@ -176,7 +176,7 @@
 <script>
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
-import { getCertifiedDomains } from '@/api/domains'
+import { getCertifiedDomains, getTargetDomains } from '@/api/domains'
 
 export default Vue.extend({
   name: 'Person',
@@ -240,9 +240,10 @@ export default Vue.extend({
       })
     },
     loadTargetDomains() {
-      getCertifiedDomains({}).then((res) => {
+      getTargetDomains({}).then((res) => {
         for (let i = 0; i < res.items.length; i++) {
           const domain = res.items[i]
+          console.log(domain)
           this.targetDomains.push({
             icon: 'mdi-shield-star-outline',
             text: domain.title,
