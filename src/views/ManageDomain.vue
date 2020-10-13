@@ -86,6 +86,18 @@
                   @blur="checkModifyGroup(index)"
                 ></v-text-field>
               </v-list-item-title>
+              <v-list-item-action
+                v-if="modifyGrouping && modifyGroupIndex == index"
+              >
+                <v-btn
+                  text
+                  depressed
+                  color="primary"
+                  @click="clearAllStatus"
+                >
+                  取消
+                </v-btn>
+              </v-list-item-action>
               <v-list-item-action-text
                 v-if="!(modifyGrouping && modifyGroupIndex == index)"
                 class="caption"
@@ -127,6 +139,18 @@
                   @blur="checkModifyGroupIntro(index)"
                 ></v-text-field>
               </v-list-item-title>
+              <v-list-item-action
+                v-if="modifyIntro && modifyGroupIndex == index"
+              >
+                <v-btn
+                  text
+                  depressed
+                  color="primary"
+                  @click="clearAllStatus"
+                >
+                  取消
+                </v-btn>
+              </v-list-item-action>
               <v-list-item-action v-if="!(modifyIntro  && modifyGroupIndex == index)">
                 <TooltipIconButton
                   str="mdi-pen"
@@ -246,6 +270,16 @@
                       @blur="checkModifyMCP(index, i)"
                     ></v-textarea>
                   </v-list-item-title>
+                  <v-list-item-action>
+                    <v-btn
+                      text
+                      depressed
+                      color="primary"
+                      @click="clearAllStatus"
+                    >
+                      取消
+                    </v-btn>
+                  </v-list-item-action>
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-title>
@@ -305,6 +339,16 @@
                       @blur="checkAddMCPChoice(index, i)"
                     ></v-textarea>
                   </v-list-item-title>
+                  <v-list-item-action>
+                    <v-btn
+                      text
+                      depressed
+                      color="primary"
+                      @click="clearAllStatus"
+                    >
+                      取消
+                    </v-btn>
+                  </v-list-item-action>
                 </v-list-item>
                 <v-list-item
                   v-for="(choice, ci) in p.mcp.choices"
@@ -360,6 +404,18 @@
                       @blur="checkModifyChoice(index, i, ci)"
                     ></v-textarea>
                   </v-list-item-title>
+                  <v-list-item-action
+                    v-if="ifModifyMCPChoice(index, i, ci)"
+                  >
+                    <v-btn
+                      text
+                      depressed
+                      color="primary"
+                      @click="clearAllStatus"
+                    >
+                      取消
+                    </v-btn>
+                  </v-list-item-action>
                 </v-list-item>
               </div>
             </v-list-group>
@@ -377,6 +433,16 @@
                   @blur="checkAddMCP(index)"
                 ></v-textarea>
               </v-list-item-title>
+              <v-list-item-action>
+                <v-btn
+                  text
+                  depressed
+                  color="primary"
+                  @click="clearAllStatus"
+                >
+                  取消
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
           </v-list-group>
           <v-list-item v-if="!addGrouping">

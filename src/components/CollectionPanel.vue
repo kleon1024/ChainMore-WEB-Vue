@@ -33,9 +33,9 @@
         <router-link
           :to="{ path: '/explore/collection/' + collection.id}"
         >
-            <div class='subtitle-1 text--primary'> {{ collection.domain_title }}</div>
+            <div class='caption text--primary'> {{ collection.domain_title }}</div>
             <div class='subtitle-2 text--primary'> {{ collection.title }} </div>
-            <div class='subtitle-2 font-weight-light'> 收藏于 {{ readableTime(collection.collect_time) }} </div>
+            <div class='caption font-weight-light'> 收藏于 {{ readableTime(collection.collect_time) }} </div>
         </router-link>
       </v-list-item>
       </template>

@@ -27,12 +27,14 @@
       <template v-for="(resource, index) in resources">
       <v-list-item :key="index">
             <router-link :to="{ path: '/explore/resource/' + resource.id}">
-            <div class='subtitle-1 text--primary'> {{ resource.title }} </div>
+            <v-card elevation="0">
+            <div class='subtitle-2 text--primary'> {{ resource.title }} </div>
             <div class='subtitle-2 text--primary'><a
                 target='_blank'
                 :href="resource.url"
               >{{ resource.url }}</a></div>
-            <div class='subtitle-2 text--primary font-weight-light'>收藏于 {{ readableTime(resource.star_time) }} </div>
+            <div class='caption text--primary font-weight-light'>收藏于 {{ readableTime(resource.star_time) }} </div>
+            </v-card>
             </router-link>
       </v-list-item>
       </template>

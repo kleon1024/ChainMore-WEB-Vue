@@ -27,8 +27,8 @@
       <template v-for="(domain, index) in domains">
       <v-list-item :key="index">
         <router-link :to="{ path: '/explore/domain/' + domain.id}" >
-            <div class='subtitle-1 text--primary'> {{ domain.title }} </div>
-            <div class='subtitle-2 font-weight-light'> 收藏于 {{ readableTime(domain.mark_time) }} </div>
+            <div class='subtitle-2 text--primary'> {{ domain.title }} </div>
+            <div class='caption font-weight-light'> 收藏于 {{ readableTime(domain.mark_time) }} </div>
         </router-link>
       </v-list-item>
       </template>

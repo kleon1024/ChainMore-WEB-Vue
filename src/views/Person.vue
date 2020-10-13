@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="person">
     <v-navigation-drawer
       v-model="drawer"
       app
