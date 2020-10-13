@@ -11,15 +11,51 @@
           :complete="domain.certified"
           :step="index"
         >
-          <v-btn text @click="step = index">
-            {{ domain.title }}
-          </v-btn>
+          <v-row>
+            <v-btn text @click="onClickDomain(index)">
+              {{ domain.title }}
+            </v-btn>
+            <TooltipIconButton
+              text
+              outlined
+              v-if="domain.certified"
+              str="已认证"
+              tip="已掌握并获得认证"
+            />
+            <TooltipIconButton
+              text
+              outlined
+              color="grey"
+              v-if="!domain.certified && domain.skip"
+              str="跳过"
+              tip="根据认证推测已掌握"
+            />
+            <TooltipIconButton
+              text
+              outlined
+              color="primary"
+              v-if="!domain.skip && domain.recommend"
+              str="推荐"
+              tip="根据认证推荐学习"
+            />
+          </v-row>
         </v-stepper-step>
         <v-stepper-content
           :key="`${index}-content`"
           :step="index"
         >
-          {{ domain.description}}
+          <v-card>
+            <v-card-actions>
+              <v-btn text outlined>
+                <a target="_blank" :href="'/explore/domain/' + domain.id">
+                  查看领域
+                </a>
+              </v-btn>
+            </v-card-actions>
+            <v-card-text>
+              {{ domain.description}}
+            </v-card-text>
+          </v-card>
         </v-stepper-content>
       </template>
     </v-stepper>
@@ -38,6 +74,7 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'ManageDomain',
   components: {
+    TooltipIconButton
   },
   data() {
     return {
@@ -64,6 +101,11 @@ export default Vue.extend({
           this.dependDomains.push(...res.items)
         }
       )
+    },
+    onClickDomain(index) {
+      this.step = index
+      if (this.dependDomains[index].collections === undefined) {
+      }
     }
   },
   mounted() {

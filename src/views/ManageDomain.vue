@@ -65,8 +65,11 @@
               >
                 <span> {{ group.title }} </span>
                 <TooltipIconButton
-                  icon="mdi-pen"
+                  str="mdi-pen"
                   tip="修改"
+                  text
+                  icon
+                  x-small
                   @click="onClickModifyGroup(index)"
                 />
               </v-list-item-title>
@@ -97,8 +100,11 @@
               </v-list-item-action-text>
               <v-list-item-action v-if="!(modifyGrouping && modifyGroupIndex == index)">
                 <TooltipIconButton
-                  icon="mdi-trash-can-outline"
+                  str="mdi-trash-can-outline"
                   tip="删除"
+                  text
+                  icon
+                  x-small
                   @click="onDeleteGroup(index)"
                 />
               </v-list-item-action>
@@ -123,8 +129,11 @@
               </v-list-item-title>
               <v-list-item-action v-if="!(modifyIntro  && modifyGroupIndex == index)">
                 <TooltipIconButton
-                  icon="mdi-pen"
+                  str="mdi-pen"
                   tip="修改"
+                  text
+                  icon
+                  x-small
                   @click="onClickModifyIntro(index)"
                 />
               </v-list-item-action>
@@ -184,15 +193,21 @@
                 </v-list-item-title>
                 <v-list-item-action>
                   <TooltipIconButton
-                    icon="mdi-file-move-outline"
+                    str="mdi-file-move-outline"
                     tip="移动至"
+                    text
+                    icon
+                    x-small
                     @click="onClickMoveToButton(index, i)"
                   />
                 </v-list-item-action>
                 <v-list-item-action>
                   <TooltipIconButton
-                    icon="mdi-trash-can-outline"
+                    str="mdi-trash-can-outline"
                     tip="删除"
+                    text
+                    icon
+                    x-small
                     @click="onClickDeleteCertification(index, i)"
                   />
                 </v-list-item-action>
@@ -206,8 +221,11 @@
                   </v-list-item-action-text>
                   <v-list-item-action>
                     <TooltipIconButton
-                      icon="mdi-pen"
+                      str="mdi-pen"
                       tip="修改"
+                      text
+                      icon
+                      x-small
                       @click="onClickModifyMCPText(index, i)"
                     />
                   </v-list-item-action>
@@ -263,8 +281,11 @@
                   </v-list-item-title>
                   <v-list-item-action>
                     <TooltipIconButton
-                      icon="mdi-plus-circle-outline"
+                      str="mdi-plus-circle-outline"
                       tip="添加选项"
+                      text
+                      icon
+                      x-small
                       @click="onClickAddMCPChoice(index, i)"
                     />
                   </v-list-item-action>
@@ -291,8 +312,11 @@
                 >
                   <v-list-item-icon v-if="!ifModifyMCPChoice(index, i, ci)">
                     <TooltipIconButton
-                      :icon="p.mcp.answers.includes(choice.id) ? 'mdi-check' : 'mdi-close'"
+                      :str="p.mcp.answers.includes(choice.id) ? 'mdi-check' : 'mdi-close'"
                       :tip="p.mcp.answers.includes(choice.id) ? '正确选项' : '错误选项'"
+                      text
+                      icon
+                      x-small
                       @click="onClickSetMCPChoice(index, i, ci)"
                     />
                   </v-list-item-icon>
@@ -302,15 +326,21 @@
                   > {{ choice.text }} </v-list-item-title>
                   <v-list-item-action v-if="!ifModifyMCPChoice(index, i, ci)">
                     <TooltipIconButton
-                      icon="mdi-trash-can-outline"
+                      str="mdi-trash-can-outline"
                       tip="删除"
+                      text
+                      icon
+                      x-small
                       @click="onDeleteMCPChoice(index, i, ci)"
                     />
                   </v-list-item-action>
                   <v-list-item-action v-if="!ifModifyMCPChoice(index, i, ci)">
                     <TooltipIconButton
-                      icon="mdi-pen"
+                      str="mdi-pen"
                       tip="修改"
+                      text
+                      icon
+                      x-small
                       @click="onClickModifyChoice(index, i, ci)"
                     />
                   </v-list-item-action>

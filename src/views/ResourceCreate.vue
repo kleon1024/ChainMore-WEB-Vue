@@ -1,12 +1,7 @@
 <template>
-  <v-container
-    fluid
-    fill-height
-  >
-    <v-row
-      align='center'
-      justify='center'
-    >
+  <v-app id="resource-create">
+  <v-main>
+  <v-container>
       <v-card :width="width">
         <v-card-text>
           <p class='display-1 text--primary'> {{ title }}资源 </p>
@@ -86,8 +81,9 @@
           </v-form>
         </v-card-text>
       </v-card>
-    </v-row>
   </v-container>
+  </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -376,15 +372,6 @@ export default Vue.extend({
     },
     create() {
       return this.$route.params.operation === 'create'
-    },
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.9
-      }
     }
   }
 })
