@@ -6,9 +6,10 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import Toasted from 'vue-toasted'
 import VuetifyConfirm from 'vuetify-confirm'
+import Marked from './directives/marked.js'
 
+Vue.use(Marked)
 Vue.use(VuetifyConfirm, { vuetify })
-
 Vue.use(Toasted)
 
 Vue.config.productionTip = false

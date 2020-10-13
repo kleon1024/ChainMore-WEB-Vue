@@ -11,11 +11,8 @@
         <v-card-text>
           <div> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
           <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
-          <div
-            v-if="collection.description!==''"
-            class='text--primary'
-            style='white-space: pre-wrap;'
-          >{{ collection.description }}</div>
+          <div v-marked class='text--primary my-4'
+          > {{ description }} </div>
           <div> {{ readableTime(collection.modify_time) }} 修改 </div>
         </v-card-text>
         <v-card-actions>
@@ -103,6 +100,7 @@ export default Vue.extend({
   data() {
     return {
       resources: [],
+      description: '',
       collection: null,
       collected: false,
       collecting: false
@@ -188,6 +186,7 @@ export default Vue.extend({
         id: this.$route.params.id
       }).then((res) => {
         this.collection = res.items[0]
+        this.description = this.collection.description
       })
     }
   },
@@ -211,3 +210,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style>
+.v-application code {
+    background-color: #f8f8f8;
+}
+</style>

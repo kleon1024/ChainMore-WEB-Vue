@@ -31,7 +31,7 @@
               </v-btn>
             </v-subheader>
             <v-card-text class="py-0">
-              <div class="subtitle-2 text--primary">
+              <div v-marked class="subtitle-2 text--primary">
                 {{ certifications[curPage - 1].mcp.text }}
               </div>
             </v-card-text>
@@ -237,3 +237,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style>
+.v-application code {
+    background-color: #f8f8f8;
+}
+</style>

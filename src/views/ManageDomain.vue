@@ -241,7 +241,7 @@
                     modifyGroupIndex == index &&
                     modifyProblemIndex == i)">
                   <v-list-item-action-text class="subtitle-2">
-                    {{ p.mcp.text }}
+                    <div v-marked> {{ p.mcp.text }} </div>
                   </v-list-item-action-text>
                   <v-list-item-action>
                     <TooltipIconButton
@@ -257,8 +257,20 @@
                 <v-list-item v-if="modifyMCPing &&
                     modifyGroupIndex == index &&
                     modifyProblemIndex == i">
+                  <v-list-item-action>
+                    <v-btn
+                      text
+                      icon
+                      depressed
+                      color="primary"
+                      @click="preview = !preview"
+                    >
+                      <v-icon> {{ preview ? 'mdi-pen' : 'mdi-text' }} </v-icon>
+                    </v-btn>
+                  </v-list-item-action>
                   <v-list-item-title class="subtitle-2">
                     <v-textarea
+                      v-if="!preview"
                       autofocus
                       v-model="form.mcpText"
                       :counter="mcpCount"
@@ -267,9 +279,21 @@
                       rows="1"
                       required
                       placeholder="题干"
-                      @blur="checkModifyMCP(index, i)"
                     ></v-textarea>
+                    <div v-if="preview" v-marked class="text--primary">
+                      {{ form.mcpText }}
+                    </div>
                   </v-list-item-title>
+                  <v-list-item-action>
+                    <v-btn
+                      text
+                      depressed
+                      color="primary"
+                      @click="checkModifyMCP(index, i)"
+                    >
+                      确认
+                    </v-btn>
+                  </v-list-item-action>
                   <v-list-item-action>
                     <v-btn
                       text
@@ -521,6 +545,7 @@ export default Vue.extend({
   data() {
     return {
       valid: true,
+      preview: false,
       showMoveToDialog: false,
       moveToDialogModel: null,
       moveToGroupIndex: 0,
@@ -806,6 +831,7 @@ export default Vue.extend({
     },
     checkModifyMCP(groupIndex, problemIndex) {
       if (this.$refs.form.validate()) {
+        console.log(this.form.mcpText)
         if (
           this.groups[groupIndex].problems[problemIndex].mcp.text ===
           this.form.mcpText
@@ -823,15 +849,16 @@ export default Vue.extend({
               problemIndex
             ].digest = res.items[0].text.slice(0, 64)
             this.form.mcpText = ''
+            this.clearAllStatus()
           } else {
             this.$toasted.show('更新失败，请稍后重试', {
               theme: 'outline',
               position: 'top-center',
               duration: 500
             })
+            this.clearAllStatus()
           }
         })
-        this.clearAllStatus()
       }
     },
     onClickAddMCPChoice(groupIndex, problemIndex) {
@@ -998,3 +1025,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style>
+.v-application code {
+    background-color: #f8f8f8;
+}
+</style>

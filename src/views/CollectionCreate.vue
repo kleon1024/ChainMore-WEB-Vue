@@ -2,7 +2,7 @@
   <v-app id="create-collection">
   <v-main>
   <v-container>
-      <v-card :width="width">
+      <v-card>
         <v-card-text>
           <p class='display-1 text--primary'> {{ title }}合集 </p>
           <v-form
@@ -18,7 +18,11 @@
               dense
               required
             ></v-text-field>
+            <v-btn small v-if="!form.desciption" text icon @click="preview=!preview" class="mb-4">
+              <v-icon> {{ preview ? 'mdi-pen' : 'mdi-text' }} </v-icon>
+            </v-btn>
             <v-textarea
+              v-if="!preview"
               v-model="form.description"
               :counter="descCount"
               :rules="rules.description"
@@ -29,6 +33,9 @@
               rows="1"
               required
             ></v-textarea>
+            <div v-marked v-if="preview" class="text--primary mb-4">
+              {{ form.description }}
+            </div>
             <v-autocomplete
               v-model="form.domain"
               :items="markedDomains"
@@ -56,7 +63,6 @@
             >
               <template v-slot:selection="data">
                 <v-card
-                  :width="width"
                   :elevation="0"
                   dense
                   color="transparent"
@@ -107,6 +113,7 @@ export default Vue.extend({
   data() {
     return {
       valid: true,
+      preview: false,
       titleCount: 32,
       descCount: 4096,
       form: {
@@ -255,3 +262,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style>
+.v-application code {
+    background-color: #f8f8f8;
+}
+</style>
