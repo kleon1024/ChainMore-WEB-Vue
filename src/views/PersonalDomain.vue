@@ -18,7 +18,7 @@
     </v-card>
     <v-card
       class="my-1"
-      v-for="(domain, index) in domains"
+      v-for="(domain, index) in searchedDomains"
       :key="index"
       :to="{ path: '/explore/domain/' + domain.id}"
     >
@@ -38,7 +38,14 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'ResourcePanel',
   components: {},
+  props: {
+    query: {
+      type: String,
+      default: ''
+    }
+  },
   data: () => ({
+    searchedDomains: [],
     domains: [],
     searchInput: ''
   }),
@@ -51,7 +58,36 @@ export default Vue.extend({
     getMarkedDomains({ limit: 999 }).then((res) => {
       this.domains.splice(0, this.domains.length)
       this.domains.push(...res.items)
+      this.searchedDomains.push(...res.items)
     })
+  },
+  watch: {
+    query(val) {
+      const qs = val.split(' ')
+      this.searchedDomains.splice(0, this.searchedDomains.length)
+      if (val === '' || qs.length === 0) {
+        this.searchedDomains.push(...this.domains)
+        return
+      }
+      const d = {}
+      const temp = []
+      for (let i = 0; i < qs.length; i++) {
+        const q = qs[i]
+        for (let j = 0; j < this.domains.length; j++) {
+          const r = this.domains[j]
+          if (r.title.includes(q) || r.intro.includes(q)) {
+            if (r.id in d) {
+              d[r.id].count += 1
+            } else {
+              r.count = 1
+              d[r.id] = r
+              temp.push(r)
+            }
+          }
+        }
+      }
+      this.searchedDomains.push(...temp.sort((a, b) => b.count - a.count))
+    }
   }
 })
 </script>

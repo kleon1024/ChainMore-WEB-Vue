@@ -18,7 +18,7 @@
     </v-card>
     <v-card
       class="my-1"
-      v-for="(collection, index) in collections"
+      v-for="(collection, index) in searchedCollections"
       :key="index"
       :to="{ path:'/explore/collection/' + collection.id}"
     >
@@ -39,7 +39,14 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'PersonalCollection',
   components: {},
+  props: {
+    query: {
+      type: String,
+      default: ''
+    }
+  },
   data: () => ({
+    searchedCollections: [],
     collections: [],
     searchInput: ''
   }),
@@ -52,7 +59,36 @@ export default Vue.extend({
     getCollectedCollections({ limit: 999 }).then((res) => {
       this.collections.splice(0, this.collections.length)
       this.collections.push(...res.items)
+      this.searchedCollections.push(...res.items)
     })
+  },
+  watch: {
+    query(val) {
+      const qs = val.split(' ')
+      this.searchedCollections.splice(0, this.searchedCollections.length)
+      if (val === '' || qs.length === 0) {
+        this.searchedCollections.push(...this.collections)
+        return
+      }
+      const d = {}
+      const temp = []
+      for (let i = 0; i < qs.length; i++) {
+        const q = qs[i]
+        for (let j = 0; j < this.collections.length; j++) {
+          const r = this.collections[j]
+          if (r.title.includes(q) || r.description.includes(q)) {
+            if (r.id in d) {
+              d[r.id].count += 1
+            } else {
+              r.count = 1
+              d[r.id] = r
+              temp.push(r)
+            }
+          }
+        }
+      }
+      this.searchedCollections.push(...temp.sort((a, b) => b.count - a.count))
+    }
   }
 })
 </script>

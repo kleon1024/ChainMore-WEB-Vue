@@ -841,7 +841,6 @@ export default Vue.extend({
     },
     checkModifyMCP(groupIndex, problemIndex) {
       if (this.$refs.form.validate()) {
-        console.log(this.form.mcpText)
         if (
           this.groups[groupIndex].problems[problemIndex].mcp.text ===
           this.form.mcpText

@@ -114,6 +114,7 @@
       </v-toolbar-title>
       <v-responsive max-width="365">
         <v-text-field
+          v-model="query"
           dense
           flat
           hide-details
@@ -165,7 +166,7 @@
     </v-app-bar>
     <v-main>
       <keep-alive>
-        <router-view :key="$route.fullPath" />
+        <router-view :key="$route.fullPath" :query="query" />
       </keep-alive>
     </v-main>
   </v-app>
@@ -241,7 +242,6 @@ export default Vue.extend({
       getTargetDomains({}).then((res) => {
         for (let i = 0; i < res.items.length; i++) {
           const domain = res.items[i]
-          console.log(domain)
           this.targetDomains.push({
             icon: 'mdi-shield-star-outline',
             text: domain.title,
@@ -253,6 +253,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      query: '',
       collections: [],
       domain: null,
       drawer: null,

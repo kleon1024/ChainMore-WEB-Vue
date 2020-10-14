@@ -18,7 +18,7 @@
     </v-card>
     <v-card
       class="my-1"
-      v-for="(resource, index) in resources"
+      v-for="(resource, index) in searchedResources"
       :key="index"
       :to="{path: '/explore/resource/' + resource.id}"
     >
@@ -50,8 +50,15 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'PersonalResource',
   components: {},
+  props: {
+    query: {
+      type: String,
+      default: ''
+    }
+  },
   data: () => ({
     resources: [],
+    searchedResources: [],
     searchInput: ''
   }),
   methods: {
@@ -63,7 +70,36 @@ export default Vue.extend({
     getStaredResources({ limit: 999 }).then((res) => {
       this.resources.splice(0, this.resources.length)
       this.resources.push(...res.items)
+      this.searchedResources.push(...res.items)
     })
+  },
+  watch: {
+    query(val) {
+      const qs = val.split(' ')
+      this.searchedResources.splice(0, this.searchedResources.length)
+      if (val === '' || qs.length === 0) {
+        this.searchedResources.push(...this.resources)
+        return
+      }
+      const d = {}
+      const temp = []
+      for (let i = 0; i < qs.length; i++) {
+        const q = qs[i]
+        for (let j = 0; j < this.resources.length; j++) {
+          const r = this.resources[j]
+          if (r.title.includes(q) || r.url.includes(q)) {
+            if (r.id in d) {
+              d[r.id].count += 1
+            } else {
+              r.count = 1
+              d[r.id] = r
+              temp.push(r)
+            }
+          }
+        }
+      }
+      this.searchedResources.push(...temp.sort((a, b) => b.count - a.count))
+    }
   }
 })
 </script>
