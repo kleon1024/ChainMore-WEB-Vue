@@ -47,7 +47,22 @@
               chips
               small-chips
               label="从收藏的领域添加"
-            > </v-autocomplete>
+            >
+              <template v-slot:selection="data">
+                <v-chip
+                  :elevation="0"
+                  dense
+                  small
+                  v-bind="data.attrs"
+                  :input-value="data.selected"
+                  @click="data.select"
+                >
+                  <div
+                    class="text--primary subtitle-2 display: inline-block text-truncate"
+                  > {{ data.item.title }} </div>
+                </v-chip>
+              </template>
+            </v-autocomplete>
             <v-autocomplete
               v-model="form.resources"
               :items="staredResources"
@@ -56,28 +71,28 @@
               item-value="id"
               dense
               outlined
-              small-chips
               chips
               multiple
               label="从收藏的资源添加"
             >
               <template v-slot:selection="data">
-                <v-card
-                  :elevation="0"
-                  dense
-                  color="transparent"
-                  v-bind="data.attrs"
-                  :input-value="data.selected"
-                  @click="data.select"
-                  @click:close="remove(data.item)"
-                >
-                  <div
-                    class="text--primary subtitle-2 display: inline-block text-truncate"
-                    style="padding: 0.5em"
-                  > {{ data.item.title }} </div>
-                </v-card>
+                <v-container class="px-0 py-1">
+                  <v-chip
+                    :elevation="0"
+                    dense
+                    small
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    @click="data.select"
+                    close
+                    @click:close="remove(data.item)"
+                  >
+                    <div
+                      class="text--primary subtitle-2 display: inline-block text-truncate"
+                    > {{ data.item.title }} </div>
+                  </v-chip>
+                </v-container>
               </template>
-
             </v-autocomplete>
             <v-btn
               block
@@ -243,6 +258,15 @@ export default Vue.extend({
             this.form.resources.push(res.items[i].id)
           }
         })
+      }
+    },
+    remove(item) {
+      for (let i = 0; i < this.form.resources.length; i++) {
+        const resource = this.form.resources[i]
+        if (item.id === resource) {
+          this.form.resources.splice(i, 1)
+          break
+        }
       }
     }
   },
