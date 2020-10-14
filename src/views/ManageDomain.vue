@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
-    <v-card dense>
+    <v-sheet>
+      <v-card-title> {{ domain.title }} </v-card-title>
+    </v-sheet>
+    <v-card dense class="mb-4" v-if="domain.certified">
       <v-dialog
         scrollable
         max-width="10vw"
@@ -511,6 +514,14 @@
         </v-list>
       </v-form>
     </v-card>
+    <v-card class="mb-4" v-if="domain.certified">
+      <v-subheader> 认证选项 </v-subheader>
+      <v-card-actions>
+        <v-btn outlined block @click="uncertifyDomain">
+          放弃认证
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
@@ -519,6 +530,7 @@ import Vue from 'vue'
 import {
   getDomain,
   checkCertify,
+  uncertify,
   getManageCertifications,
   getCertificationGroups,
   putCertificationGroup,
@@ -546,6 +558,7 @@ export default Vue.extend({
     return {
       valid: true,
       preview: false,
+      domain: { title: '未认证', certified: false },
       showMoveToDialog: false,
       moveToDialogModel: null,
       moveToGroupIndex: 0,
@@ -636,18 +649,15 @@ export default Vue.extend({
       }
     },
     loadDomain() {
-      getDomain({
-        id: this.$route.params.id
-      }).then((res) => {
-        this.domain = res.items[0]
+      checkCertify({ id: this.$route.params.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.domain = res.items[0]
+          this.domain.certified = true
+          this.loadCertificationGroups()
+        } else {
+          this.$router.replace({ path: '/explore/domain/' + this.$route.params.id })
+        }
       })
-      if (this.isLoggedIn) {
-        checkCertify({ id: this.$route.params.id }).then((res) => {
-          if (res.items.length === 1) {
-            this.certified = true
-          }
-        })
-      }
     },
     loadCertificationGroups() {
       getCertificationGroups({ id: this.$route.params.id }).then((res) => {
@@ -1017,11 +1027,24 @@ export default Vue.extend({
         })
       }
       this.showMoveToDialog = false
+    },
+    uncertifyDomain() {
+      this.$confirm('将清除所有认证组记录，确认清除？', {
+        buttonTrueText: '确认',
+        buttonFalseText: '取消'
+      }).then((res) => {
+        if (res) {
+          uncertify({ domain: this.domain.id }).then((res) => {
+            if (res.items.length === 1) {
+              this.$router.replace({ path: '/person' })
+            }
+          })
+        }
+      })
     }
   },
   mounted() {
     this.loadDomain()
-    this.loadCertificationGroups()
   }
 })
 </script>

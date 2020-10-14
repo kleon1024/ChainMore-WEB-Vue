@@ -14,7 +14,7 @@
       <v-spacer></v-spacer>
       <v-btn
         icon
-        to="/roadmap"
+        to="/explore/roadmap"
       >
         <v-icon color="teal">mdi-transit-connection-variant</v-icon>
       </v-btn>

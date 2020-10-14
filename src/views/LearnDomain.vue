@@ -59,12 +59,20 @@
         </v-stepper-content>
       </template>
     </v-stepper>
+    <v-card elevation="0">
+      <v-card-actions>
+        <v-btn block outlined @click="unlearnDomain">
+          放弃学习
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
 <script>
 import Vue from 'vue'
 import {
+  unlearn,
   getDomain,
   getDependedDomains
 } from '@/api/domains'
@@ -106,6 +114,13 @@ export default Vue.extend({
       this.step = index
       if (this.dependDomains[index].collections === undefined) {
       }
+    },
+    unlearnDomain() {
+      unlearn({ domain: this.domain.id }).then((res) => {
+        if (res.items.length === 1) {
+          this.$router.replace({ path: '/person' })
+        }
+      })
     }
   },
   mounted() {

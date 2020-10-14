@@ -301,6 +301,13 @@ export const unlearn = (params: any) =>
     params
   })
 
+export const uncertify = (params: any) =>
+  request({
+    url: '/domain/certify',
+    method: 'delete',
+    params
+  })
+
 export const getTargetDomains = (params: any) =>
   request({
     url: '/domain/targets',

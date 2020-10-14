@@ -1,43 +1,39 @@
 <template>
-  <v-container>
-    <v-row class='text-center' align='center' justify='center'>
-      <v-card elevation='0'>
-        <svg
-          v-if='data'
-          :width='width'
-          :height='data.layout.height'
-          class='tangle-tree'
-        >
-          <g v-for='(b, index) in bundleDatas' :key='"bundle" + index'>
-            <path class='link' :d='b' stroke='white' stroke-width='6' />
-            <path class='link' :d='b' :stroke='pathColor(index)' stroke-width='3' />
-          </g>
-          <g v-for='(n, index) in data.nodes' :key='"node" + index'>
-            <line
-              class='node'
-              stroke='black'
-              stroke-width='8'
-              :x1='n.x'
-              :y1='n.y-n.height/2'
-              :x2='n.x'
-              :y2='n.y+n.height/2'
-            />
-            <line
-              class='node'
-              stroke='white'
-              stroke-width='4'
-              :x1='n.x'
-              :y1='n.y-n.height/2'
-              :x2='n.x '
-              :y2='n.y+n.height/2'
-            />
-            <text :x='n.x+4' :y='n.y-n.height/2-4' stroke='white' stroke-width='2'>{{ n.id }}</text>
-            <text :x='n.x+4' :y='n.y-n.height/2-4'>{{ n.id }}</text>
-          </g>
-        </svg>
-      </v-card>
-    </v-row>
-  </v-container>
+  <v-sheet :width="width()">
+    <svg
+      v-if='data'
+      :width='width()'
+      :height='data.layout.height'
+      class='tangle-tree'
+    >
+      <g v-for='(b, index) in bundleDatas' :key='"bundle" + index'>
+        <path class='link' :d='b' stroke='white' stroke-width='6' />
+        <path class='link' :d='b' :stroke='pathColor(index)' stroke-width='3' />
+      </g>
+      <g v-for='(n, index) in data.nodes' :key='"node" + index'>
+        <line
+          class='node'
+          stroke='black'
+          stroke-width='8'
+          :x1='n.x'
+          :y1='n.y-n.height/2'
+          :x2='n.x'
+          :y2='n.y+n.height/2'
+        />
+        <line
+          class='node'
+          stroke='white'
+          stroke-width='4'
+          :x1='n.x'
+          :y1='n.y-n.height/2'
+          :x2='n.x '
+          :y2='n.y+n.height/2'
+        />
+        <text :x='n.x+4' :y='n.y-n.height/2-4' stroke='white' stroke-width='2'>{{ n.id }}</text>
+        <text :x='n.x+4' :y='n.y-n.height/2-4'>{{ n.id }}</text>
+      </g>
+    </svg>
+  </v-sheet>
 </template>
 
 <script>
@@ -63,9 +59,6 @@ export default Vue.extend({
     })
   },
   computed: {
-    width() {
-      return 210 * this.levels.length
-    },
     bundleDatas() {
       return this.data.bundles.map((b) =>
         b.links
@@ -83,6 +76,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    width() {
+      return 300 * this.levels.length
+    },
     color: d3.scaleOrdinal(d3.schemeDark2),
     pathColor(index) {
       return this.color(this.data.bundles[index].id)
