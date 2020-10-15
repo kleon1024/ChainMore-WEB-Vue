@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    :width="width"
-    style="margin: 0.5em"
-  >
+  <v-card class="ma-2">
     <v-card-text>
       <v-col align="center">
         <div class='display-1 text--primary font-weight-bold'> 定制 </div>
@@ -39,12 +36,6 @@ import { UserModule } from '@/store/modules/user'
 
 export default Vue.extend({
   name: 'FreeMemberCard',
-  props: {
-    width: {
-      type: Number,
-      required: true
-    }
-  },
   methods: {
     onSubmit() {
       this.$emit('confirm')

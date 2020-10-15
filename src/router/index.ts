@@ -10,7 +10,8 @@ const routes: Array<RouteConfig> = [
     name: 'Default',
     component: () => import(/* webpackChunkName: "default" */ '../views/Default.vue'),
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: '阡陌'
     }
   },
   {
@@ -21,7 +22,8 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: '关于 - 阡陌'
     }
   },
   {
@@ -29,7 +31,8 @@ const routes: Array<RouteConfig> = [
     name: 'Login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: '登录 - 阡陌'
     }
   },
   {
@@ -37,7 +40,8 @@ const routes: Array<RouteConfig> = [
     name: 'ResourceCreate',
     component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      title: '添加资源 - 阡陌'
     }
   },
   {
@@ -45,7 +49,8 @@ const routes: Array<RouteConfig> = [
     name: 'DomainCreate',
     component: () => import(/* webpackChunkName: "domain_create" */ '../views/DomainCreate.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      title: '创建领域 - 阡陌'
     }
   },
   {
@@ -53,7 +58,8 @@ const routes: Array<RouteConfig> = [
     name: 'CollectionCreate',
     component: () => import(/* webpackChunkName: "colletion_create" */ '../views/CollectionCreate.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      title: '发布合集 - 阡陌'
     }
   },
   {
@@ -70,14 +76,6 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "certify" */ '../views/CertifyGroup.vue'),
     meta: {
       requiresAuth: true
-    }
-  },
-  {
-    path: '/member',
-    name: 'Member',
-    component: () => import(/* webpackChunkName: "member" */ '../views/Member.vue'),
-    meta: {
-      requiresAuth: false
     }
   },
   {
@@ -125,6 +123,15 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
         meta: {
           requiresAuth: false
+        }
+      },
+      {
+        path: '/member',
+        name: 'Member',
+        component: () => import(/* webpackChunkName: "member" */ '../views/Member.vue'),
+        meta: {
+          requiresAuth: false,
+          title: '会员'
         }
       }
     ]
@@ -201,6 +208,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, _from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
   if (process.env.NODE_ENV !== 'production') {
     next()
     return

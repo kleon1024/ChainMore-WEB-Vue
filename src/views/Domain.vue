@@ -349,6 +349,7 @@ export default Vue.extend({
         id: this.$route.params.id
       }).then((res) => {
         this.domain = res.items[0]
+        document.title = this.domain.title + ' - 阡陌'
       })
       if (this.isLoggedIn) {
         checkCertify({ id: this.$route.params.id }).then((res) => {

@@ -168,6 +168,7 @@ export default Vue.extend({
         id: this.$route.params.id
       }).then((res) => {
         this.collection = res.items[0]
+        document.title = this.collection.title + ' - 阡陌'
         this.description = this.collection.description
       })
     }
