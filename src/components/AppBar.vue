@@ -26,7 +26,7 @@
         <v-icon
           v-if="!loggedIn"
           color="teal"
-        >person_outline</v-icon>
+        >mdi-account-outline</v-icon>
         <div
           v-if="loggedIn"
           class="font-weight-bold headline"
