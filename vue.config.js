@@ -1,4 +1,5 @@
 const path = require('path')
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const sourceMap = process.env.NODE_ENV === 'development'
 
 module.exports = {
@@ -19,6 +20,44 @@ module.exports = {
       })
   },
   configureWebpack: config => {
+    config.externals = {
+      vue: 'Vue',
+      vuetify: 'Vuetify',
+      axios: 'axios',
+      vuex: 'Vuex',
+      'vue-router': 'VueRouter',
+      moment: 'moment',
+      'highlight.js': 'hljs'
+    }
+
+    config.plugins.push(new CompressionWebpackPlugin({
+      algorithm: 'gzip',
+      test: /\.js$|\.html$|\.json$|\.css/,
+      threshold: 10240,
+      minRatio: 0.8
+    }));
+
+    config.optimization = {
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 20000,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name (module) {
+              // get the name. E.g. node_modules/packageName/not/this/part.js
+              // or node_modules/packageName
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+              // npm package names are URL-safe, but some servers don't like @ symbols
+              return `npm.${packageName.replace('@', '')}`
+            }
+          }
+        }
+      }
+    };
+
     if (process.env.NODE_ENV === 'production') {
       config.mode = 'production'
       // config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
