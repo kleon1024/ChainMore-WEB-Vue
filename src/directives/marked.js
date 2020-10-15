@@ -25,6 +25,21 @@ const install = function(Vue) {
   Vue.directive('marked', function(el, binding, vnode) {
     if (!el.rendered) {
       el.innerHTML = marked(el.innerText)
+      el.children.forEach(elem => {
+        if (elem.tagName === 'PRE') {
+          elem.children.forEach(code => {
+            if (code.tagName === 'CODE') {
+              const codeCount = code.innerText.replace(/<\/?span[^>]*>/g, '').split(/\r\n|\r|\n/).length
+              let lineNumberText = '<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><code class="hljs">'
+              for (let i = 0; i < codeCount; i++) {
+                lineNumberText += '<span class="hljs-class">' + (i + 1) + '</span><br>'
+              }
+              lineNumberText += '</code></pre></td>'
+              elem.outerHTML = lineNumberText + '<td class="code">' + elem.outerHTML + '</td></tr></tbody></table></figure>'
+            }
+          })
+        }
+      })
       el.rendered = true
     }
   })
