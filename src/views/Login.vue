@@ -35,7 +35,7 @@
                       label="密码"
                       v-model="password"
                       min="8"
-                      :append-icon="e1 ? 'visibility' : 'visibility_off'"
+                      :append-icon="e1 ? 'eye-outline' : 'eye-off-outline'"
                       @click:append="() => (e1 = !e1)"
                       :type="e1 ? 'password' : 'text'"
                       :rules="passwordRules"
