@@ -33,8 +33,9 @@
 
 <script>
 import Vue from 'vue'
-import { getCollectedCollections } from '@/api/collections'
+import { PersonModule } from '@/store/modules/person'
 import { readableTimestamp } from '@/utils/time'
+import { searchQuery } from '@/utils/search'
 
 export default Vue.extend({
   name: 'PersonalCollection',
@@ -47,7 +48,6 @@ export default Vue.extend({
   },
   data: () => ({
     searchedCollections: [],
-    collections: [],
     searchInput: ''
   }),
   methods: {
@@ -56,38 +56,14 @@ export default Vue.extend({
     }
   },
   mounted() {
-    getCollectedCollections({ limit: 999 }).then((res) => {
-      this.collections.splice(0, this.collections.length)
-      this.collections.push(...res.items)
-      this.searchedCollections.push(...res.items)
-    })
+    this.searchedCollections.push(...PersonModule.collections)
   },
   watch: {
     query(val) {
-      const qs = val.split(' ')
       this.searchedCollections.splice(0, this.searchedCollections.length)
-      if (val === '' || qs.length === 0) {
-        this.searchedCollections.push(...this.collections)
-        return
-      }
-      const d = {}
-      const temp = []
-      for (let i = 0; i < qs.length; i++) {
-        const q = qs[i]
-        for (let j = 0; j < this.collections.length; j++) {
-          const r = this.collections[j]
-          if (r.title.includes(q) || r.description.includes(q)) {
-            if (r.id in d) {
-              d[r.id].count += 1
-            } else {
-              r.count = 1
-              d[r.id] = r
-              temp.push(r)
-            }
-          }
-        }
-      }
-      this.searchedCollections.push(...temp.sort((a, b) => b.count - a.count))
+      this.searchedCollections.push(
+        ...searchQuery(val, PersonModule.collections,
+          (r, q) => r.title.toLowerCase().includes(q) || r.description.includes(q)))
     }
   }
 })

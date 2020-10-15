@@ -78,6 +78,7 @@ import {
 } from '@/api/domains'
 import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 import { readableTimestamp } from '@/utils/time'
+import { PersonModule } from '@/store/modules/person'
 
 export default Vue.extend({
   name: 'ManageDomain',
@@ -116,11 +117,8 @@ export default Vue.extend({
       }
     },
     unlearnDomain() {
-      unlearn({ domain: this.domain.id }).then((res) => {
-        if (res.items.length === 1) {
-          this.$router.replace({ path: '/person' })
-        }
-      })
+      this.$router.replace({ path: '/person' })
+      PersonModule.RemoveTargetDomain(this.domain.id)
     }
   },
   mounted() {

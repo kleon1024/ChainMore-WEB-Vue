@@ -175,7 +175,7 @@
 <script>
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
-import { getCertifiedDomains, getTargetDomains } from '@/api/domains'
+import { PersonModule } from '@/store/modules/person'
 
 export default Vue.extend({
   name: 'Person',
@@ -225,30 +225,6 @@ export default Vue.extend({
         this.topNTargetDomain = 1
         this.targetExpanded = false
       }
-    },
-    loadCertifiedDomains() {
-      getCertifiedDomains({}).then((res) => {
-        for (let i = 0; i < res.items.length; i++) {
-          const domain = res.items[i]
-          this.manageDomains.push({
-            icon: 'mdi-shield-star-outline',
-            text: domain.title,
-            to: '/person/manage/domain/' + domain.id
-          })
-        }
-      })
-    },
-    loadTargetDomains() {
-      getTargetDomains({}).then((res) => {
-        for (let i = 0; i < res.items.length; i++) {
-          const domain = res.items[i]
-          this.targetDomains.push({
-            icon: 'mdi-shield-star-outline',
-            text: domain.title,
-            to: '/person/learn/domain/' + domain.id
-          })
-        }
-      })
     }
   },
   data() {
@@ -288,8 +264,6 @@ export default Vue.extend({
           to: '/person/domain'
         }
       ],
-      manageDomains: [],
-      targetDomains: [],
       expanded: false,
       targetExpanded: false,
       topNDomain: 3,
@@ -306,11 +280,16 @@ export default Vue.extend({
       } else {
         return ''
       }
+    },
+    manageDomains() {
+      return PersonModule.certifiedDomains
+    },
+    targetDomains() {
+      return PersonModule.targetDomains
     }
   },
   mounted() {
-    this.loadCertifiedDomains()
-    this.loadTargetDomains()
+    PersonModule.Initialize()
   }
 })
 </script>

@@ -10,7 +10,6 @@ import {
   getUserInfo, setUserInfo, removeUserInfo
 } from '@/plugins/cookies'
 import store from '@/store'
-import { remove } from 'js-cookie'
 
 export interface UserBean {
   accessToken: string

@@ -44,8 +44,9 @@
 
 <script>
 import Vue from 'vue'
-import { getStaredResources } from '@/api/resources'
+import { PersonModule } from '@/store/modules/person'
 import { readableTimestamp } from '@/utils/time'
+import { searchQuery } from '@/utils/search'
 
 export default Vue.extend({
   name: 'PersonalResource',
@@ -57,7 +58,6 @@ export default Vue.extend({
     }
   },
   data: () => ({
-    resources: [],
     searchedResources: [],
     searchInput: ''
   }),
@@ -67,38 +67,14 @@ export default Vue.extend({
     }
   },
   mounted() {
-    getStaredResources({ limit: 999 }).then((res) => {
-      this.resources.splice(0, this.resources.length)
-      this.resources.push(...res.items)
-      this.searchedResources.push(...res.items)
-    })
+    this.searchedResources.push(...PersonModule.resources)
   },
   watch: {
     query(val) {
-      const qs = val.split(' ')
       this.searchedResources.splice(0, this.searchedResources.length)
-      if (val === '' || qs.length === 0) {
-        this.searchedResources.push(...this.resources)
-        return
-      }
-      const d = {}
-      const temp = []
-      for (let i = 0; i < qs.length; i++) {
-        const q = qs[i]
-        for (let j = 0; j < this.resources.length; j++) {
-          const r = this.resources[j]
-          if (r.title.includes(q) || r.url.includes(q)) {
-            if (r.id in d) {
-              d[r.id].count += 1
-            } else {
-              r.count = 1
-              d[r.id] = r
-              temp.push(r)
-            }
-          }
-        }
-      }
-      this.searchedResources.push(...temp.sort((a, b) => b.count - a.count))
+      this.searchedResources.push(
+        ...searchQuery(val, PersonModule.resources,
+          (r, q) => r.title.toLowerCase().includes(q) || r.url.includes(q)))
     }
   }
 })
