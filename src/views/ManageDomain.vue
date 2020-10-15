@@ -6,7 +6,6 @@
     <v-card dense class="mb-4" v-if="domain.certified">
       <v-dialog
         scrollable
-        max-width="10vw"
         v-model="showMoveToDialog"
       >
         <v-card>
@@ -383,7 +382,7 @@
                 >
                   <v-list-item-icon v-if="!ifModifyMCPChoice(index, i, ci)">
                     <TooltipIconButton
-                      :str="p.mcp.answers.includes(choice.id) ? 'mdi-check' : 'mdi-close'"
+                      :str="p.mcp.answers.includes(choice.id) ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'"
                       :tip="p.mcp.answers.includes(choice.id) ? '正确选项' : '错误选项'"
                       text
                       icon
