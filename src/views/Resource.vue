@@ -4,15 +4,16 @@
       v-if="resource"
     >
       <v-card-text>
-        <div> 资源 </div>
-        <div class='title text--primary'>{{ resource.title }}</div>
+        <div class="caption"> 资源 </div>
+        <img :src="badgeUrl(resource)">
+        <div class='subtitle-1 text--primary'>{{ resource.title }}</div>
         <a
           :href="resource.url"
           target="_blank"
         >
-          <div>{{ resource.url }}</div>
+          <div class="caption">{{ resource.url }}</div>
         </a>
-        <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+        <div class="caption"> {{ readableTime(resource.modify_time) }} 修改 </div>
       </v-card-text>
       <v-card-actions>
         <v-row>
@@ -68,19 +69,11 @@
       :to="{ path: '/explore/collection/' + collection.id.toString() }"
     >
       <v-card-text>
-        <div class='text--primary'> {{ collection.domain_title }}</div>
-        <div class='title text--primary'>{{ collection.title }}</div>
-        <div class='text--primary'>{{ collection.description }}</div>
-        <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
+        <div class='caption text--primary'> {{ collection.domain_title }}</div>
+        <div class='subtitle-1 text--primary'>{{ collection.title }}</div>
+        <div class='subtitle-2 text--primary'>{{ collection.description }}</div>
+        <div class="caption text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
       </v-card-text>
-      <v-card-actions>
-        <v-btn
-          text
-          x-small
-          color='teal'
-          :to="{ path: '/explore/collection/' + collection.id.toString() }"
-        >LEARN MORE</v-btn>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -96,6 +89,7 @@ import {
 } from '@/api/resources'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
+import { badgeUrl } from '@/utils/type'
 
 export default Vue.extend({
   name: 'Resource',
@@ -190,6 +184,9 @@ export default Vue.extend({
         this.collections.splice(0, this.collections.length)
         this.collections.push(...res.items)
       })
+    },
+    badgeUrl(resource) {
+      return badgeUrl(resource.resource_type, resource.media_type)
     }
   },
   computed: {

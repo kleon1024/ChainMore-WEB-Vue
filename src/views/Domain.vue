@@ -68,14 +68,14 @@
       v-if="domain"
     >
       <v-card-text>
-        <div> 领域 </div>
+        <div class="caption"> 领域 </div>
         <div class='title font-weight-bold text--primary'>{{ domain.title }}</div>
         <div
           v-if="domain.intro != ''"
-          class='text--primary'
+          class='subtile-2 text--primary'
           style='white-space: pre-wrap;'
         >{{ domain.intro }}</div>
-        <div> {{ readableTime(domain.create_time) }} 创建 </div>
+        <div class="caption"> {{ readableTime(domain.create_time) }} 创建 </div>
       </v-card-text>
       <v-card-actions>
         <v-row>
@@ -189,19 +189,11 @@
       :to="{ path: '/explore/collection/' + collection.id.toString() }"
     >
       <v-card-text>
-        <div class='text--primary'> {{ collection.domain_title }}</div>
-        <div class='title text--primary'>{{ collection.title }}</div>
-        <div class='text--primary'>{{ collection.description }}</div>
-        <div class="text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
+        <div class='caption text--primary'> {{ collection.domain_title }}</div>
+        <div class='subtitle-1 text--primary'>{{ collection.title }}</div>
+        <div class='subtitle-2 text--primary'>{{ collection.description }}</div>
+        <div class="caption text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
       </v-card-text>
-      <v-card-actions>
-        <v-btn
-          text
-          x-small
-          color='teal'
-          :to="{ path: '/explore/collection/' + collection.id.toString() }"
-        >LEARN MORE</v-btn>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>

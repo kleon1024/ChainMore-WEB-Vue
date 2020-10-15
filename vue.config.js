@@ -26,7 +26,6 @@ module.exports = {
       axios: 'axios',
       vuex: 'Vuex',
       'vue-router': 'VueRouter',
-      moment: 'moment',
       'highlight.js': 'hljs'
     }
 

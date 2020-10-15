@@ -4,11 +4,11 @@
       v-if="collection"
     >
       <v-card-text>
-        <div> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
-        <div class='title font-weight-bold text--primary'>{{ collection.title }}</div>
+        <div class="caption"> 合集  位于  <router-link :to="'/explore/domain/' + collection.domain_id"> {{ collection.domain_title }} </router-link> </div>
+        <div class='subtitle-1 font-weight-bold text--primary'>{{ collection.title }}</div>
         <div v-marked class='text--primary my-4'
         > {{ description }} </div>
-        <div> {{ readableTime(collection.modify_time) }} 修改 </div>
+        <div class="caption"> {{ readableTime(collection.modify_time) }} 修改 </div>
       </v-card-text>
       <v-card-actions>
         <v-row>
@@ -41,7 +41,7 @@
       </v-card-actions>
     </v-card>
     <v-card
-      style='margin-top:0px'
+      class="ma-0 pa-0"
       color="transparent"
       elevation="0"
     >
@@ -54,12 +54,13 @@
       :to="{ path: '/explore/resource/' + resource.id.toString() }"
     >
       <v-card-text>
-        <div class='title text--primary'>{{ resource.title }}</div>
-        <div class='text--primary'><a
+        <img :src="badgeUrl(resource)">
+        <div class='subtile-1 text--primary'> {{ resource.title }} </div>
+        <div class='caption text--primary'><a
             target='_blank'
             :href="resource.url"
           >{{ resource.url }}</a></div>
-        <div> {{ readableTime(resource.modify_time) }} 修改 </div>
+        <div class="caption"> {{ readableTime(resource.modify_time) }} 修改 </div>
       </v-card-text>
     </v-card>
   </v-container>
@@ -76,6 +77,7 @@ import {
 } from '@/api/collections'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
+import { badgeUrl } from '@/utils/type'
 
 export default Vue.extend({
   name: 'Collection',
@@ -171,6 +173,9 @@ export default Vue.extend({
         document.title = this.collection.title + ' - 阡陌'
         this.description = this.collection.description
       })
+    },
+    badgeUrl(resource) {
+      return badgeUrl(resource.resource_type, resource.media_type)
     }
   },
   computed: {
