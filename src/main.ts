@@ -5,11 +5,11 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import Toasted from 'vue-toasted'
-import VuetifyConfirm from 'vuetify-confirm'
 import Marked from './directives/marked.js'
+import VuetifyConfirm from './components/dialogs/Confirm'
 
 Vue.use(Marked)
-Vue.use(VuetifyConfirm, { vuetify })
+Vue.use(VuetifyConfirm, { vuetify: vuetify })
 Vue.use(Toasted)
 
 Vue.config.productionTip = false

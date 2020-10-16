@@ -698,10 +698,7 @@ export default Vue.extend({
       }
     },
     onDeleteGroup(index) {
-      this.$confirm('一旦删除将不可恢复，确认删除？', {
-        buttonTrueText: '确认',
-        buttonFalseText: '取消'
-      }).then((res) => {
+      this.$confirm('一旦删除将不可恢复，确认删除？').then((res) => {
         if (res) {
           deleteCertificationGroup({ id: this.groups[index].id }).then(
             (res) => {
@@ -720,10 +717,7 @@ export default Vue.extend({
       })
     },
     onClickDeleteCertification(groupIndex, problemIndex) {
-      this.$confirm('一旦删除将不可恢复，确认删除？', {
-        buttonTrueText: '确认',
-        buttonFalseText: '取消'
-      }).then((res) => {
+      this.$confirm('一旦删除将不可恢复，确认删除？').then((res) => {
         if (res) {
           deleteCertification({
             id: this.groups[groupIndex].problems[problemIndex].id
@@ -936,10 +930,7 @@ export default Vue.extend({
       })
     },
     onDeleteMCPChoice(groupIndex, problemIndex, choiceIndex) {
-      this.$confirm('一旦删除将不可恢复，确认删除？', {
-        buttonTrueText: '确认',
-        buttonFalseText: '取消'
-      }).then((res) => {
+      this.$confirm('一旦删除将不可恢复，确认删除？').then((res) => {
         const mcp = this.groups[groupIndex].problems[problemIndex].mcp
         if (res) {
           deleteMCPChoice({
@@ -1028,10 +1019,7 @@ export default Vue.extend({
       this.showMoveToDialog = false
     },
     uncertifyDomain() {
-      this.$confirm('将清除所有认证组记录，确认清除？', {
-        buttonTrueText: '确认',
-        buttonFalseText: '取消'
-      }).then((res) => {
+      this.$confirm('将清除所有认证组记录，确认清除？').then((res) => {
         if (res) {
           this.$router.replace({ path: '/person' })
           PersonModule.RemoveCertifiedDomain(this.domain.id)

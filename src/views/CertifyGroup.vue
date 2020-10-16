@@ -30,8 +30,8 @@
                 {{ mcpTypeToText(certifications[curPage - 1].mcp.type) }}
               </v-btn>
             </v-subheader>
-            <v-card-text class="py-0">
-              <div v-marked class="subtitle-2 text--primary">
+            <v-card-text class="py-0" v-for="(c, i) in certifications" :key="i">
+              <div v-marked class="subtitle-2 text--primary" v-if="curPage - 1 === i">
                 {{ certifications[curPage - 1].mcp.text }}
               </div>
             </v-card-text>
@@ -175,10 +175,7 @@ export default Vue.extend({
       const unfinished = this.validateAllAnswer()
       const answers = {}
       if (unfinished === -1) {
-        this.$confirm('检查无误，确认提交？', {
-          buttonTrueText: '确认',
-          buttonFalseText: '取消'
-        }).then((res) => {
+        this.$confirm('检查无误，确认提交？').then((res) => {
           if (!res) return
           for (let i = 0; i < this.certifications.length; i++) {
             const c = this.certifications[i]

@@ -1,6 +1,5 @@
 export const searchQuery = (val: string, items: any[], compare) => {
   const qs = val.split(' ')
-  console.log(val)
   if (val === '' || qs.length === 0) {
     return items
   }
