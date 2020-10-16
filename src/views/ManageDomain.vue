@@ -6,6 +6,7 @@
     <v-card dense class="mb-4" v-if="domain.certified">
       <v-dialog
         scrollable
+        max-width="450"
         v-model="showMoveToDialog"
       >
         <v-card>
@@ -270,6 +271,10 @@
                       <v-icon> {{ preview ? 'mdi-pen' : 'mdi-text' }} </v-icon>
                     </v-btn>
                   </v-list-item-action>
+                </v-list-item>
+                <v-list-item v-if="modifyMCPing &&
+                    modifyGroupIndex == index &&
+                    modifyProblemIndex == i">
                   <v-list-item-title class="subtitle-2">
                     <v-textarea
                       v-if="!preview"
@@ -446,9 +451,23 @@
               </div>
             </v-list-group>
             <v-list-item v-if="addMCPing && modifyGroupIndex == index">
+              <v-list-item-action>
+                <v-btn
+                  text
+                  icon
+                  depressed
+                  color="primary"
+                  @click="preview = !preview"
+                >
+                  <v-icon> {{ preview ? 'mdi-pen' : 'mdi-text' }} </v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item v-if="addMCPing && modifyGroupIndex == index">
               <v-list-item-title class="subtitle-2">
                 <v-textarea
                   autofocus
+                  v-if="!preview"
                   v-model="form.mcpText"
                   :counter="mcpCount"
                   :rules="rules.mcpText"
@@ -456,9 +475,21 @@
                   auto-grow
                   rows="1"
                   placeholder="题干"
-                  @blur="checkAddMCP(index)"
                 ></v-textarea>
+                <div v-if="preview" v-marked class="text--primary">
+                  {{ form.mcpText }}
+                </div>
               </v-list-item-title>
+              <v-list-item-action>
+                <v-btn
+                  text
+                  depressed
+                  color="primary"
+                  @click="checkAddMCP(index)"
+                >
+                  确认
+                </v-btn>
+              </v-list-item-action>
               <v-list-item-action>
                 <v-btn
                   text
@@ -835,12 +866,11 @@ export default Vue.extend({
     },
     checkModifyMCP(groupIndex, problemIndex) {
       if (this.$refs.form.validate()) {
+        this.clearAllStatus()
         if (
           this.groups[groupIndex].problems[problemIndex].mcp.text ===
           this.form.mcpText
-        ) {
-          return
-        }
+        ) return
         putMCP({
           id: this.groups[groupIndex].problems[problemIndex].mcp.id,
           text: this.form.mcpText
@@ -852,14 +882,12 @@ export default Vue.extend({
               problemIndex
             ].digest = res.items[0].text.slice(0, 64)
             this.form.mcpText = ''
-            this.clearAllStatus()
           } else {
             this.$toasted.show('更新失败，请稍后重试', {
               theme: 'outline',
               position: 'top-center',
               duration: 500
             })
-            this.clearAllStatus()
           }
         })
       }
@@ -872,6 +900,7 @@ export default Vue.extend({
     },
     checkAddMCPChoice(groupIndex, problemIndex) {
       if (this.$refs.form.validate()) {
+        this.clearAllStatus()
         postMCPChoice({
           mcp: this.groups[groupIndex].problems[problemIndex].mcp.id,
           text: this.form.mcpChoiceText
@@ -883,7 +912,6 @@ export default Vue.extend({
             this.form.mcpChoiceText = ''
           }
         })
-        this.clearAllStatus()
       }
     },
     onClickSetMCPChoice(groupIndex, problemIndex, choiceIndex) {
@@ -967,7 +995,10 @@ export default Vue.extend({
       if (this.$refs.form.validate()) {
         const choice = this.groups[groupIndex].problems[problemIndex].mcp
           .choices[choiceIndex]
-        if (this.form.mcpChoiceText.trim() === choice.text) return
+        if (this.form.mcpChoiceText.trim() === choice.text) {
+          this.clearAllStatus()
+          return
+        }
         putMCPChoice({
           id: choice.id,
           text: this.form.mcpChoiceText.trim()
