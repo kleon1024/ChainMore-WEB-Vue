@@ -131,10 +131,17 @@ export default Vue.extend({
     },
     loadCertifications() {
       getCertifications({ id: this.$route.params.id }).then((res) => {
-        this.certifications.push(...res.items)
+        const cs = res.items.sort(() => 0.5 - Math.random())
+        for (let i = 0; i < cs.length; i++) {
+          const c = cs[i]
+          if (c.type === 'multiple_choice_problem') {
+            c.mcp.choices = c.mcp.choices.sort(() => 0.5 - Math.random())
+            this.certifications.push(c)
+          }
+        }
         this.certificationsLoaded = true
-        for (let i = 0; i < res.items.length; i++) {
-          const c = res.items[i]
+        for (let i = 0; i < cs.length; i++) {
+          const c = cs[i]
           if (c.type === 'multiple_choice_problem') {
             if (c.mcp.type === 'single_answer') {
               this.forms.push({
@@ -195,27 +202,20 @@ export default Vue.extend({
           }
           certificate({ id: this.group.id, answers: answers }).then((res) => {
             if (res.items.length === 1) {
-              this.$toasted.show('认证成功，请再接再厉' + (unfinished + 1), {
-                theme: 'outline',
-                position: 'top-center',
-                duration: 500
-              })
-            } else {
-              this.$toasted.show('认证失败，请重新来过' + (unfinished + 1), {
-                theme: 'outline',
-                position: 'top-center',
-                duration: 500
-              })
+              this.$toasted.show('认证成功，请再接再厉')
+              this.$router.back()
             }
-            this.$router.back()
+          }).catch(err => {
+            if (err.response) {
+              if (err.response.status === 500) {
+                this.$toasted.show('认证失败，请重新来过')
+                this.$router.back()
+              }
+            }
           })
         })
       } else {
-        this.$toasted.show('还没有完成测试' + (unfinished + 1), {
-          theme: 'outline',
-          position: 'top-center',
-          duration: 500
-        })
+        this.$toasted.show('还没有完成测试' + (unfinished + 1))
       }
     },
     validateAllAnswer() {

@@ -719,11 +719,7 @@ export default Vue.extend({
             group.problems = []
             this.groups.push(group)
           } else {
-            this.$toasted.show('添加失败，请稍后重试', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 500
-            })
+            this.$toasted.show('添加失败，请稍后重试')
           }
         })
       }
@@ -736,11 +732,7 @@ export default Vue.extend({
               if (res.items.length === 1) {
                 this.groups.splice(index, 1)
               } else {
-                this.$toasted.show('删除失败，请稍后重试', {
-                  theme: 'outline',
-                  position: 'top-center',
-                  duration: 500
-                })
+                this.$toasted.show('删除失败，请稍后重试')
               }
             }
           )
@@ -756,11 +748,7 @@ export default Vue.extend({
             if (res.items.length === 1) {
               this.groups[groupIndex].problems.splice(problemIndex, 1)
             } else {
-              this.$toasted.show('删除失败，请稍后重试', {
-                theme: 'outline',
-                position: 'top-center',
-                duration: 500
-              })
+              this.$toasted.show('删除失败，请稍后重试')
             }
           })
         }
@@ -783,11 +771,7 @@ export default Vue.extend({
           if (res.items.length === 1) {
             this.groups[index].title = res.items[0].title
           } else {
-            this.$toasted.show('更新失败，请稍后重试', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 500
-            })
+            this.$toasted.show('更新失败，请稍后重试')
           }
         })
       }
@@ -803,11 +787,7 @@ export default Vue.extend({
           if (res.items.length === 1) {
             this.groups[index].intro = res.items[0].intro
           } else {
-            this.$toasted.show('更新失败，请稍后重试', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 500
-            })
+            this.$toasted.show('更新失败，请稍后重试')
           }
         })
       }
@@ -883,11 +863,7 @@ export default Vue.extend({
             ].digest = res.items[0].text.slice(0, 64)
             this.form.mcpText = ''
           } else {
-            this.$toasted.show('更新失败，请稍后重试', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 500
-            })
+            this.$toasted.show('更新失败，请稍后重试')
           }
         })
       }
@@ -971,11 +947,7 @@ export default Vue.extend({
                 mcp.answers.splice()
               }
             } else {
-              this.$toasted.show('删除失败，请稍后重试', {
-                theme: 'outline',
-                position: 'top-center',
-                duration: 500
-              })
+              this.$toasted.show('删除失败，请稍后重试')
             }
           })
         }
@@ -1007,11 +979,7 @@ export default Vue.extend({
             choice.text = res.items[0].text
             this.form.mcpChoiceText = ''
           } else {
-            this.$toasted.show('更新失败，请稍后重试', {
-              theme: 'outline',
-              position: 'top-center',
-              duration: 500
-            })
+            this.$toasted.show('更新失败，请稍后重试')
           }
         })
         this.clearAllStatus()

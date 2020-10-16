@@ -358,11 +358,7 @@ export default Vue.extend({
             path: '/person/learn/domain/' + this.domain.id
           })
         } else {
-          this.$toasted.show('添加失败，请稍后再试', {
-            theme: 'outline',
-            position: 'top-center',
-            duration: 500
-          })
+          this.$toasted.show('添加失败，请稍后再试')
         }
       })
     }

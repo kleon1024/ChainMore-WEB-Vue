@@ -27,7 +27,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     // You can change this part for your own usage.
-    const res = response.data
     return response.data
   },
   (error) => {

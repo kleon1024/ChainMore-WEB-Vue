@@ -10,7 +10,11 @@ import VuetifyConfirm from './components/dialogs/Confirm'
 
 Vue.use(Marked)
 Vue.use(VuetifyConfirm, { vuetify: vuetify })
-Vue.use(Toasted)
+Vue.use(Toasted, {
+  theme: 'outline',
+  position: 'top-center',
+  duration: 2000
+})
 
 Vue.config.productionTip = false
 Vue.config.devtools = false
