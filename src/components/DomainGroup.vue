@@ -22,7 +22,6 @@
       </v-card>
       <v-card
         v-if="domain.noResult"
-        :width='width'
       >
         <v-card-text>
           <div class='title text--primary font-weight-bold'>{{ domain.desc }}</div>
