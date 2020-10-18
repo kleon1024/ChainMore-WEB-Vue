@@ -43,6 +43,7 @@
           <v-col
             cols="12"
             sm="2"
+            v-if="to !== '/explore/roadmap'"
           />
           <v-col
             cols="12"
@@ -53,6 +54,7 @@
           <v-col
             cols="12"
             sm="2"
+            v-if="to !== '/explore/roadmap'"
           />
         </v-row>
       </v-container>
@@ -85,6 +87,9 @@ export default Vue.extend({
       } else {
         return ''
       }
+    },
+    to() {
+      return this.$router.currentRoute.path
     }
   }
 })

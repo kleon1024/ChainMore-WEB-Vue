@@ -1,7 +1,5 @@
 <template>
-  <v-container fluid>
-    <DependCard />
-  </v-container>
+  <DependCard />
 </template>
 
 <script>
