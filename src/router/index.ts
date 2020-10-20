@@ -73,7 +73,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/certify/group/:id',
     name: 'Certify Group',
-    component: () => import(/* webpackChunkName: "certify" */ '../views/CertifyGroup.vue'),
+    component: () => import(/* webpackChunkName: "certify-group" */ '../views/CertifyGroup.vue'),
     meta: {
       requiresAuth: true
     }
@@ -81,14 +81,14 @@ const routes: Array<RouteConfig> = [
   {
     path: '/explore',
     name: 'Explore',
-    component: () => import(/* webpackChunkName: "explore" */ '../views/Explore.vue'),
+    component: () => import(/* webpackChunkName: "group-explore" */ '../views/Explore.vue'),
     meta: {
       requiresAuth: false
     },
     children: [
       {
         path: '/',
-        component: () => import(/* webpackChunkName: "explore" */ '../views/Domain.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Domain.vue'),
         meta: {
           requiresAuth: false
         }
@@ -96,7 +96,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'roadmap',
         name: 'Roadmap',
-        component: () => import(/* webpackChunkName: "roadmap" */ '../views/Roadmap.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Roadmap.vue'),
         meta: {
           requiresAuth: false
         }
@@ -104,7 +104,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'domain/:id',
         name: 'Domain',
-        component: () => import(/* webpackChunkName: "domain" */ '../views/Domain.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Domain.vue'),
         meta: {
           requiresAuth: false
         }
@@ -112,7 +112,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'collection/:id',
         name: 'Collection',
-        component: () => import(/* webpackChunkName: "collection" */ '../views/Collection.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Collection.vue'),
         meta: {
           requiresAuth: false
         }
@@ -120,7 +120,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'resource/:id',
         name: 'Resource',
-        component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Resource.vue'),
         meta: {
           requiresAuth: false
         }
@@ -128,7 +128,7 @@ const routes: Array<RouteConfig> = [
       {
         path: '/member',
         name: 'Member',
-        component: () => import(/* webpackChunkName: "member" */ '../views/Member.vue'),
+        component: () => import(/* webpackChunkName: "group-explore" */ '../views/Member.vue'),
         meta: {
           requiresAuth: false,
           title: '会员'
@@ -139,14 +139,14 @@ const routes: Array<RouteConfig> = [
   {
     path: '/person',
     name: 'Person',
-    component: () => import(/* webpackChunkName: "person" */ '../views/Person.vue'),
+    component: () => import(/* webpackChunkName: "group-person" */ '../views/Person.vue'),
     meta: {
       requiresAuth: true
     },
     children: [
       {
         path: '/',
-        component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/Home.vue'),
         meta: {
           requiresAuth: true
         }
@@ -154,7 +154,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'resource',
         name: 'Person\'s Resource',
-        component: () => import(/* webpackChunkName: "presource" */ '../views/PersonalResource.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalResource.vue'),
         meta: {
           requiresAuth: true
         }
@@ -162,7 +162,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'collection',
         name: 'Person\'s Collection',
-        component: () => import(/* webpackChunkName: "pcollection" */ '../views/PersonalCollection.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalCollection.vue'),
         meta: {
           requiresAuth: true
         }
@@ -170,7 +170,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'domain',
         name: 'Person\'s Domain',
-        component: () => import(/* webpackChunkName: "pdomain" */ '../views/PersonalDomain.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalDomain.vue'),
         meta: {
           requiresAuth: true
         }
@@ -178,7 +178,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'manage/domain/:id',
         name: 'Manage Domain',
-        component: () => import(/* webpackChunkName: "pmdomain" */ '../views/ManageDomain.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/ManageDomain.vue'),
         meta: {
           requiresAuth: true
         }
@@ -186,7 +186,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'learn/domain/:id',
         name: 'Learn Domain',
-        component: () => import(/* webpackChunkName: "pmdomain" */ '../views/LearnDomain.vue'),
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/LearnDomain.vue'),
         meta: {
           requiresAuth: true
         }

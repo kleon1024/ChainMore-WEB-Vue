@@ -21,10 +21,15 @@ module.exports = {
   },
   configureWebpack: config => {
     config.externals = {
+      // vue: 'Vue',
       axios: 'axios',
       vuex: 'Vuex',
       'vue-router': 'VueRouter',
-      'highlight.js': 'hljs'
+      'highlight.js': 'hljs',
+      moment: 'moment',
+      d3: 'd3',
+      marked: 'marked',
+      // 'vue-toasted': 'Toasted'
     }
 
     config.plugins.push(new CompressionWebpackPlugin({
