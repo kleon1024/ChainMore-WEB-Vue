@@ -9,7 +9,7 @@ import Marked from './directives/marked.js'
 import VuetifyConfirm from './components/dialogs/Confirm'
 
 Vue.use(Marked)
-Vue.use(VuetifyConfirm, { vuetify: vuetify })
+Vue.use(VuetifyConfirm, { vuetify })
 Vue.use(Toasted, {
   theme: 'outline',
   position: 'top-center',

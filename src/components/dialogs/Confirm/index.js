@@ -1,12 +1,13 @@
 import Confirm from './Confirm.vue'
+import Vuetify from 'vuetify/lib'
 
 function Install (Vue, options = {}) {
   const property = options.property || '$confirm'
   delete options.property
-  const vuetify = options.vuetify
+  let vuetify = options.vuetify
   delete options.vuetify
   if (!vuetify) {
-    console.warn('Module vuetify-confirm needs vuetify instance. Use Vue.use(VuetifyConfirm, { vuetify })')
+    vuetify = new Vuetify()
   }
   const Ctor = Vue.extend(Object.assign({ vuetify }, Confirm))
   function createDialogCmp (options) {

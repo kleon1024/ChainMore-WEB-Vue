@@ -21,7 +21,7 @@ module.exports = {
   },
   configureWebpack: config => {
     config.externals = {
-      // vue: 'Vue',
+      vue: 'Vue',
       axios: 'axios',
       vuex: 'Vuex',
       'vue-router': 'VueRouter',
@@ -29,6 +29,7 @@ module.exports = {
       moment: 'moment',
       d3: 'd3',
       marked: 'marked',
+      vuetify: 'Vuetify',
       // 'vue-toasted': 'Toasted'
     }
 
