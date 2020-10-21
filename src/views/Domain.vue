@@ -32,7 +32,6 @@
         > 开始学习 </v-btn>
       </v-container>
       <v-container
-        fluid
         fill-height
         v-if="!isLoggedIn"
       >
@@ -68,7 +67,14 @@
       v-if="domain"
     >
       <v-card-text>
-        <div class="caption"> 领域 </div>
+        <div class="caption">
+          <span class="pr-2"> 领域 </span>
+          <span v-for="(agg, i) in aggregatorDomains" :key="agg.title">
+            <a :href="agg.href" v-if="!agg.disabled"> {{ agg.text }} </a>
+            <span v-if="agg.disabled"> {{ agg.text }} </span>
+            <v-icon class="caption" v-if="i < aggregatorDomains.length - 1"> mdi-chevron-right </v-icon>
+          </span>
+        </div>
         <div class='title font-weight-bold text--primary'>{{ domain.title }}</div>
         <div
           v-if="domain.intro != ''"
@@ -208,7 +214,8 @@ import {
   unmarkDomain,
   getDependedDomains,
   checkCertify,
-  learn
+  learn,
+  getAggregatorDomains
 } from '@/api/domains'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
@@ -235,7 +242,8 @@ export default Vue.extend({
       marked: false,
       marking: false,
       drawer: false,
-      dependDomains: []
+      dependDomains: [],
+      aggregatorDomains: []
     }
   },
   mounted() {
@@ -243,6 +251,7 @@ export default Vue.extend({
     this.loadDomain()
     this.checkMark()
     this.loadDependDomains()
+    this.loadAggregatorDomains()
   },
   methods: {
     readableTime(val) {
@@ -324,6 +333,19 @@ export default Vue.extend({
           }
         )
       }
+    },
+    loadAggregatorDomains() {
+      getAggregatorDomains({ id: this.$route.params.id, distance: 999 }).then(res => {
+        this.aggregatorDomains.splice(0, this.aggregatorDomains.length)
+        for (let i = 0; i < res.items.length; i++) {
+          const domain = res.items[i]
+          this.aggregatorDomains.push({
+            text: domain.title,
+            disabled: domain.id === this.$route.params.id,
+            href: '/explore/domain/' + domain.id
+          })
+        }
+      })
     },
     loadCollections() {
       getDomainCollections({
