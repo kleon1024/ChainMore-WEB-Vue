@@ -40,13 +40,9 @@
         </v-row>
       </v-card-actions>
     </v-card>
-    <v-card
-      class="ma-0 pa-0"
-      color="transparent"
-      elevation="0"
-    >
-      <v-card-text> 资源列表 </v-card-text>
-    </v-card>
+    <v-list-item>
+      <v-list-item-content class="subtitle-2"> 资源列表 </v-list-item-content>
+    </v-list-item>
     <v-card
       v-for='(resource, index) in resources'
       :key='index'

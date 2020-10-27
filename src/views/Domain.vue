@@ -183,7 +183,7 @@
             :key="index"
             @click="refresh(opt.order, opt.desc)"
           >
-            <v-list-item-title>{{ opt.desc }}</v-list-item-title>
+            <v-list-item-content class="subtitle-2">{{ opt.desc }}</v-list-item-content>
           </v-list-item>
         </v-list>
       </v-menu>

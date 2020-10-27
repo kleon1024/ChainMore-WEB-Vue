@@ -9,6 +9,7 @@
         :x-small="xSmall"
         :outlined="outlined"
         :color="color"
+        :to="to"
         v-bind="attrs"
         v-on="on"
         @click="click"
@@ -62,6 +63,9 @@ export default Vue.extend({
     medium: {
       type: Boolean,
       default: true
+    },
+    to: {
+      type: Object
     }
   },
   methods: {

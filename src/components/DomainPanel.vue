@@ -1,81 +1,57 @@
 <template>
     <v-card>
-      <v-row>
-        <v-subheader class="mx-3">领域</v-subheader>
-        <v-card-actions>
-          <v-btn
-            icon
-            x-small
-            color='teal'
-            class="mx-3"
-            :to="{ path: '/op/create/domain' }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            x-small
-            color='teal'
-            class="mx-3"
-            :to="{ path: '/person/domain'}"
-          >
-            <v-icon> mdi-menu </v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-row>
-      <v-list>
-      <template v-for="(domain, index) in domains">
-      <v-list-item :key="index">
-        <router-link :to="{ path: '/explore/domain/' + domain.id}" >
-            <div class='subtitle-2 text--primary'> {{ domain.title }} </div>
-            <div class='caption font-weight-light'> 收藏于 {{ readableTime(domain.mark_time) }} </div>
-        </router-link>
-      </v-list-item>
-      </template>
+      <v-list dense>
+        <v-list-item>
+          <v-list-item-title>
+            <div> 最近收藏领域 </div>
+          </v-list-item-title>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-plus"
+              tip="创建领域"
+              text
+              icon
+              x-small
+              :to="{ path: '/op/create/domain' }"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-menu"
+              tip="所有收藏"
+              text
+              icon
+              x-small
+              :to="{ path: '/person/domain'}"
+            />
+          </v-list-item-action>
+        </v-list-item>
+        <v-list-item v-for="(domain, index) in domains" :key="index">
+          <v-list-item-title>
+          <router-link :to="{ path: '/explore/domain/' + domain.id}" >
+              <div class='subtitle-2 text--primary'> {{ domain.title }} </div>
+          </router-link>
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-card>
 </template>
 
 <script>
 import Vue from 'vue'
-import { getMarkedDomains } from '@/api/domains'
-import { readableTimestamp } from '@/utils/time'
+import { PersonModule } from '@/store/modules/person'
+import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 
 export default Vue.extend({
   name: 'ResourcePanel',
-  components: {},
+  components: {
+    TooltipIconButton
+  },
   data: () => ({
-    domains: [],
-    searchInput: ''
+    domains: []
   }),
-  methods: {
-    readableTime(val) {
-      return readableTimestamp(val)
-    }
-  },
   mounted() {
-    getMarkedDomains({ limit: 3 }).then((res) => {
-      this.domains.splice(0, this.domains.length)
-      this.domains.push(...res.items)
-    })
-  },
-  computed: {
-    width() {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      if (width > height) {
-        return width * 0.382
-      } else {
-        return width * 0.93
-      }
-    }
+    this.domains = PersonModule.domains.slice(0, 3)
   }
 })
 </script>
-
-<style>
-.mx-3 {
-  margin-left: 1em;
-  margin-right: 1em;
-}
-</style>

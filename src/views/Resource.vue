@@ -56,12 +56,9 @@
         </v-row>
       </v-card-actions>
     </v-card>
-    <v-card
-      color="transparent"
-      elevation="0"
-    >
-      <v-card-text> 相关集合 </v-card-text>
-    </v-card>
+    <v-list-item>
+      <v-list-item-content class="subtitle-2"> 相关集合 </v-list-item-content>
+    </v-list-item>
     <v-card
       v-for='(collection, index) in collections'
       :key='`${index}-collection`'

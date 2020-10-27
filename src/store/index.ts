@@ -4,12 +4,14 @@ import createPersistedState from 'vuex-persistedstate'
 import { secureStorage } from '@/globals'
 import { UserBean } from './modules/user'
 import { PersonBean } from './modules/person'
+import { GlobalBean } from './modules/global'
 
 Vue.use(Vuex)
 
 export interface RootBean {
     user: UserBean
     person: PersonBean
+    global: GlobalBean
 }
 
 // Declare empty store first, dynamically register all modules later.
