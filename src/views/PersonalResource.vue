@@ -121,7 +121,7 @@
               text
               icon
               x-small
-              @click="showTag = !showTag"
+              @click="onClickShowTagButton"
             />
           </v-list-item-action>
         </v-list-item>
@@ -161,100 +161,108 @@
             {{ item.title }}
           </v-chip>
         </div>
-        <template v-for="(resource, index) in finalResources">
-          <v-list-item
-            :key="`title${index}`"
-          >
-            <v-list-item-title>
-              <router-link :to="{path: '/explore/resource/' + resource.id}">
-                <div class='body-2 font-weight-bold text--primary'> {{ resource.title }} </div>
-                <div class='caption'> 收藏于 {{ readableTime(resource.star_time) }} </div>
-              </router-link>
-            </v-list-item-title>
-            <v-list-item-action>
-              <a
-                target='_blank'
-                :href="resource.url"
+        <v-virtual-scroll
+          :bench="benched"
+          :items="finalResources"
+          max-height="30vh"
+          :item-height="getResourceHeight()"
+        >
+          <template v-slot:default="{ item }">
+            <v-list-item
+              :key="`title${item.id}`"
+              id="resource-body"
+            >
+              <v-list-item-title>
+                <router-link :to="{path: '/explore/resource/' + item.id}">
+                  <div class='body-2 font-weight-bold text--primary'> {{ item.title }} </div>
+                  <div class='caption'> 收藏于 {{ readableTime(item.star_time) }} </div>
+                </router-link>
+              </v-list-item-title>
+              <v-list-item-action>
+                <a
+                  target='_blank'
+                  :href="item.url"
+                >
+                  <TooltipIconButton
+                    str="mdi-link-variant"
+                    tip="打开链接"
+                    text
+                    icon
+                    x-small
+                  />
+                </a>
+              </v-list-item-action>
+            </v-list-item>
+            <div v-if="showTag && item.id !== editingResourceTag" :key="`tag${item.id}`">
+              <v-chip
+                v-for="(tag, i) in item.tags"
+                :key="`tag${i}`"
+                x-small
+                :close="showRemoveResourceTag"
+                class="ml-3 caption"
               >
+                {{ toTag(tag).title }}
+              </v-chip>
+              <span class="ml-4">
                 <TooltipIconButton
-                  str="mdi-link-variant"
-                  tip="打开链接"
+                  str="mdi-tag-plus-outline"
+                  tip="管理标签"
                   text
                   icon
                   x-small
+                  @click="setEditingTags(item)"
                 />
-              </a>
-            </v-list-item-action>
-          </v-list-item>
-          <div v-if="showTag && index !== editingResourceTag" :key="`tag${index}`">
-            <v-chip
-              v-for="(item, index) in resource.tags"
-              :key="`tag${index}`"
-              x-small
-              :close="showRemoveResourceTag"
-              class="ml-3 caption"
-            >
-              {{ toTag(item).title }}
-            </v-chip>
-            <span class="ml-4">
-              <TooltipIconButton
-                str="mdi-tag-plus-outline"
-                tip="管理标签"
+              </span>
+            </div>
+            <v-list-item v-if="editingResourceTag === item.id" :key="`tagcombobox${item.id}`" id="tag-edit">
+              <v-list-item-title>
+              <v-combobox
+                v-model="comboboxSelectedTags"
+                :items="comboboxResourceTags"
+                :search-input.sync="search"
+                item-text="title"
+                item-value="id"
+                multiple
+                close
+                small-chips
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    small
+                    class="ma-2"
+                    :key="JSON.stringify(data.item)"
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    :disabled="data.disabled"
+                    close
+                    @click:close="onCloseTagChip(data)"
+                  >
+                    {{ data.item.title || data.item }}
+                  </v-chip>
+                </template>
+                <template v-slot:no-data>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title class="subtitle-2">
+                        {{ comboboxHint() }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-combobox>
+              </v-list-item-title>
+              <v-list-item-action>
+              <v-btn
+                class="ml-3"
                 text
-                icon
                 x-small
-                @click="setEditingTags(index)"
-              />
-            </span>
-          </div>
-          <v-list-item v-if="editingResourceTag === index" :key="`tagcombobox${index}`">
-            <v-list-item-title>
-            <v-combobox
-              v-model="comboboxSelectedTags"
-              :items="comboboxResourceTags"
-              :search-input.sync="search"
-              item-text="title"
-              item-value="id"
-              multiple
-              close
-              small-chips
-            >
-              <template v-slot:selection="data">
-                <v-chip
-                  small
-                  class="ma-2"
-                  :key="JSON.stringify(data.item)"
-                  v-bind="data.attrs"
-                  :input-value="data.selected"
-                  :disabled="data.disabled"
-                  close
-                  @click:close="onCloseTagChip(data)"
-                >
-                  {{ data.item.title || data.item }}
-                </v-chip>
-              </template>
-              <template v-slot:no-data>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title class="subtitle-2">
-                      {{ comboboxHint() }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-combobox>
-            </v-list-item-title>
-            <v-list-item-action>
-            <v-btn
-              class="ml-3"
-              text
-              x-small
-              @click="onCompleteEditTag">
-              完成
-            </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </template>
+                @click="onCompleteEditTag">
+                完成
+              </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </template>
+        </v-virtual-scroll>
       </v-list>
     </v-card>
   </v-container>
@@ -293,6 +301,7 @@ export default Vue.extend({
   data: () => ({
     showTag: false,
     search: '',
+    benched: 8,
     showRemoveResourceTag: false,
     comboboxResourceTags: [],
     comboboxSelectedTags: [],
@@ -310,6 +319,17 @@ export default Vue.extend({
     filterResourceTags: []
   }),
   methods: {
+    getResourceHeight() {
+      let height = 48
+      if (this.showTag) {
+        if (this.editingResourceTag !== -1) {
+          height += 48
+        } else {
+          height += 32
+        }
+      }
+      return height
+    },
     readableTime(val) {
       return readableTimestamp(val)
     },
@@ -339,6 +359,10 @@ export default Vue.extend({
           )
         }
       )
+
+      for (let i = 0; i < this.finalResources.length; i++) {
+        this.finalResources[i].index = i
+      }
     },
     onCloseFilterChip(type, item) {
       if (type === 'media') {
@@ -369,11 +393,18 @@ export default Vue.extend({
       this.filterResource()
       this.editingResourceTag = -1
     },
-    setEditingTags(index) {
+    setEditingTags(item) {
       if (this.editingResourceTag !== -1) {
         this.onCompleteEditTag()
       }
-      const resource = this.finalResources[index]
+      let resource
+      for (let i = 0; i < this.finalResources.length; i++) {
+        if (this.finalResources[i].id === item.id) {
+          resource = this.finalResources[i]
+          break
+        }
+      }
+      console.log(resource)
       this.comboboxResourceTags = PersonModule.resourceTags
 
       this.comboboxSelectedTags.splice(0, this.comboboxSelectedTags.length)
@@ -383,7 +414,7 @@ export default Vue.extend({
 
       this.comboboxTagNum = this.comboboxSelectedTags.length
 
-      this.editingResourceTag = index
+      this.editingResourceTag = item.id
     },
     toTag(index) {
       return PersonModule.resourceTagMap[index]
@@ -416,6 +447,10 @@ export default Vue.extend({
           }
         })
       }
+    },
+    onClickShowTagButton() {
+      this.showTag = !this.showTag
+      this.editingResourceTag = -1
     }
   },
   mounted() {
