@@ -164,7 +164,8 @@
         <v-virtual-scroll
           :bench="benched"
           :items="finalResources"
-          max-height="30vh"
+          height="dynamic"
+          max-height="600"
           :item-height="getResourceHeight()"
         >
           <template v-slot:default="{ item }">
