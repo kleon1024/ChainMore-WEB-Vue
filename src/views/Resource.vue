@@ -5,7 +5,7 @@
     >
       <v-card-text>
         <div class="caption"> 资源 </div>
-        <img :src="badgeUrl(resource)">
+        <img v-if="isTypeCached()" :src="badgeUrl(resource)">
         <div class='subtitle-1 text--primary'>{{ resource.title }}</div>
         <a
           :href="resource.url"
@@ -85,6 +85,7 @@ import {
   unstarResource
 } from '@/api/resources'
 import { UserModule } from '@/store/modules/user'
+import { GlobalModule } from '@/store/modules/global'
 import { readableTimestamp } from '@/utils/time'
 import { badgeUrl } from '@/utils/type'
 
@@ -104,6 +105,9 @@ export default Vue.extend({
     this.checkStar()
   },
   methods: {
+    isTypeCached() {
+      return GlobalModule.resourceTypeCached
+    },
     readableTime(val) {
       return readableTimestamp(val)
     },
@@ -183,7 +187,7 @@ export default Vue.extend({
       })
     },
     badgeUrl(resource) {
-      return badgeUrl(resource.resource_type, resource.media_type)
+      return badgeUrl(resource.resource_type_id, resource.media_type_id)
     }
   },
   computed: {

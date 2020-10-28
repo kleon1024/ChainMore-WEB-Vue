@@ -8,6 +8,11 @@ import { getResourceType } from '@/api/main'
 export interface GlobalBean {
   resourceTypeMap
   mediaTypeMap
+  resourceMediaTypeMap
+  resourceItems
+  mediaItems
+  resourceMediaNameMap
+  resourceTypeCached
 }
 
 const name = 'global'
@@ -22,37 +27,41 @@ const name = 'global'
 class Global extends VuexModule implements GlobalBean {
   public resourceTypeMap = {}
   public mediaTypeMap = {}
+  public resourceMediaTypeMap = {}
+  public resourceItems: any[] = []
+  public mediaItems: any[] = []
+  public resourceMediaNameMap = {}
+  public resourceTypeCached = false
+
+  @Mutation
+  public SET_RESOURCE_TYPE(types) {
+    types.forEach((type) => {
+      if (type.resource.id in this.resourceMediaTypeMap) {
+        this.resourceMediaTypeMap[type.resource.id].push(type.media)
+      } else {
+        this.resourceMediaTypeMap[type.resource.id] = [type.media]
+      }
+
+      this.resourceMediaNameMap[`${type.resource.id}${type.media.id}`] = type
+
+      if (!(type.resource.id in this.resourceTypeMap)) {
+        this.resourceTypeMap[type.resource.id] = type.resource
+      }
+      if (!(type.media.id in this.mediaTypeMap)) {
+        this.mediaTypeMap[type.media.id] = type.media
+      }
+    })
+    this.resourceItems.splice(0, this.resourceItems.length)
+    this.resourceItems.push(...Object.values(this.resourceTypeMap))
+    this.mediaItems.splice(0, this.mediaItems.length)
+    this.mediaItems.push(...Object.values(this.mediaTypeMap))
+    this.resourceTypeCached = true
+  }
 
   @Action
   public async UpdateResourceType() {
     getResourceType({}).then(res => {
-      const types: any[] = []
-      types.push(...res.items)
-      types.forEach((type) => {
-        if (type.resource_id in this.typeMap) {
-          this.typeMap[type.resource_id].push({
-            id: type.media_id,
-            name: this.mediaName[type.media_name]
-          })
-        } else {
-          this.resourceItems.push({
-            id: type.resource_id,
-            name: this.resourceName[type.resource_name]
-          })
-          this.typeMap[type.resource_id] = [
-            {
-              id: type.media_id,
-              name: this.mediaName[type.media_name]
-            }
-          ]
-        }
-        if (!(type.resource_id in this.resourceNameMap)) {
-          this.resourceNameMap[type.resource_id] = type.resource_name
-        }
-        if (!(type.media_id in this.mediaNameMap)) {
-          this.mediaNameMap[type.media_id] = type.media_name
-        }
-      })
+      this.SET_RESOURCE_TYPE(res.items)
     })
   }
 }

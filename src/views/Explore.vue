@@ -65,6 +65,7 @@
 <script>
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
+import { GlobalModule } from '@/store/modules/global'
 
 export default Vue.extend({
   name: 'Explore',
@@ -76,6 +77,9 @@ export default Vue.extend({
         UserModule.LogOut()
       }
     }
+  },
+  mounted() {
+    GlobalModule.UpdateResourceType()
   },
   computed: {
     loggedIn() {

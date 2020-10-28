@@ -109,7 +109,7 @@
       color="white"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="mr-3 align-center d-none d-sm-block">
+      <v-toolbar-title class="mr-3 align-center">
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
       </v-toolbar-title>
       <v-responsive max-width="365">

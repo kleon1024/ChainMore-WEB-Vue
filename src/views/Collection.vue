@@ -50,7 +50,7 @@
       :to="{ path: '/explore/resource/' + resource.id.toString() }"
     >
       <v-card-text>
-        <img :src="badgeUrl(resource)">
+        <img v-if="isTypeCached()" :src="badgeUrl(resource)">
         <div class='subtile-1 text--primary'> {{ resource.title }} </div>
         <div class='caption text--primary'><a
             target='_blank'
@@ -74,6 +74,7 @@ import {
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
 import { badgeUrl } from '@/utils/type'
+import { GlobalModule } from '@/store/modules/global'
 
 export default Vue.extend({
   name: 'Collection',
@@ -92,6 +93,9 @@ export default Vue.extend({
     this.checkCollect()
   },
   methods: {
+    isTypeCached() {
+      return GlobalModule.resourceTypeCached
+    },
     readableTime(val) {
       return readableTimestamp(val)
     },
@@ -171,7 +175,7 @@ export default Vue.extend({
       })
     },
     badgeUrl(resource) {
-      return badgeUrl(resource.resource_type, resource.media_type)
+      return badgeUrl(resource.resource_type_id, resource.media_type_id)
     }
   },
   computed: {
