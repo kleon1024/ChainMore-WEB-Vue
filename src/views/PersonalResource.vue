@@ -162,32 +162,31 @@
           </v-chip>
         </div>
         <template v-for="(resource, index) in finalResources">
-        <v-list-item
-          :key="`title${index}`"
-        >
-          <v-list-item-title>
-            <router-link :to="{path: '/explore/resource/' + resource.id}">
-              <div class='body-2 font-weight-bold text--primary'> {{ resource.title }} </div>
-              <div class='caption'> 收藏于 {{ readableTime(resource.star_time) }} </div>
-            </router-link>
-          </v-list-item-title>
-          <v-list-item-action>
-            <a
-              target='_blank'
-              :href="resource.url"
-            >
-              <TooltipIconButton
-                str="mdi-link-variant"
-                tip="打开链接"
-                text
-                icon
-                x-small
-              />
-            </a>
-          </v-list-item-action>
-        </v-list-item>
-        <v-expand-transition :key="`tag${index}`">
-          <div v-if="showTag && index !== editingResourceTag">
+          <v-list-item
+            :key="`title${index}`"
+          >
+            <v-list-item-title>
+              <router-link :to="{path: '/explore/resource/' + resource.id}">
+                <div class='body-2 font-weight-bold text--primary'> {{ resource.title }} </div>
+                <div class='caption'> 收藏于 {{ readableTime(resource.star_time) }} </div>
+              </router-link>
+            </v-list-item-title>
+            <v-list-item-action>
+              <a
+                target='_blank'
+                :href="resource.url"
+              >
+                <TooltipIconButton
+                  str="mdi-link-variant"
+                  tip="打开链接"
+                  text
+                  icon
+                  x-small
+                />
+              </a>
+            </v-list-item-action>
+          </v-list-item>
+          <div v-if="showTag && index !== editingResourceTag" :key="`tag${index}`">
             <v-chip
               v-for="(item, index) in resource.tags"
               :key="`tag${index}`"
@@ -208,7 +207,6 @@
               />
             </span>
           </div>
-        </v-expand-transition>
           <v-list-item v-if="editingResourceTag === index" :key="`tagcombobox${index}`">
             <v-list-item-title>
             <v-combobox
