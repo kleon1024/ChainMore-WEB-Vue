@@ -11,14 +11,24 @@ import {
   getMarkedDomains
 } from '@/api/domains'
 import { getCollectedCollections } from '@/api/collections'
-import { getStaredResources } from '@/api/resources'
+import {
+  getStaredResources,
+  getResourceTags,
+  createResourceTag,
+  deleteResourceTag,
+  modifyResourceTag,
+  stickResourceTag,
+  unstickResourceTag
+} from '@/api/resources'
 
 export interface PersonBean {
-    certifiedDomains: Array<any>
-    targetDomains: Array<any>
-    resources: Array<any>
-    collections: Array<any>
-    domains: Array<any>
+    certifiedDomains
+    targetDomains
+    resources
+    collections
+    domains
+    resourceTags
+    resourceTagMap
 }
 
 const name = 'person'
@@ -36,12 +46,68 @@ class Person extends VuexModule implements PersonBean {
     public resources: any[] = []
     public collections: any[] = []
     public domains: any[] = []
+    public resourceTags: any[] = []
+    public resourceTagMap: any = {}
+
+    @Mutation
+    REMOVE_RESOURCE_TAG(index) {
+      for (let i = 0; i < this.resourceTags.length; i++) {
+        if (this.resourceTags[i].id === index) {
+          this.resourceTags.splice(i, 1)
+          break
+        }
+      }
+
+      delete this.resourceTagMap[index]
+    }
+
+    @Mutation
+    MODIFY_RESOURCE_TAG(index, tag) {
+      for (let i = 0; i < this.resourceTags.length; i++) {
+        if (this.resourceTags[i].id === index) {
+          this.resourceTags[i] = tag
+          break
+        }
+      }
+
+      this.resourceTagMap[index] = tag
+    }
+
+    @Mutation
+    INSERT_RESOURCE_TAG(tag) {
+      this.resourceTags.push(tag)
+      this.resourceTagMap[tag.id] = tag
+    }
+
+    @Mutation
+    INSERT_RESOURCE_TAGS(tags) {
+      this.resourceTags.push(...tags)
+      for (let i = 0; i < tags.length; i++) {
+        this.resourceTagMap[tags[i].id] = tags[i]
+      }
+    }
+
+    @Mutation
+    RESET_RESOURCE_TAG() {
+      this.resourceTags.splice(0, this.resourceTags.length)
+      this.resourceTagMap = {}
+    }
 
     @Mutation
     REMOVE_RESOURCE(index) {
       for (let i = 0; i < this.resources.length; i++) {
         if (this.resources[i].id === index) {
           this.resources.splice(i, 1)
+          break
+        }
+      }
+    }
+
+    @Mutation
+    MODIFY_RESOURCE(resource) {
+      for (let i = 0; i < this.resources.length; i++) {
+        if (this.resources[i].id === resource.id) {
+          this.resources[i] = resource
           break
         }
       }
@@ -221,12 +287,84 @@ class Person extends VuexModule implements PersonBean {
     }
 
     @Action
+    public UpdateResourceTags() {
+      getResourceTags({ limit: 999 }).then((res) => {
+        this.RESET_RESOURCE_TAG()
+        this.INSERT_RESOURCE_TAGS(res.items)
+      })
+    }
+
+    @Action
+    public CreateResourceTag(params) {
+      createResourceTag({ title: params.title }).then((res) => {
+        if (res.items.length === 1) {
+          const tag = res.items[0]
+          this.INSERT_RESOURCE_TAG(tag)
+          stickResourceTag({ resource: params.resourceId, tag: tag.id }).then((res) => {
+            if (res.items.length === 1) {
+              const resource = res.items[0]
+              this.MODIFY_RESOURCE(resource)
+              if (params.callback) {
+                params.callback(resource, tag)
+              }
+            }
+          })
+        }
+      })
+    }
+
+    @Action
+    public RemoveResourceTag(index) {
+      deleteResourceTag({ id: index }).then((res) => {
+        if (res.items.length === 1) {
+          this.REMOVE_RESOURCE_TAG(index)
+        }
+      })
+    }
+
+    @Action
+    public ModifyResourceTag(params) {
+      modifyResourceTag({ id: params.index, title: params.title }).then((res) => {
+        if (res.items.length === 1) {
+          this.MODIFY_RESOURCE_TAG(params.index, res.items[0])
+        }
+      })
+    }
+
+    @Action
+    public StickResourceTag(params) {
+      stickResourceTag({ resource: params.resource, tag: params.tag }).then((res) => {
+        if (res.items.length === 1) {
+          const resource = res.items[0]
+          this.MODIFY_RESOURCE(resource)
+          if (params.callback) {
+            params.callback(resource)
+          }
+        }
+      })
+    }
+
+    @Action
+    public UnstickResourceTag(params) {
+      unstickResourceTag({ resource: params.resource, tag: params.tag }).then((res) => {
+        if (res.items.length === 1) {
+          const resource = res.items[0]
+          this.MODIFY_RESOURCE(resource)
+          if (params.callback) {
+            params.callback(resource)
+          }
+        }
+      })
+    }
+
+    @Action
     public async Initialize() {
       this.UpdateDomains()
       this.UpdateCollections()
       this.UpdateResources()
       this.UpdateTargetDomains()
       this.UpdateCertifiedDomains()
+      this.UpdateResourceTags()
     }
 }
 

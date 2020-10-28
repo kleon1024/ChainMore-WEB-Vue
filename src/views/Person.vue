@@ -176,6 +176,7 @@
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
 import { PersonModule } from '@/store/modules/person'
+import { GlobalModule } from '@/store/modules/global'
 
 export default Vue.extend({
   name: 'Person',
@@ -290,6 +291,7 @@ export default Vue.extend({
   },
   mounted() {
     PersonModule.Initialize()
+    GlobalModule.UpdateResourceType()
   }
 })
 </script>

@@ -7,6 +7,48 @@ export const getResource = (params: any) =>
     params
   })
 
+export const getResourceTags = (params: any) =>
+  request({
+    url: '/resource/tags',
+    method: 'get',
+    params
+  })
+
+export const createResourceTag = (data: any) =>
+  request({
+    url: '/resource/tag',
+    method: 'post',
+    data
+  })
+
+export const modifyResourceTag = (data: any) =>
+  request({
+    url: '/resource/tag',
+    method: 'post',
+    data
+  })
+
+export const deleteResourceTag = (params: any) =>
+  request({
+    url: '/resource/tag',
+    method: 'delete',
+    params
+  })
+
+export const stickResourceTag = (data: any) =>
+  request({
+    url: '/resource/stick',
+    method: 'post',
+    data
+  })
+
+export const unstickResourceTag = (params: any) =>
+  request({
+    url: '/resource/stick',
+    method: 'delete',
+    params
+  })
+
 export const createResource = (data: any) =>
   request({
     url: '/resource',
