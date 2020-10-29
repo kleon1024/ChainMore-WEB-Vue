@@ -89,7 +89,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_RESOURCE_TAG() {
-      this.resourceTags.splice(0, this.resourceTags.length)
+      this.resourceTags = []
       this.resourceTagMap = {}
     }
 
@@ -125,7 +125,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_RESOURCE() {
-      this.resources.splice(0, this.resources.length)
+      this.resources = []
     }
 
     @Mutation
@@ -150,7 +150,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_COLLECTION() {
-      this.collections.splice(0, this.collections.length)
+      this.collections = []
     }
 
     @Mutation
@@ -175,7 +175,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_DOMAIN() {
-      this.domains.splice(0, this.domains.length)
+      this.domains = []
     }
 
     @Mutation
@@ -190,7 +190,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_CERTIFIED_DOMAIN() {
-      this.certifiedDomains.splice(0, this.certifiedDomains.length)
+      this.certifiedDomains = []
     }
 
     @Mutation
@@ -210,7 +210,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     RESET_TARGET_DOMAIN() {
-      this.targetDomains.splice(0, this.targetDomains.length)
+      this.targetDomains = []
     }
 
     @Mutation

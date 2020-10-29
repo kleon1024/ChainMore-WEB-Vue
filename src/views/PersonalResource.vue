@@ -4,13 +4,14 @@
       <v-list>
         <v-subheader class="mb-3"> 过滤资源 </v-subheader>
         <v-list-item>
-          <v-combobox
+          <v-autocomplete
             class="subtitle-2"
             v-model="resourceTypes"
             :items="allResourceTypes"
             item-text="name_zh_cn"
             item-value="id"
             label="资源类型"
+            hide-selected
             multiple
             chips
             dense
@@ -18,7 +19,6 @@
               <template v-slot:selection="data">
                 <v-chip
                   small
-                  class="ma-2"
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
                   :input-value="data.selected"
@@ -29,16 +29,17 @@
                   {{ data.item.name_zh_cn }}
                 </v-chip>
               </template>
-          </v-combobox>
+          </v-autocomplete>
         </v-list-item>
         <v-list-item>
-          <v-combobox
+          <v-autocomplete
             class="subtitle-2"
             v-model="mediaTypes"
             :items="allMediaTypes"
             item-text="name_zh_cn"
             item-value="id"
             label="媒体类型"
+            hide-selected
             multiple
             chips
             dense
@@ -46,7 +47,6 @@
               <template v-slot:selection="data">
                 <v-chip
                   small
-                  class="ma-2"
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
                   :input-value="data.selected"
@@ -57,16 +57,17 @@
                   {{ data.item.name_zh_cn }}
                 </v-chip>
               </template>
-          </v-combobox>
+          </v-autocomplete>
         </v-list-item>
         <v-list-item>
-          <v-combobox
+          <v-autocomplete
             class="subtitle-2"
             v-model="resourceTags"
             :items="allTags"
             item-text="title"
             item-value="id"
             label="标签"
+            hide-selected
             multiple
             chips
             dense
@@ -74,7 +75,6 @@
               <template v-slot:selection="data">
                 <v-chip
                   small
-                  class="ma-2"
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
                   :input-value="data.selected"
@@ -85,9 +85,53 @@
                   {{ data.item.title }}
                 </v-chip>
               </template>
-          </v-combobox>
+          </v-autocomplete>
         </v-list-item>
-        <div class="pa-5"></div>
+        <div class="pa-8"></div>
+      </v-list>
+    </v-bottom-sheet>
+    <v-bottom-sheet v-model="showTagMange">
+      <v-list>
+        <v-subheader class="mb-3"> 资源标签 </v-subheader>
+        <v-list-item>
+        <v-combobox
+          v-model="comboboxSelectedTags"
+          :items="comboboxResourceTags"
+          :search-input.sync="search"
+          item-text="title"
+          item-value="id"
+          hide-selected
+          multiple
+          close
+          dense
+          small-chips
+        >
+          <template v-slot:selection="data">
+            <v-chip
+              x-small
+              class="ma-1"
+              :key="JSON.stringify(data.item)"
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              :disabled="data.disabled"
+              close
+              @click:close="onCloseTagChip(data)"
+            >
+              {{ data.item.title || data.item }}
+            </v-chip>
+          </template>
+          <template v-slot:no-data>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title class="subtitle-2">
+                  {{ comboboxHint() }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-combobox>
+        </v-list-item>
+        <div class="pa-8"></div>
       </v-list>
     </v-bottom-sheet>
     <v-card>
@@ -129,7 +173,8 @@
           class="pl-2"
           v-if="filterMediaTypes.length > 0
           || filterResourceTypes.length > 0
-          || filterResourceTags.length > 0">
+          || filterResourceTags.length > 0"
+        >
           <v-chip
             v-for="(item, index) in filterMediaTypes"
             :key="`media${index}`"
@@ -138,7 +183,7 @@
             close
             @click:close="onCloseFilterChip('media', item)"
           >
-            {{ item.name_zh_cn }}
+            {{ getMediaTypeName(item) }}
           </v-chip>
           <v-chip
             v-for="(item, index) in filterResourceTypes"
@@ -148,7 +193,7 @@
             close
             @click:close="onCloseFilterChip('resource', item)"
           >
-            {{ item.name_zh_cn }}
+            {{ getResourceTypeName(item) }}
           </v-chip>
           <v-chip
             v-for="(item, index) in filterResourceTags"
@@ -158,7 +203,7 @@
             close
             @click:close="onCloseFilterChip('tag', item)"
           >
-            {{ item.title }}
+            {{ getResourceTagName(item) }}
           </v-chip>
         </div>
         <v-virtual-scroll
@@ -193,29 +238,34 @@
                   />
                 </a>
               </v-list-item-action>
+              <v-list-item-action v-if="showTag">
+                  <TooltipIconButton
+                    str="mdi-tag-plus-outline"
+                    tip="管理标签"
+                    text
+                    icon
+                    x-small
+                    @click="setEditingTags(item)"
+                  />
+              </v-list-item-action>
             </v-list-item>
-            <div v-if="showTag && item.id !== editingResourceTag" :key="`tag${item.id}`">
-              <v-chip
-                v-for="(tag, i) in item.tags"
-                :key="`tag${i}`"
-                x-small
-                :close="showRemoveResourceTag"
-                class="ml-3 caption"
+            <div v-if="showTag" :key="`tag${item.id}`" class="mx-3">
+              <v-chip-group
+                center-active
+                active-class="primary--text"
               >
-                {{ toTag(tag).title }}
-              </v-chip>
-              <span class="ml-4">
-                <TooltipIconButton
-                  str="mdi-tag-plus-outline"
-                  tip="管理标签"
-                  text
-                  icon
+                <v-chip
+                  v-for="(tag, i) in item.tags"
+                  :key="`tag${i}`"
                   x-small
-                  @click="setEditingTags(item)"
-                />
-              </span>
+                  :close="showRemoveResourceTag"
+                  class="caption"
+                >
+                  {{ toTag(tag).title }}
+                </v-chip>
+              </v-chip-group>
             </div>
-            <v-list-item v-if="editingResourceTag === item.id" :key="`tagcombobox${item.id}`" id="tag-edit">
+            <!-- <v-list-item v-if="editingResourceTag === item.id" :key="`tagcombobox${item.id}`" id="tag-edit">
               <v-list-item-title>
               <v-combobox
                 v-model="comboboxSelectedTags"
@@ -223,14 +273,16 @@
                 :search-input.sync="search"
                 item-text="title"
                 item-value="id"
+                hide-selected
                 multiple
                 close
+                dense
                 small-chips
               >
                 <template v-slot:selection="data">
                   <v-chip
-                    small
-                    class="ma-2"
+                    x-small
+                    class="ma-1"
                     :key="JSON.stringify(data.item)"
                     v-bind="data.attrs"
                     :input-value="data.selected"
@@ -261,7 +313,7 @@
                 完成
               </v-btn>
               </v-list-item-action>
-            </v-list-item>
+            </v-list-item> -->
           </template>
         </v-virtual-scroll>
       </v-list>
@@ -300,9 +352,10 @@ export default Vue.extend({
     }
   },
   data: () => ({
-    showTag: false,
+    showTag: true,
+    showTagMange: false,
     search: '',
-    benched: 8,
+    benched: 24,
     showRemoveResourceTag: false,
     comboboxResourceTags: [],
     comboboxSelectedTags: [],
@@ -320,14 +373,19 @@ export default Vue.extend({
     filterResourceTags: []
   }),
   methods: {
+    getMediaTypeName(id) {
+      return GlobalModule.mediaTypeMap[id].name_zh_cn
+    },
+    getResourceTypeName(id) {
+      return GlobalModule.resourceTypeMap[id].name_zh_cn
+    },
+    getResourceTagName(id) {
+      return PersonModule.resourceTags[id].title
+    },
     getResourceHeight() {
       let height = 48
       if (this.showTag) {
-        if (this.editingResourceTag !== -1) {
-          height += 48
-        } else {
-          height += 32
-        }
+        height += 32
       }
       return height
     },
@@ -342,21 +400,21 @@ export default Vue.extend({
       return false
     },
     filterResource() {
-      this.filterMediaTypes.splice(0, this.filterMediaTypes.length)
+      this.filterMediaTypes = []
       this.filterMediaTypes.push(...this.mediaTypes)
 
-      this.filterResourceTypes.splice(0, this.filterResourceTypes.length)
+      this.filterResourceTypes = []
       this.filterResourceTypes.push(...this.resourceTypes)
 
-      this.filterResourceTags.splice(0, this.filterResourceTags.length)
+      this.filterResourceTags = []
       this.filterResourceTags.push(...this.resourceTags)
 
       this.finalResources = this.searchedResources.filter(
         (r) => {
           return (
-            this.arrayIn(this.mediaTypes, r, (a, r) => r.media_type_id === a.id) &&
-            this.arrayIn(this.resourceTypes, r, (a, r) => r.resource_type_id === a.id) &&
-            this.arrayIn(this.resourceTags, r, (a, r) => r.tags.includes(a.id))
+            this.arrayIn(this.mediaTypes, r, (a, r) => r.media_type_id === a) &&
+            this.arrayIn(this.resourceTypes, r, (a, r) => r.resource_type_id === a) &&
+            this.arrayIn(this.resourceTags, r, (a, r) => r.tags.includes(a))
           )
         }
       )
@@ -368,21 +426,21 @@ export default Vue.extend({
     onCloseFilterChip(type, item) {
       if (type === 'media') {
         for (let i = 0; i < this.mediaTypes.length; i++) {
-          if (this.mediaTypes[i].id === item.id) {
+          if (this.mediaTypes[i] === item) {
             this.mediaTypes.splice(i, 1)
             break
           }
         }
       } else if (type === 'resource') {
         for (let i = 0; i < this.resourceTypes.length; i++) {
-          if (this.resourceTypes[i].id === item.id) {
+          if (this.resourceTypes[i] === item) {
             this.resourceTypes.splice(i, 1)
             break
           }
         }
       } else if (type === 'tag') {
         for (let i = 0; i < this.resourceTags.length; i++) {
-          if (this.resourceTags[i].id === item.id) {
+          if (this.resourceTags[i] === item) {
             this.resourceTags.splice(i, 1)
             break
           }
@@ -393,6 +451,7 @@ export default Vue.extend({
     onCompleteEditTag() {
       this.filterResource()
       this.editingResourceTag = -1
+      this.showTagMange = false
     },
     setEditingTags(item) {
       if (this.editingResourceTag !== -1) {
@@ -405,10 +464,9 @@ export default Vue.extend({
           break
         }
       }
-      console.log(resource)
       this.comboboxResourceTags = PersonModule.resourceTags
 
-      this.comboboxSelectedTags.splice(0, this.comboboxSelectedTags.length)
+      this.comboboxSelectedTags = []
       for (let i = 0; i < resource.tags.length; i++) {
         this.comboboxSelectedTags.push(PersonModule.resourceTagMap[resource.tags[i]])
       }
@@ -416,20 +474,32 @@ export default Vue.extend({
       this.comboboxTagNum = this.comboboxSelectedTags.length
 
       this.editingResourceTag = item.id
+      this.showTagMange = true
     },
     toTag(index) {
       return PersonModule.resourceTagMap[index]
     },
     comboboxHint() {
-      if (this.comboboxResourceTags.length === 0) {
+      if (this.search !== null && this.search !== '') {
+        return '没有找到这个标签，按回车或确认键立即创建'
+      } else if (this.comboboxResourceTags.length === 0) {
         return '还没有创建任何标签，直接输入创建标签'
+      } else if (this.comboboxSelectedTags.length === this.comboboxResourceTags.length) {
+        return '已添加所有已有标签'
+      } else {
+        return '发生了什么？'
       }
     },
     onCloseTagChip(data) {
       data.parent.selectItem(data.item)
       this.comboboxTagNum = this.comboboxSelectedTags.length
       if (data.item.id) {
-        const currentResource = this.finalResources[this.editingResourceTag]
+        let currentResource
+        for (let i = 0; i < this.finalResources.length; i++) {
+          if (this.finalResources[i].id === this.editingResourceTag) {
+            currentResource = this.finalResources[i]
+          }
+        }
         PersonModule.UnstickResourceTag({
           resource: currentResource.id,
           tag: data.item.id,
@@ -460,7 +530,7 @@ export default Vue.extend({
   },
   watch: {
     query(val) {
-      this.searchedResources.splice(0, this.searchedResources.length)
+      this.searchedResources = []
       this.searchedResources.push(
         ...searchQuery(val, PersonModule.resources,
           (r, q) => r.title.toLowerCase().includes(q) || r.url.includes(q)))
@@ -475,11 +545,17 @@ export default Vue.extend({
           this.comboboxTagNum = this.comboboxSelectedTags.length
           const resourceTag = this.comboboxSelectedTags[this.comboboxSelectedTags.length - 1]
           if (resourceTag.id !== undefined) {
-            const currentResource = this.finalResources[this.editingResourceTag]
+            let currentResource
+            for (let i = 0; i < this.finalResources.length; i++) {
+              if (this.finalResources[i].id === this.editingResourceTag) {
+                currentResource = this.finalResources[i]
+              }
+            }
             PersonModule.StickResourceTag({
               resource: currentResource.id,
               tag: resourceTag.id,
               callback: (resource) => {
+                console.log(resource)
                 for (let i = 0; i < this.finalResources.length; i++) {
                   if (this.finalResources[i].id === resource.id) {
                     this.finalResources[i] = resource

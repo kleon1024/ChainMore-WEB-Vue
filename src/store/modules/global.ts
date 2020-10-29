@@ -51,9 +51,9 @@ class Global extends VuexModule implements GlobalBean {
         this.mediaTypeMap[type.media.id] = type.media
       }
     })
-    this.resourceItems.splice(0, this.resourceItems.length)
+    this.resourceItems = []
     this.resourceItems.push(...Object.values(this.resourceTypeMap))
-    this.mediaItems.splice(0, this.mediaItems.length)
+    this.mediaItems = []
     this.mediaItems.push(...Object.values(this.mediaTypeMap))
     this.resourceTypeCached = true
   }
