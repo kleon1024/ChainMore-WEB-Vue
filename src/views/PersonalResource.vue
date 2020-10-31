@@ -534,6 +534,7 @@ export default Vue.extend({
       this.searchedResources.push(
         ...searchQuery(val, PersonModule.resources,
           (r, q) => r.title.toLowerCase().includes(q) || r.url.includes(q)))
+      this.filterResource()
     },
     showFilter(val) {
       if (val) return
