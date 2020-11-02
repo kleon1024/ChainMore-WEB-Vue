@@ -156,8 +156,8 @@
           <v-list-item-action>
           </v-list-item-action>
         </v-list-item>
-        <v-list-item v-for="(tag, index) in allTags" :key="`tag${index}`">
-          <v-list-item-title>
+        <v-list-item v-for="(tag, index) in topNTags" :key="`tag${index}`">
+          <v-list-item-title class="text-truncate">
             {{ tag.title }}
           </v-list-item-title>
           <v-list-item-action>
@@ -196,6 +196,24 @@
             </v-btn>
           </v-list-item-action>
         </v-list-item>
+        <v-list-item v-if="showTopNTags <= allTags.length && !showMoreTags">
+          <v-btn
+            text
+            block
+            @click="onClickShowMoreTag"
+          >
+            显示更多
+          </v-btn>
+        </v-list-item>
+        <v-list-item v-if="showMoreTags">
+          <v-btn
+            text
+            block
+            @click="onClickShowLessTag"
+          >
+            显示更少
+          </v-btn>
+        </v-list-item>
       </v-list>
     </v-form>
     </v-card>
@@ -233,6 +251,27 @@
               @click="onClickShowTagButton"
             />
           </v-list-item-action>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-label-outline"
+              :tip="showBadge ? '隐藏类型' : '显示类型'"
+              text
+              icon
+              x-small
+              @click="onClickShowBadgeButton"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-clock-outline"
+              tip="收藏时间"
+              text
+              icon
+              x-small
+              @click="showTime = !showTime"
+            />
+          </v-list-item-action>
+          <v-list-item-action></v-list-item-action>
         </v-list-item>
         <div
           class="pl-2"
@@ -288,8 +327,8 @@
             <v-list-item>
               <v-list-item-title>
                 <router-link :to="{path: '/explore/resource/' + item.id}">
-                  <div class='body-2 font-weight-bold text--primary'> {{ item.title }} </div>
-                  <div class='caption'> 收藏于 {{ readableTime(item.star_time) }} </div>
+                  <div class='body-2 font-weight-bold text--primary text-truncate'> {{ item.title }} </div>
+                  <div v-if="showTime" class='caption'> 收藏于 {{ readableTime(item.star_time) }} </div>
                 </router-link>
               </v-list-item-title>
               <v-list-item-action>
@@ -315,6 +354,9 @@
                     x-small
                     @click="setEditingTags(item)"
                   />
+              </v-list-item-action>
+              <v-list-item-action v-if="isTypeCached() && showBadge" class="mx-2">
+                <img :src="badgeUrl(item)">
               </v-list-item-action>
             </v-list-item>
             <div v-if="showTag" :key="`tag${item.id}`" class="mx-3">
@@ -397,6 +439,7 @@ import { GlobalModule } from '@/store/modules/global'
 import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
 import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
+import { badgeUrl } from '@/utils/type'
 
 export default Vue.extend({
   name: 'PersonalResource',
@@ -418,11 +461,16 @@ export default Vue.extend({
     },
     allTags() {
       return PersonModule.resourceTags
+    },
+    topNTags() {
+      return PersonModule.resourceTags.slice(0, this.showTopNTags)
     }
   },
   data() {
     return {
+      showTime: false,
       showTag: true,
+      showBadge: false,
       showTagMange: false,
       search: '',
       benched: 24,
@@ -443,6 +491,8 @@ export default Vue.extend({
       filterResourceTypes: [],
       filterResourceTags: [],
       addingResourceTag: false,
+      showMoreTags: false,
+      showTopNTags: 3,
       resourceTagCount: 32,
       form: {
         resourceTag: ''
@@ -458,6 +508,12 @@ export default Vue.extend({
     }
   },
   methods: {
+    isTypeCached() {
+      return GlobalModule.resourceTypeCached
+    },
+    badgeUrl(resource) {
+      return badgeUrl(resource.resource_type_id, resource.media_type_id)
+    },
     getMediaTypeName(id) {
       return GlobalModule.mediaTypeMap[id].name_zh_cn
     },
@@ -608,7 +664,11 @@ export default Vue.extend({
     },
     onClickShowTagButton() {
       this.showTag = !this.showTag
-      this.editingResourceTag = -1
+      this.clearAllStatus()
+    },
+    onClickShowBadgeButton() {
+      this.showBadge = !this.showBadge
+      this.clearAllStatus()
     },
     onClickRemoveTag(tag) {
       this.$confirm('一旦删除，不可恢复').then(res => {
@@ -648,6 +708,15 @@ export default Vue.extend({
     },
     clearAllStatus() {
       this.addingResourceTag = false
+      this.editingResourceTag = -1
+    },
+    onClickShowMoreTag() {
+      this.showTopNTags = this.allTags.length
+      this.showMoreTags = true
+    },
+    onClickShowLessTag() {
+      this.showTopNTags = 3
+      this.showMoreTags = false
     }
   },
   mounted() {

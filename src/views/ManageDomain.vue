@@ -503,20 +503,14 @@
             </v-list-item>
           </v-list-group>
           <v-list-item v-if="!addGrouping">
-            <v-row
-              align="center"
-              justify="center"
+            <v-btn
+              text
+              block
+              color="primary"
+              @click="onClickAddGroup"
             >
-              <v-list-item-action class="subtitle-2">
-                <v-btn
-                  text
-                  outlined
-                  @click="onClickAddGroup"
-                >
-                  添加认证组
-                </v-btn>
-              </v-list-item-action>
-            </v-row>
+              添加认证组
+            </v-btn>
           </v-list-item>
           <v-list-item v-if="addGrouping">
             <v-list-item-title>
@@ -547,7 +541,7 @@
     <v-card class="mb-4" v-if="domain.certified">
       <v-subheader> 认证选项 </v-subheader>
       <v-card-actions>
-        <v-btn outlined block @click="uncertifyDomain">
+        <v-btn text block @click="uncertifyDomain">
           放弃认证
         </v-btn>
       </v-card-actions>

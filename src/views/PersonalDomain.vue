@@ -1,31 +1,56 @@
 <template>
   <v-container fluid>
     <v-card>
-      <v-row>
-        <v-subheader class="mx-3">领域</v-subheader>
-        <v-card-actions>
-          <v-btn
-            icon
-            x-small
-            color='teal'
-            class="mx-3"
-            :to="{ path: '/op/create/domain' }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-row>
-    </v-card>
-    <v-card
-      class="my-1"
-      v-for="(domain, index) in searchedDomains"
-      :key="index"
-      :to="{ path: '/explore/domain/' + domain.id}"
-    >
-      <v-card-text>
-        <div class='body-2 text--primary'> {{ domain.title }} </div>
-        <div class='caption'> 收藏于 {{ readableTime(domain.mark_time) }} </div>
-      </v-card-text>
+      <v-list dense>
+        <v-list-item>
+          <v-subheader class="pl-0">领域</v-subheader>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-plus"
+              tip="创建领域"
+              text
+              icon
+              x-small
+              :to="{ path: '/op/create/domain' }"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-clock-outline"
+              tip="收藏时间"
+              text
+              icon
+              x-small
+              @click="showTime = !showTime"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+          </v-list-item-action>
+        </v-list-item>
+        <DynamicScroller
+          :items="searchedDomains"
+          :min-item-size="32"
+          class="scroller"
+        >
+          <template v-slot:default="{ item, index, active }">
+            <DynamicScrollerItem
+              :item="item"
+              :active="active"
+              :data-index="index"
+              :size-dependencies="[]"
+            >
+            <v-list-item>
+              <v-list-item-title>
+                <router-link :to="{ path: `/explore/domain/${item.id}`}">
+                  <div class='body-2 font-weight-bold text--primary text-truncate'> {{ item.title }} </div>
+                  <div v-if="showTime" class='caption'> 收藏于 {{ readableTime(item.mark_time) }} </div>
+                </router-link>
+              </v-list-item-title>
+            </v-list-item>
+          </DynamicScrollerItem>
+        </template>
+        </DynamicScroller>
+      </v-list>
     </v-card>
   </v-container>
 </template>
@@ -35,10 +60,13 @@ import Vue from 'vue'
 import { PersonModule } from '@/store/modules/person'
 import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
+import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 
 export default Vue.extend({
   name: 'ResourcePanel',
-  components: {},
+  components: {
+    TooltipIconButton
+  },
   props: {
     query: {
       type: String,
@@ -47,7 +75,8 @@ export default Vue.extend({
   },
   data: () => ({
     searchedDomains: [],
-    searchInput: ''
+    searchInput: '',
+    showTime: false
   }),
   methods: {
     readableTime(val) {
@@ -67,3 +96,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped>
+.scroller {
+  max-height: 600px;
+}
+</style>

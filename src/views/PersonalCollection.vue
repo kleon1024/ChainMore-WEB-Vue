@@ -1,32 +1,58 @@
 <template>
   <v-container fluid>
     <v-card>
-      <v-row>
-        <v-subheader class="mx-3">合集</v-subheader>
-        <v-card-actions>
-          <v-btn
-            icon
-            x-small
-            color='teal'
-            class="mx-3"
-            :to="{ path: '/op/create/collection' }"
-          >
-            <v-icon> mdi-plus </v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-row>
-    </v-card>
-    <v-card
-      class="my-1"
-      v-for="(collection, index) in searchedCollections"
-      :key="index"
-      :to="{ path:'/explore/collection/' + collection.id}"
-    >
-      <v-card-text>
-        <div class='caption font-weight-bold text--primary'> {{ collection.domaintitle }}</div>
-        <div class='body-2 text--primary'> {{ collection.title }} </div>
-        <div class='caption'> 收藏于 {{ readableTime(collection.collect_time) }} </div>
-      </v-card-text>
+      <v-list dense>
+        <v-list-item>
+          <v-subheader class="pl-0">合集</v-subheader>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-plus"
+              tip="发布集合"
+              text
+              icon
+              x-small
+              :to="{ path: '/op/create/collection' }"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-clock-outline"
+              tip="收藏时间"
+              text
+              icon
+              x-small
+              @click="showTime = !showTime"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+          </v-list-item-action>
+        </v-list-item>
+        <DynamicScroller
+          :items="searchedCollections"
+          :min-item-size="32"
+          class="scroller"
+        >
+          <template v-slot:default="{ item, index, active }">
+            <DynamicScrollerItem
+              :item="item"
+              :active="active"
+              :data-index="index"
+              :size-dependencies="[]"
+            >
+              <v-list-item>
+                <v-list-item-title>
+                  <router-link :to="{ path: `/explore/collection/${item.id}`}">
+                    <div class='font-weight-bold text--primary text-truncate body-2 text--primary'> {{ item.title }} </div>
+                    <div v-if="showTime" class='caption'> 收藏于 {{ readableTime(item.collect_time) }} </div>
+                  </router-link>
+                </v-list-item-title>
+                <v-list-item-action>
+                </v-list-item-action>
+              </v-list-item>
+            </DynamicScrollerItem>
+          </template>
+        </DynamicScroller>
+      </v-list>
     </v-card>
   </v-container>
 </template>
@@ -36,10 +62,13 @@ import Vue from 'vue'
 import { PersonModule } from '@/store/modules/person'
 import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
+import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 
 export default Vue.extend({
   name: 'PersonalCollection',
-  components: {},
+  components: {
+    TooltipIconButton
+  },
   props: {
     query: {
       type: String,
@@ -48,7 +77,8 @@ export default Vue.extend({
   },
   data: () => ({
     searchedCollections: [],
-    searchInput: ''
+    searchInput: '',
+    showTime: false
   }),
   methods: {
     readableTime(val) {
@@ -68,3 +98,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped>
+.scroller {
+  max-height: 600px;
+}
+</style>

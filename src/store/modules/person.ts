@@ -84,7 +84,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     INSERT_RESOURCE_TAG(tag) {
-      this.resourceTags.push(tag)
+      this.resourceTags.unshift(tag)
       this.resourceTagMap[tag.id] = tag
     }
 
