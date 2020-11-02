@@ -7,7 +7,10 @@ import vuetify from './plugins/vuetify'
 import Toasted from 'vue-toasted'
 import Marked from './directives/marked.js'
 import VuetifyConfirm from './components/dialogs/Confirm'
+import VueVirtualScoller from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 
+Vue.use(VueVirtualScoller)
 Vue.use(Marked)
 Vue.use(VuetifyConfirm, { vuetify })
 Vue.use(Toasted, {

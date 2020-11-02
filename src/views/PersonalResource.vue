@@ -134,7 +134,72 @@
         <div class="pa-8"></div>
       </v-list>
     </v-bottom-sheet>
-    <v-card>
+    <v-card class="mb-3">
+      <v-form
+        ref="form"
+        v-model="valid"
+        @submit.native.prevent
+      >
+      <v-list dense>
+        <v-list-item>
+          <v-subheader class="pl-0">标签管理</v-subheader>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-plus"
+              tip="添加标签"
+              text
+              icon
+              x-small
+              @click="onClickAddTag"
+            />
+          </v-list-item-action>
+          <v-list-item-action>
+          </v-list-item-action>
+        </v-list-item>
+        <v-list-item v-for="(tag, index) in allTags" :key="`tag${index}`">
+          <v-list-item-title>
+            {{ tag.title }}
+          </v-list-item-title>
+          <v-list-item-action>
+            <TooltipIconButton
+              str="mdi-trash-can-outline"
+              tip="删除标签"
+              text
+              icon
+              x-small
+              @click="onClickRemoveTag(tag)"
+            />
+          </v-list-item-action>
+        </v-list-item>
+        <v-list-item v-if="addingResourceTag">
+          <v-list-item-title class="subtitle-2">
+            <v-textarea
+              autofocus
+              v-model="form.resourceTag"
+              :counter="resourceTagCount"
+              :rules="rules.resourceTag"
+              required
+              auto-grow
+              rows="1"
+              placeholder="标签"
+              @blur="checkAddResourceTag"
+            ></v-textarea>
+          </v-list-item-title>
+          <v-list-item-action>
+            <v-btn
+              text
+              depressed
+              color="primary"
+              @click="clearAllStatus"
+            >
+              取消
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+    </v-form>
+    </v-card>
+    <v-card class="mb-3">
       <v-list dense>
         <v-list-item>
           <v-subheader class="pl-0">资源管理</v-subheader>
@@ -206,18 +271,21 @@
             {{ getResourceTagName(item) }}
           </v-chip>
         </div>
-        <v-virtual-scroll
-          :bench="benched"
+        <DynamicScroller
           :items="finalResources"
-          height="dynamic"
-          max-height="600"
-          :item-height="getResourceHeight()"
+          :min-item-size="32"
+          class="scroller"
         >
-          <template v-slot:default="{ item }">
-            <v-list-item
-              :key="`title${item.id}`"
-              id="resource-body"
+          <template v-slot:default="{ item, index, active }">
+            <DynamicScrollerItem
+              :item="item"
+              :active="active"
+              :data-index="index"
+              :size-dependencies="[
+                item.tags.length,
+              ]"
             >
+            <v-list-item>
               <v-list-item-title>
                 <router-link :to="{path: '/explore/resource/' + item.id}">
                   <div class='body-2 font-weight-bold text--primary'> {{ item.title }} </div>
@@ -250,20 +318,20 @@
               </v-list-item-action>
             </v-list-item>
             <div v-if="showTag" :key="`tag${item.id}`" class="mx-3">
-              <v-chip-group
+              <!-- <v-chip-group
                 center-active
                 active-class="primary--text"
-              >
+              > -->
                 <v-chip
                   v-for="(tag, i) in item.tags"
                   :key="`tag${i}`"
                   x-small
                   :close="showRemoveResourceTag"
-                  class="caption"
+                  class="caption mx-1"
                 >
                   {{ toTag(tag).title }}
                 </v-chip>
-              </v-chip-group>
+              <!-- </v-chip-group> -->
             </div>
             <!-- <v-list-item v-if="editingResourceTag === item.id" :key="`tagcombobox${item.id}`" id="tag-edit">
               <v-list-item-title>
@@ -314,8 +382,9 @@
               </v-btn>
               </v-list-item-action>
             </v-list-item> -->
+            </DynamicScrollerItem>
           </template>
-        </v-virtual-scroll>
+        </DynamicScroller>
       </v-list>
     </v-card>
   </v-container>
@@ -351,27 +420,43 @@ export default Vue.extend({
       return PersonModule.resourceTags
     }
   },
-  data: () => ({
-    showTag: true,
-    showTagMange: false,
-    search: '',
-    benched: 24,
-    showRemoveResourceTag: false,
-    comboboxResourceTags: [],
-    comboboxSelectedTags: [],
-    comboboxTagNum: 0,
-    editingResourceTag: -1,
-    finalResources: [],
-    searchedResources: [],
-    searchInput: '',
-    showFilter: false,
-    mediaTypes: [],
-    resourceTypes: [],
-    resourceTags: [],
-    filterMediaTypes: [],
-    filterResourceTypes: [],
-    filterResourceTags: []
-  }),
+  data() {
+    return {
+      showTag: true,
+      showTagMange: false,
+      search: '',
+      benched: 24,
+      valid: false,
+      showRemoveResourceTag: false,
+      comboboxResourceTags: [],
+      comboboxSelectedTags: [],
+      comboboxTagNum: 0,
+      editingResourceTag: -1,
+      finalResources: [],
+      searchedResources: [],
+      searchInput: '',
+      showFilter: false,
+      mediaTypes: [],
+      resourceTypes: [],
+      resourceTags: [],
+      filterMediaTypes: [],
+      filterResourceTypes: [],
+      filterResourceTags: [],
+      addingResourceTag: false,
+      resourceTagCount: 32,
+      form: {
+        resourceTag: ''
+      },
+      rules: {
+        resourceTag: [
+          (v) => !!v.trim() || '标签名称不能为空',
+          (v) =>
+            (v && v.length <= this.resourceTagCount) ||
+              `名称必须小于${this.resourceTagCount}个字符`
+        ]
+      }
+    }
+  },
   methods: {
     getMediaTypeName(id) {
       return GlobalModule.mediaTypeMap[id].name_zh_cn
@@ -381,13 +466,6 @@ export default Vue.extend({
     },
     getResourceTagName(id) {
       return PersonModule.resourceTags[id].title
-    },
-    getResourceHeight() {
-      let height = 48
-      if (this.showTag) {
-        height += 32
-      }
-      return height
     },
     readableTime(val) {
       return readableTimestamp(val)
@@ -493,7 +571,8 @@ export default Vue.extend({
     onCloseTagChip(data) {
       data.parent.selectItem(data.item)
       this.comboboxTagNum = this.comboboxSelectedTags.length
-      if (data.item.id) {
+      const tagId = data.item.id
+      if (tagId) {
         let currentResource
         for (let i = 0; i < this.finalResources.length; i++) {
           if (this.finalResources[i].id === this.editingResourceTag) {
@@ -502,17 +581,25 @@ export default Vue.extend({
         }
         PersonModule.UnstickResourceTag({
           resource: currentResource.id,
-          tag: data.item.id,
+          tag: tagId,
           callback: (resource) => {
             for (let i = 0; i < this.finalResources.length; i++) {
               if (this.finalResources[i].id === resource.id) {
-                this.finalResources[i] = resource
+                const index = this.finalResources[i].tags.indexOf(tagId)
+                if (index > -1) {
+                  this.finalResources[i].tags.splice(index, 1)
+                  break
+                }
               }
             }
 
             for (let i = 0; i < this.searchedResources.length; i++) {
               if (this.searchedResources[i].id === resource.id) {
-                this.searchedResources[i] = resource
+                const index = this.searchedResources[i].tags.indexOf(tagId)
+                if (index > -1) {
+                  this.searchedResources[i].tags.splice(index, 1)
+                  break
+                }
               }
             }
           }
@@ -522,6 +609,45 @@ export default Vue.extend({
     onClickShowTagButton() {
       this.showTag = !this.showTag
       this.editingResourceTag = -1
+    },
+    onClickRemoveTag(tag) {
+      this.$confirm('一旦删除，不可恢复').then(res => {
+        if (res) {
+          PersonModule.RemoveResourceTag({
+            index: tag.id,
+            callback: (tag) => {
+              console.log(tag)
+              for (let i = 0; i < this.finalResources.length; i++) {
+                const index = this.finalResources[i].tags.indexOf(tag.id)
+                if (index > -1) {
+                  this.finalResources[i].tags.splice(index, 1)
+                }
+              }
+
+              for (let i = 0; i < this.searchedResources.length; i++) {
+                const index = this.searchedResources[i].tags.indexOf(tag.id)
+                if (index > -1) {
+                  this.searchedResources[i].tags.splice(index, 1)
+                }
+              }
+            }
+          })
+        }
+      })
+    },
+    checkAddResourceTag() {
+      this.clearAllStatus()
+      if (this.$refs.form.validate()) {
+        PersonModule.CreateResourceTag({
+          title: this.form.resourceTag
+        })
+      }
+    },
+    onClickAddTag() {
+      this.addingResourceTag = !this.addingResourceTag
+    },
+    clearAllStatus() {
+      this.addingResourceTag = false
     }
   },
   mounted() {
@@ -559,31 +685,51 @@ export default Vue.extend({
                 console.log(resource)
                 for (let i = 0; i < this.finalResources.length; i++) {
                   if (this.finalResources[i].id === resource.id) {
-                    this.finalResources[i] = resource
+                    const index = this.finalResources[i].tags.indexOf(resourceTag.id)
+                    if (index === -1) {
+                      this.finalResources[i].tags.push(resourceTag.id)
+                    }
                   }
                 }
 
                 for (let i = 0; i < this.searchedResources.length; i++) {
                   if (this.searchedResources[i].id === resource.id) {
-                    this.searchedResources[i] = resource
+                    const index = this.searchedResources[i].tags.indexOf(resourceTag.id)
+                    if (index === -1) {
+                      this.searchedResources[i].tags.push(resourceTag.id)
+                    }
                   }
                 }
               }
             })
           } else {
+            let resource
+            for (let i = 0; i < this.finalResources.length; i++) {
+              if (this.finalResources[i].id === this.editingResourceTag) {
+                resource = this.finalResources[i]
+                break
+              }
+            }
+            if (resource === undefined) return
             PersonModule.CreateResourceTag({
               title: resourceTag,
-              resourceId: this.finalResources[this.editingResourceTag].id,
+              resourceId: resource.id,
               callback: (resource, tag) => {
                 for (let i = 0; i < this.finalResources.length; i++) {
                   if (this.finalResources[i].id === resource.id) {
-                    this.finalResources[i] = resource
+                    const index = this.finalResources[i].tags.indexOf(tag.id)
+                    if (index === -1) {
+                      this.finalResources[i].tags.push(tag.id)
+                    }
                   }
                 }
 
                 for (let i = 0; i < this.searchedResources.length; i++) {
                   if (this.searchedResources[i].id === resource.id) {
-                    this.searchedResources[i] = resource
+                    const index = this.searchedResources[i].tags.indexOf(tag.id)
+                    if (index === -1) {
+                      this.searchedResources[i].tags.push(tag.id)
+                    }
                   }
                 }
 
@@ -601,3 +747,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped>
+.scroller {
+  max-height: 600px;
+}
+</style>

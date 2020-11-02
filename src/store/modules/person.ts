@@ -59,6 +59,15 @@ class Person extends VuexModule implements PersonBean {
       }
 
       delete this.resourceTagMap[index]
+
+      for (let i = 0; i < this.resources.length; i++) {
+        for (let j = 0; j < this.resources[i].tags.length; j++) {
+          if (this.resources[i].tags[j].id === index) {
+            this.resources[i].tags.splice(j, 1)
+            break
+          }
+        }
+      }
     }
 
     @Mutation
@@ -300,24 +309,34 @@ class Person extends VuexModule implements PersonBean {
         if (res.items.length === 1) {
           const tag = res.items[0]
           this.INSERT_RESOURCE_TAG(tag)
-          stickResourceTag({ resource: params.resourceId, tag: tag.id }).then((res) => {
-            if (res.items.length === 1) {
-              const resource = res.items[0]
-              this.MODIFY_RESOURCE(resource)
-              if (params.callback) {
-                params.callback(resource, tag)
+          if (params.resourceId) {
+            stickResourceTag({ resource: params.resourceId, tag: tag.id }).then((res) => {
+              if (res.items.length === 1) {
+                const resource = res.items[0]
+                this.MODIFY_RESOURCE(resource)
+                if (params.callback) {
+                  params.callback(resource, tag)
+                }
               }
+            })
+          } else {
+            if (params.callback) {
+              params.callback(tag)
             }
-          })
+          }
         }
       })
     }
 
     @Action
-    public RemoveResourceTag(index) {
-      deleteResourceTag({ id: index }).then((res) => {
+    public RemoveResourceTag(params) {
+      deleteResourceTag({ id: params.index }).then((res) => {
         if (res.items.length === 1) {
-          this.REMOVE_RESOURCE_TAG(index)
+          const tag = res.items[0]
+          this.REMOVE_RESOURCE_TAG(params.index)
+          if (params.callback) {
+            params.callback(tag)
+          }
         }
       })
     }
