@@ -1,7 +1,7 @@
 <template>
   <v-app id="certify">
     <v-main>
-      <v-app-bar flat color="white">
+      <v-app-bar flat color="appbar">
         <a href="/">
           <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
         </a>
