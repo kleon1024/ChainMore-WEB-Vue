@@ -51,8 +51,7 @@ class User extends VuexModule implements UserBean {
       this.refreshToken !== '' &&
       this.username !== '' &&
       this.timestamp !== '' &&
-      this.userId !== '' &&
-      this.userInfo !== undefined
+      this.userId !== ''
     )
   }
 
@@ -98,7 +97,9 @@ class User extends VuexModule implements UserBean {
       const data = await signIn(userInfo)
       const timestamp = Math.floor(Date.now() / 1000 / 60).toString()
       this.SET_USERNAME(data.username)
+
       this.SET_ACCESS_TOKEN(data.access_token)
+      console.log(this.accessToken)
       this.SET_REFRESH_TOKEN(data.refresh_token)
       this.SET_TIMESTAMP(timestamp)
       this.SET_USE_ID(data.id.toString())

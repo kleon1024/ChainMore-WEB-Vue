@@ -12,7 +12,7 @@
         >
           <AggregateCard />
           <v-overlay>
-            <v-card light>
+            <v-card>
               <v-card-text class="pt-4">
                 <div>
                   <p
@@ -35,7 +35,7 @@
                       label="密码"
                       v-model="password"
                       min="8"
-                      :append-icon="e1 ? 'eye-outline' : 'eye-off-outline'"
+                      :append-icon="e1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                       @click:append="() => (e1 = !e1)"
                       :type="e1 ? 'password' : 'text'"
                       :rules="passwordRules"
