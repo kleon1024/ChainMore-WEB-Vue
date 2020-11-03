@@ -46,6 +46,7 @@
               item-text="name_zh_cn"
               item-value="id"
               outlined
+              dense
               v-model="form.resourceTypeId"
             >
             </v-select>
@@ -55,18 +56,56 @@
               item-value="id"
               label="媒体类型"
               outlined
+              dense
               v-model="form.mediaTypeId"
             >
             </v-select>
-            <v-row class="mx-3">
-              <p class="subheading font-weight-bold"> {{ combinedName() }} </p>
-            </v-row>
-            <v-row class="mx-3">
+            <!-- <v-combobox
+              v-model="selectedTags"
+              :items="resourceTags"
+              :search-input.sync="search"
+              item-text="title"
+              item-value="id"
+              label="标签"
+              hide-selected
+              multiple
+              close
+              dense
+              outlined
+              small-chips
+            >
+              <template v-slot:selection="data">
+                <v-chip
+                  x-small
+                  class="ma-1"
+                  :key="JSON.stringify(data.item)"
+                  v-bind="data.attrs"
+                  :input-value="data.selected"
+                  :disabled="data.disabled"
+                  close
+                  @click:close="onCloseTagChip(data)"
+                >
+                  {{ data.item.title || data.item }}
+                </v-chip>
+              </template>
+              <template v-slot:no-data>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title class="subtitle-2">
+                      {{ comboboxHint() }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-combobox> -->
+            <p class="subtitle-2 text--primary font-weight-bold"> {{ resourceName() }} + {{ mediaName() }} = {{ combinedName() }} </p>
+            <v-row class="pl-3">
               <v-checkbox
                 v-model="form.paid"
                 hide-details
+                dense
                 label="付费内容"
-                class="shrink mr-2 mt-0"
+                class="shrink mr-2 mt-0 subtitle-2 text--primary"
               ></v-checkbox>
             </v-row>
             <p> </p>
@@ -91,6 +130,7 @@
 import Vue from 'vue'
 import { getResourceType } from '@/api/main'
 import { GlobalModule } from '@/store/modules/global'
+import { PersonModule } from '@/store/modules/person'
 import {
   checkUrlExsit,
   createResource,
@@ -105,6 +145,8 @@ export default Vue.extend({
   name: 'ResourceCreate',
   data() {
     return {
+      selectedTags: [],
+      search: '',
       valid: true,
       resource: null,
       urlCount: 512,
@@ -137,8 +179,23 @@ export default Vue.extend({
   mounted() {
     this.loadResource()
     GlobalModule.UpdateResourceType()
+    PersonModule.UpdateResourceTags()
   },
   methods: {
+    comboboxHint() {
+      if (this.search !== null && this.search !== '') {
+        return '没有找到这个标签，按回车或确认键立即创建'
+      } else if (this.resourceTags.length === 0) {
+        return '还没有创建任何标签，直接输入创建标签'
+      } else if (this.selectedTags.length === this.resourceTags.length) {
+        return '已添加所有已有标签'
+      } else {
+        return '发生了什么？'
+      }
+    },
+    onCloseTagChip(data) {
+      data.parent.selectItem(data.item)
+    },
     starFoundResource() {
       if (!this.staring) {
         this.staring = true
@@ -247,6 +304,16 @@ export default Vue.extend({
     resourceItems() {
       return GlobalModule.resourceItems
     },
+    mediaName() {
+      const m = GlobalModule.mediaTypeMap[this.form.mediaTypeId]
+      if (m === undefined) return ''
+      return m.name_zh_cn
+    },
+    resourceName() {
+      const m = GlobalModule.resourceTypeMap[this.form.resourceTypeId]
+      if (m === undefined) return ''
+      return m.name_zh_cn
+    },
     combinedName() {
       const m = GlobalModule.resourceMediaNameMap[`${this.form.resourceTypeId}${this.form.mediaTypeId}`]
       if (m === undefined) return ''
@@ -279,6 +346,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    resourceTags() {
+      return PersonModule.resourceTags
+    },
     title() {
       if (this.modify) {
         return '修改'

@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <v-skeleton-loader
+      v-if="!collection"
+      v-bind="attrs"
+      type="card, actions"
+    ></v-skeleton-loader>
     <v-card
       v-if="collection"
     >
