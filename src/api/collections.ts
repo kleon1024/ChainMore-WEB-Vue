@@ -21,6 +21,13 @@ export const modifyCollection = (data: any) =>
     data
   })
 
+export const deleteCollection = (params: any) =>
+  request({
+    url: '/collection',
+    method: 'delete',
+    params
+  })
+
 export const getCollectionResources = (params: any) =>
   request({
     url: '/collection/referenceds',

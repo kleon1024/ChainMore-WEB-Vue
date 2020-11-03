@@ -37,6 +37,19 @@
               修改集合
             </v-btn>
           </v-col>
+          <v-col>
+            <v-btn
+              text
+              v-if="isAdmin"
+              @click="onClickDeleteCollections"
+            >
+              <v-icon
+                left
+                color="teal"
+              > mdi-trash-can-outline </v-icon>
+              删除集合
+            </v-btn>
+          </v-col>
         </v-row>
       </v-card-actions>
     </v-card>
@@ -69,7 +82,8 @@ import {
   getCollection,
   isCollectCollection,
   collectCollection,
-  uncollectCollection
+  uncollectCollection,
+  deleteCollection
 } from '@/api/collections'
 import { UserModule } from '@/store/modules/user'
 import { readableTimestamp } from '@/utils/time'
@@ -176,6 +190,22 @@ export default Vue.extend({
     },
     badgeUrl(resource) {
       return badgeUrl(resource.resource_type_id, resource.media_type_id)
+    },
+    onClickDeleteCollections() {
+      this.$confirm('一旦删除不可恢复，继续删除？').then(res => {
+        if (res) {
+          deleteCollection({ id: this.$route.params.id }).then((res) => {
+            if (res.items.length === 1) {
+              this.$toasted.show('删除成功')
+              if (window.history.length <= 1) {
+                this.$router.replace('/')
+              } else {
+                this.$router.back()
+              }
+            }
+          })
+        }
+      })
     }
   },
   computed: {
@@ -185,6 +215,9 @@ export default Vue.extend({
         UserModule.isLoggedIn &&
         UserModule.UserId === this.collection.author_id
       )
+    },
+    isAdmin() {
+      return this.collection && UserModule.isLoggedIn && UserModule.isAdmin
     }
   }
 })

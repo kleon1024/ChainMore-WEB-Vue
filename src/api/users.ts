@@ -1,11 +1,10 @@
 import request from '@/plugins/request'
 
-export const getUser = (params: any, headers: any) =>
+export const getUser = (params: any) =>
   request({
     url: '/user',
     method: 'get',
-    params,
-    headers
+    params
   })
 
 export const modifyUser = (data: any) =>

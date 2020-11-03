@@ -28,6 +28,7 @@
     "vue-awesome-swiper": "^4.1.1",
     "vue-class-component": "^7.2.3",
     "vue-confirm-dialog": "^1.0.2",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.2.0",
     "vue-scrollto": "^2.18.2",

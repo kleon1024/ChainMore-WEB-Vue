@@ -63,6 +63,11 @@
         </v-card-actions>
       </v-card> -->
     </v-navigation-drawer>
+    <v-skeleton-loader
+      v-if="!domain"
+      v-bind="attrs"
+      type="card, actions"
+    ></v-skeleton-loader>
     <v-card
       v-if="domain"
     >
@@ -188,19 +193,32 @@
         </v-list>
       </v-menu>
     </v-card>
-    <v-card
-      v-for='(collection, index) in collections'
-      :key='index'
-      class='mb-2'
-      :to="{ path: '/explore/collection/' + collection.id.toString() }"
+    <div
+      v-infinite-scroll="loadCollections"
+      infinite-scroll-disabled="busy"
+      infinite-scroll-distance="10"
     >
-      <v-card-text>
-        <div class='caption text--primary'> {{ collection.domain_title }}</div>
-        <div class='subtitle-1 text--primary'>{{ collection.title }}</div>
-        <div class='subtitle-2 text--primary'>{{ collection.description }}</div>
-        <div class="caption text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
-      </v-card-text>
-    </v-card>
+      <v-card
+        v-for='(collection, index) in collections'
+        :key='index'
+        class='mb-2'
+        :to="{ path: '/explore/collection/' + collection.id.toString() }"
+      >
+        <v-card-text>
+          <div class='caption text--primary'> {{ collection.domain_title }}</div>
+          <div class='subtitle-1 text--primary'>{{ collection.title }}</div>
+          <div class='subtitle-2 text--primary'>{{ collection.description }}</div>
+          <div class="caption text--primary"> {{ readableTime(collection.modify_time) }} 修改 </div>
+        </v-card-text>
+      </v-card>
+      <div class="text-center">
+        <v-progress-circular
+          v-if="busy & !done"
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -224,6 +242,10 @@ export default Vue.extend({
   name: 'Domain',
   data() {
     return {
+      busy: false,
+      done: false,
+      offset: 1,
+      limit: 10,
       collections: [],
       domain: null,
       showMenu: false,
@@ -322,6 +344,7 @@ export default Vue.extend({
     refresh(order, orderDesc) {
       this.order = order
       this.orderDesc = orderDesc
+      this.offset = 0
       this.loadCollections()
     },
     loadDependDomains() {
@@ -348,13 +371,24 @@ export default Vue.extend({
       })
     },
     loadCollections() {
+      this.busy = true
       getDomainCollections({
         id: this.$route.params.id,
-        offset: 1,
-        limit: 10,
+        offset: this.offset,
+        limit: this.limit,
         order: this.order
       }).then((res) => {
-        this.collections.splice(0, this.collections.length)
+        console.log(res.items)
+        if (this.offset === 0) {
+          this.collections.splice(0, this.collections.length)
+        }
+        if (res.items.length < this.limit) {
+          this.done = true
+          this.busy = true
+          this.offset += this.limit
+        } else {
+          this.busy = false
+        }
         this.collections.push(...res.items)
       })
     },

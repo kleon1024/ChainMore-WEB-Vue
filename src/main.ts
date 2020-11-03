@@ -9,7 +9,9 @@ import Marked from './directives/marked.js'
 import VuetifyConfirm from './components/dialogs/Confirm'
 import VueVirtualScoller from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import infiniteScroll from 'vue-infinite-scroll'
 
+Vue.use(infiniteScroll)
 Vue.use(VueVirtualScoller)
 Vue.use(Marked)
 Vue.use(VuetifyConfirm, { vuetify })
