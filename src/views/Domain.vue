@@ -387,7 +387,7 @@ export default Vue.extend({
           this.busy = true
         } else {
           this.busy = false
-          this.offset += this.limit
+          this.offset += 1
         }
         this.collections.push(...res.items)
       })
