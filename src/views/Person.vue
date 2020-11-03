@@ -15,6 +15,7 @@
           :to="{ path: item.to }"
           :value="item.text"
           :class="activeClass(item.to)"
+          color="info"
         >
           <v-row class="mx-3">
             <v-list-item-icon>
@@ -29,13 +30,14 @@
           </v-row>
         </v-list-item>
         <v-divider />
-        <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">领域管理</v-subheader>
+        <v-subheader class="mx-4 subtitle-2 text--darken-1">领域管理</v-subheader>
         <v-list-item
           v-for="item in manageDomains.slice(0, topNDomain)"
           :key="'manage' + item.text"
           :to="{ path: item.to }"
           :value="item.text"
           :class="activeClass(item.to)"
+          color="info"
         >
           <v-row class="mx-3">
             <v-list-item-icon>
@@ -64,7 +66,7 @@
             </v-list-item-content>
           </v-row>
         </v-list-item>
-        <v-subheader class="mx-4 subtitle-2 grey--text text--darken-1">正在学习</v-subheader>
+        <v-subheader class="mx-4 subtitle-2 text--darken-1">正在学习</v-subheader>
         <v-list-item
           v-for="item in targetDomains.slice(0, topNTargetDomain)"
           :key="'target' + item.text"
@@ -104,14 +106,13 @@
 
     <v-app-bar
       app
+      dense
       clipped-left
       elevation="0"
-      color="white"
+      color="appbar"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="mr-3 align-center">
-        <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
-      </v-toolbar-title>
+      <a href="/"> <span class="headline font-weight-bold mr-3">阡陌</span> </a>
       <v-responsive max-width="365">
         <v-text-field
           v-model="query"
@@ -124,6 +125,7 @@
       </v-responsive>
       <v-spacer></v-spacer>
 
+      <v-toolbar-items>
       <v-menu
         offset-y
         outline
@@ -132,12 +134,12 @@
         <template v-slot:activator="{ on }">
           <v-btn
             icon
-            color="teal"
+            color="primary"
             v-on="on"
           >
             <v-icon
               v-if="!loggedIn"
-              color="teal"
+              color="primary"
             >mdi-account-outline</v-icon>
             <div
               v-if="loggedIn"
@@ -163,6 +165,8 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <ThemeSwitch/>
+      </v-toolbar-items>
     </v-app-bar>
     <v-main>
       <keep-alive>
@@ -177,10 +181,13 @@ import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
 import { PersonModule } from '@/store/modules/person'
 import { GlobalModule } from '@/store/modules/global'
+import ThemeSwitch from '@/components/buttons/ThemeSwitch.vue'
 
 export default Vue.extend({
   name: 'Person',
-  components: {},
+  components: {
+    ThemeSwitch
+  },
   props: {
     source: String
   },
@@ -190,9 +197,9 @@ export default Vue.extend({
     },
     activeColor(path) {
       if (this.active(path)) {
-        return 'teal'
+        return 'primary'
       } else {
-        return 'grey'
+        return 'secondary'
       }
     },
     activeClass(path) {

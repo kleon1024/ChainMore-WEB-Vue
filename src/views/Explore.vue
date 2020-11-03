@@ -2,8 +2,9 @@
   <v-app id="explore">
     <v-app-bar
       app
+      dense
       elevation="0"
-      color="white"
+      color="appbar"
     >
       <v-toolbar-title class="mr-3 align-center">
         <a href="/"> <span class="headline font-weight-bold">阡陌</span> </a>
@@ -19,6 +20,7 @@
       </v-responsive>
       <v-spacer></v-spacer>
 
+      <v-toolbar-items>
       <v-btn
         icon
         color="primary"
@@ -36,6 +38,8 @@
       >
         登录
       </v-btn>
+      <ThemeSwitch/>
+      </v-toolbar-items>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -66,10 +70,13 @@
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
 import { GlobalModule } from '@/store/modules/global'
+import ThemeSwitch from '@/components/buttons/ThemeSwitch.vue'
 
 export default Vue.extend({
   name: 'Explore',
-  components: {},
+  components: {
+    ThemeSwitch
+  },
   methods: {
     onClickLogOut() {
       this.$router.replace({ path: '/' })

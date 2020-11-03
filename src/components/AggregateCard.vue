@@ -46,6 +46,11 @@ export default Vue.extend({
       this.initArc()
     })
   },
+  computed: {
+    darkTheme() {
+      return this.$vuetify.theme.dark
+    }
+  },
   methods: {
     loadData() {
       return new Promise((resolve) => {
@@ -60,7 +65,12 @@ export default Vue.extend({
     },
     initArc() {
       const svg = d3.select('svg')
-      drawRadicalDendrogram(svg, this.arc)
+      drawRadicalDendrogram(svg, this.arc, this.$vuetify)
+    }
+  },
+  watch: {
+    darkTheme(val) {
+      this.initArc()
     }
   }
 })

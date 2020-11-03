@@ -109,7 +109,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-transit-connection-variant </v-icon>
               学习路线
             </v-btn>
@@ -121,7 +121,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-pencil-outline </v-icon>
               修改领域
             </v-btn>
@@ -133,7 +133,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-playlist-plus </v-icon>
               创建合集
             </v-btn>
@@ -145,7 +145,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-certificate-outline </v-icon>
               获得认证
             </v-btn>
@@ -157,7 +157,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-palette-outline </v-icon>
               领域管理
             </v-btn>

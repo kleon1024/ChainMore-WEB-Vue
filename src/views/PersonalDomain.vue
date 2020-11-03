@@ -85,6 +85,7 @@ export default Vue.extend({
   },
   mounted() {
     this.searchedDomains.push(...PersonModule.domains)
+    document.title = '收藏集合 - 阡陌'
   },
   watch: {
     query(val) {

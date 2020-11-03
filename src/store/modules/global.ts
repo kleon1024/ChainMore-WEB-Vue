@@ -13,6 +13,7 @@ export interface GlobalBean {
   mediaItems
   resourceMediaNameMap
   resourceTypeCached
+  darkTheme
 }
 
 const name = 'global'
@@ -32,6 +33,7 @@ class Global extends VuexModule implements GlobalBean {
   public mediaItems: any[] = []
   public resourceMediaNameMap = {}
   public resourceTypeCached = false
+  public darkTheme = false
 
   @Mutation
   public SET_RESOURCE_TYPE(types) {
@@ -63,6 +65,17 @@ class Global extends VuexModule implements GlobalBean {
     getResourceType({}).then(res => {
       this.SET_RESOURCE_TYPE(res.items)
     })
+  }
+
+  @Mutation
+  public SET_DARK_THEME(theme) {
+    console.log(this.darkTheme)
+    this.darkTheme = theme
+  }
+
+  @Action
+  public UpdateDarkTheme(theme) {
+    this.SET_DARK_THEME(theme)
   }
 }
 

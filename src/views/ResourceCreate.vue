@@ -12,7 +12,7 @@
             <v-spacer/>
             <v-btn fab small text @click="starFoundResource">
               <v-icon
-                color="teal"
+                color="primary"
               > {{ loginIcon() }} </v-icon>
             </v-btn>
           </v-card-actions>

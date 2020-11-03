@@ -21,7 +21,7 @@
       <v-col align="center">
         <v-btn
           text
-          color="teal"
+          color="primary"
           outlined
           block
           @click="onSubmit"

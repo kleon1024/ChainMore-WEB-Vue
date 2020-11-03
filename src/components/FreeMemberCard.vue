@@ -19,7 +19,7 @@
       <v-col align="center">
         <v-btn
           large
-          color="teal"
+          color="primary"
           block
           :to="{ path: '/person'}"
           class="white--text"

@@ -1,41 +1,37 @@
 <template>
-  <v-container fluid>
-    <v-sheet :width="width()" style="position: relative; float: left;">
-      <svg
-        v-if='data'
-        :width='width()'
-        :height='data.layout.height'
-        class='tangle-tree'
-      >
-        <g v-for='(b, index) in bundleDatas' :key='"bundle" + index'>
-          <path class='link' :d='b' stroke='white' stroke-width='6' />
-          <path class='link' :d='b' :stroke='pathColor(index)' stroke-width='3' />
-        </g>
-        <g v-for='(n, index) in data.nodes' :key='"node" + index'>
-          <line
-            class='node'
-            stroke='black'
-            stroke-width='8'
-            :x1='n.x'
-            :y1='n.y-n.height/2'
-            :x2='n.x'
-            :y2='n.y+n.height/2'
-          />
-          <line
-            class='node'
-            stroke='white'
-            stroke-width='4'
-            :x1='n.x'
-            :y1='n.y-n.height/2'
-            :x2='n.x '
-            :y2='n.y+n.height/2'
-          />
-          <text :x='n.x+4' :y='n.y-n.height/2-4' stroke='white' stroke-width='2'>{{ n.id }}</text>
-          <text :x='n.x+4' :y='n.y-n.height/2-4'>{{ n.id }}</text>
-        </g>
-      </svg>
-    </v-sheet>
-  </v-container>
+  <svg
+    v-if='data'
+    :width='width()'
+    :height='data.layout.height'
+    class='tangle-tree'
+  >
+    <g v-for='(b, index) in bundleDatas' :key='"bundle" + index'>
+      <path class='link' :d='b' :stroke='strokeDark' stroke-width='6' />
+      <path class='link' :d='b' :stroke='pathColor(index)' stroke-width='3' />
+    </g>
+    <g v-for='(n, index) in data.nodes' :key='"node" + index'>
+      <line
+        class='node'
+        :stroke='strokeLight'
+        stroke-width='8'
+        :x1='n.x'
+        :y1='n.y-n.height/2'
+        :x2='n.x'
+        :y2='n.y+n.height/2'
+      />
+      <line
+        class='node'
+        :stroke='strokeDark'
+        stroke-width='4'
+        :x1='n.x'
+        :y1='n.y-n.height/2'
+        :x2='n.x '
+        :y2='n.y+n.height/2'
+      />
+      <text :x='n.x+4' :y='n.y-n.height/2-4' :stroke='strokeDark' stroke-width='2'>{{ n.id }}</text>
+      <text :x='n.x+4' :y='n.y-n.height/2-4' :fill="strokeLight">{{ n.id }}</text>
+    </g>
+  </svg>
 </template>
 
 <script>
@@ -58,6 +54,12 @@ export default Vue.extend({
     })
   },
   computed: {
+    strokeDark() {
+      return this.$vuetify.theme.dark ? 'black' : 'white'
+    },
+    strokeLight() {
+      return this.$vuetify.theme.dark ? 'white' : 'black'
+    },
     bundleDatas() {
       return this.data.bundles.map((b) =>
         b.links

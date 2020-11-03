@@ -37,7 +37,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-pencil-outline </v-icon>
               修改集合
             </v-btn>
@@ -50,7 +50,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-trash-can-outline </v-icon>
               删除集合
             </v-btn>

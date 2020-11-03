@@ -12,6 +12,7 @@
         <v-card
           min-height="100vh"
           :elevation="0"
+          color="transparent"
         >
         </v-card>
       </v-container>

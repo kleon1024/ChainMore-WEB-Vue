@@ -2,7 +2,7 @@
 import * as d3 from 'd3'
 
 export const
-  drawRadicalDendrogram = (svg, data) => {
+  drawRadicalDendrogram = (svg, data, vuetify) => {
     const refWidth = 1080
     let width = window.innerWidth
     let height = window.innerHeight
@@ -17,6 +17,9 @@ export const
       width = width * 0.95
     }
 
+    const strokeColor = vuetify.theme.dark ? 'black': 'white'
+    const fontColor = vuetify.theme.dark ? 'white': 'black'
+    console.log(strokeColor)
     const radius = width / 2 + refWidth / width * 15
     const tree = d3.cluster().size([2 * Math.PI, radius - 100])
     const root = tree(
@@ -24,6 +27,7 @@ export const
         .hierarchy(data)
         .sort((a, b) => d3.ascending(a.data.name, b.data.name))
     )
+    svg.selectAll("*").remove()
     svg
       .attr('width', width)
       .attr('height', height)
@@ -31,7 +35,7 @@ export const
       .append('g')
       .attr('fill', 'none')
       .attr('stroke', '#555')
-      .attr('stroke-opacity', 0.4)
+      .attr('stroke-opacity', 0.6)
       .attr('stroke-width', 1.5 * width / refWidth )
       .selectAll('path')
       .data(root.links())
@@ -62,6 +66,7 @@ export const
       .append('g')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 12 * width / refWidth)
+      .attr('fill', fontColor)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-width', 3 * width / refWidth)
       .selectAll('text')
@@ -83,7 +88,7 @@ export const
       .text((d) => d.data.name)
       .clone(true)
       .lower()
-      .attr('stroke', 'white')
+      .attr('stroke', strokeColor)
 
     svg.attr('viewBox', [-windowWidth/2, -height/2, width, height])
   }

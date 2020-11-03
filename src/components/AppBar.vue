@@ -1,48 +1,53 @@
 <template>
   <v-app-bar
     app
-    color="white"
-    hide-on-scroll
     elevation="0"
+    color="appbar"
     dense
   >
-    <v-container class="fill-height">
-      <a href="/">
-        <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
-      </a>
-      <div class='d-flex align-center'></div>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        to="/explore/roadmap"
-      >
-        <v-icon color="teal">mdi-transit-connection-variant</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        to="/person"
-        color="teal"
-      >
-        <v-icon
-          v-if="!loggedIn"
-          color="teal"
-        >mdi-account-outline</v-icon>
-        <div
-          v-if="loggedIn"
-          class="font-weight-bold headline"
-        > {{ capital }} </div>
-      </v-btn>
-    </v-container>
+    <a href="/">
+      <v-toolbar-title class="title font-weight-bold">阡陌</v-toolbar-title>
+    </a>
+
+    <div class='d-flex align-center'></div>
+    <v-spacer></v-spacer>
+    <v-toolbar-items>
+    <v-btn
+      icon
+      to="/explore/roadmap"
+    >
+      <v-icon color="primary">mdi-transit-connection-variant</v-icon>
+    </v-btn>
+    <v-btn
+      icon
+      to="/person"
+      color="primary"
+    >
+      <v-icon
+        v-if="!loggedIn"
+        color="primary"
+      >mdi-account-outline</v-icon>
+      <div
+        v-if="loggedIn"
+        class="font-weight-bold headline"
+      > {{ capital }} </div>
+    </v-btn>
+    <ThemeSwitch />
+    </v-toolbar-items>
   </v-app-bar>
 </template>
 
 <script>
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
+import { GlobalModule } from '@/store/modules/global'
+import ThemeSwitch from '@/components/buttons/ThemeSwitch.vue'
 
 export default Vue.extend({
   name: 'AppBar',
-  components: {},
+  components: {
+    ThemeSwitch
+  },
   computed: {
     loggedIn() {
       return UserModule.isLoggedIn

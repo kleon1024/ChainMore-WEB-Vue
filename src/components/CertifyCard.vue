@@ -16,7 +16,7 @@
     <v-card-actions class="text-center align-center">
       <v-btn
         text
-        color="teal"
+        color="primary"
         outlined
         block
         :to="to"

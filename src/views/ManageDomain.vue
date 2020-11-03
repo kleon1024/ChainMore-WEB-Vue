@@ -678,6 +678,7 @@ export default Vue.extend({
         if (res.items.length === 1) {
           this.domain = res.items[0]
           this.domain.certified = true
+          document.title = '管理' + this.domain.title + ' - 阡陌'
           this.loadCertificationGroups()
         } else {
           this.$router.replace({ path: '/explore/domain/' + this.$route.params.id })

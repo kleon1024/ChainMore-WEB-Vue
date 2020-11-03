@@ -41,7 +41,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-pencil-outline </v-icon>
               修改资源
             </v-btn>
@@ -53,7 +53,7 @@
             >
               <v-icon
                 left
-                color="teal"
+                color="primary"
               > mdi-playlist-plus </v-icon>
               合集引用
             </v-btn>

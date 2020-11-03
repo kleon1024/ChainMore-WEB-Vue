@@ -722,6 +722,7 @@ export default Vue.extend({
   mounted() {
     this.searchedResources.push(...PersonModule.resources)
     this.finalResources = this.searchedResources
+    document.title = '收藏资源 - 阡陌'
   },
   watch: {
     query(val) {

@@ -17,6 +17,9 @@ export default {
     ResourcePanel,
     CollectionPanel,
     DomainPanel
+  },
+  mounted() {
+    document.title = '个人中心 - 阡陌'
   }
 }
 </script>

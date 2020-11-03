@@ -101,6 +101,7 @@ export default Vue.extend({
         id: this.$route.params.id
       }).then((res) => {
         this.domain = res.items[0]
+        document.title = '学习' + this.domain.title + ' - 阡陌'
       })
     },
     loadDependDomains() {
