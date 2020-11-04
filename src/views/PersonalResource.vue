@@ -521,7 +521,12 @@ export default Vue.extend({
       return GlobalModule.resourceTypeMap[id].name_zh_cn
     },
     getResourceTagName(id) {
-      return PersonModule.resourceTags[id].title
+      for (let i = 0; i < PersonModule.resourceTags.length; i++) {
+        if (PersonModule.resourceTags[i].id === id) {
+          return PersonModule.resourceTags[i].title
+        }
+      }
+      return ''
     },
     readableTime(val) {
       return readableTimestamp(val)
