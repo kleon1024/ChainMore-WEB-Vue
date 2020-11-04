@@ -180,7 +180,7 @@ function sortMap(node) {
   root.children = []
   const sortedChildren = node.children.sort((a, b) => a.depth - b.depth)
   sortedChildren.forEach(child => {
-    root.children.push(child)
+    root.children.push(sortMap(child))
   })
   return root
 }
