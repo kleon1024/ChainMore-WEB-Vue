@@ -378,7 +378,6 @@ export default Vue.extend({
         limit: this.limit,
         order: this.order
       }).then((res) => {
-        console.log(res.items)
         if (this.offset === 0) {
           this.collections.splice(0, this.collections.length)
         }

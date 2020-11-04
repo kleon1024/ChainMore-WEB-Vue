@@ -676,7 +676,6 @@ export default Vue.extend({
           PersonModule.RemoveResourceTag({
             index: tag.id,
             callback: (tag) => {
-              console.log(tag)
               for (let i = 0; i < this.finalResources.length; i++) {
                 const index = this.finalResources[i].tags.indexOf(tag.id)
                 if (index > -1) {
@@ -752,7 +751,6 @@ export default Vue.extend({
               resource: currentResource.id,
               tag: resourceTag.id,
               callback: (resource) => {
-                console.log(resource)
                 for (let i = 0; i < this.finalResources.length; i++) {
                   if (this.finalResources[i].id === resource.id) {
                     const index = this.finalResources[i].tags.indexOf(resourceTag.id)

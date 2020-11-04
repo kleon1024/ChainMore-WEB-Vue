@@ -99,7 +99,6 @@ class User extends VuexModule implements UserBean {
       this.SET_USERNAME(data.username)
 
       this.SET_ACCESS_TOKEN(data.access_token)
-      console.log(this.accessToken)
       this.SET_REFRESH_TOKEN(data.refresh_token)
       this.SET_TIMESTAMP(timestamp)
       this.SET_USE_ID(data.id.toString())

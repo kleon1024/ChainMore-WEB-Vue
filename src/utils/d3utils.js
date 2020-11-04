@@ -19,13 +19,11 @@ export const
 
     const strokeColor = vuetify.theme.dark ? 'black': 'white'
     const fontColor = vuetify.theme.dark ? 'white': 'black'
-    console.log(strokeColor)
     const radius = width / 2 + refWidth / width * 15
     const tree = d3.cluster().size([2 * Math.PI, radius - 100])
     const root = tree(
       d3
         .hierarchy(data)
-        .sort((a, b) => d3.ascending(a.data.name, b.data.name))
     )
     svg.selectAll("*").remove()
     svg
@@ -161,6 +159,32 @@ export const drawClearTree = (svg, data) => {
     .attr('stroke', 'white')
 }
 
+function dfsTree(node) {
+  if (node.children.length === 0) {
+    node.depth = 1
+    return 1
+  }
+  const depths = []
+  node.children.forEach(child => {
+    depths.push(dfsTree(child))
+  })
+  const maxDepth = Math.max(...depths)
+  node.depth = maxDepth + 1
+  return maxDepth + 1
+}
+
+function sortMap(node) {
+  const root = {}
+  root.name = node.name
+  root.id = node.id
+  root.children = []
+  const sortedChildren = node.children.sort((a, b) => a.depth - b.depth)
+  sortedChildren.forEach(child => {
+    root.children.push(child)
+  })
+  return root
+}
+
 export const buildHierarchyData = (datas) => {
   const domainMap = {}
   datas.forEach((depend) => {
@@ -199,5 +223,8 @@ export const buildHierarchyData = (datas) => {
       }
     }
   })
-  return domainMap
+  const root = domainMap[1]
+  dfsTree(root, 0)
+  const sortedRoot = sortMap(root)
+  return {1: sortedRoot}
 }

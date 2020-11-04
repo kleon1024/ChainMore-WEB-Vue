@@ -11,7 +11,7 @@
           justify-center
         >
           <AggregateCard />
-          <v-overlay>
+          <v-overlay :dark="dark">
             <v-card>
               <v-card-text class="pt-4">
                 <div>
@@ -81,6 +81,11 @@ export default Vue.extend({
       passwordRules: [(v) => !!v || '请填写密码'],
       username: '',
       usernameRules: [(v) => !!v || '请填写用户名']
+    }
+  },
+  computed: {
+    dark() {
+      return this.$vuetify.theme.dark
     }
   },
   methods: {

@@ -69,7 +69,6 @@ class Global extends VuexModule implements GlobalBean {
 
   @Mutation
   public SET_DARK_THEME(theme) {
-    console.log(this.darkTheme)
     this.darkTheme = theme
   }
 
