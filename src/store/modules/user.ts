@@ -1,5 +1,5 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
-import { signIn, signOut, refreshToken } from '@/api/auth'
+import { signIn, signOut, refreshToken, changePassword } from '@/api/auth'
 import { getUser } from '@/api/users'
 import store from '@/store'
 import { initialUnencryptedStorage } from '@/globals'
@@ -94,7 +94,11 @@ class User extends VuexModule implements UserBean {
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     try {
-      const data = await signIn(userInfo)
+      const data = await signIn(userInfo).catch(err => {
+        console.log(err)
+        return false
+      })
+
       const timestamp = Math.floor(Date.now() / 1000 / 60).toString()
       this.SET_USERNAME(data.username)
 
@@ -109,6 +113,7 @@ class User extends VuexModule implements UserBean {
           this.SET_USER_INFO(user)
         }
       })
+      return true
     } catch (error) {
       console.log(error)
     }
@@ -120,7 +125,9 @@ class User extends VuexModule implements UserBean {
       if (this.refreshToken === '') {
         throw Error('RefreshToken: cannot find refresh token')
       }
-      const data = await refreshToken({ Authorization: 'Bearer ' + this.refreshToken })
+      const data = await refreshToken({
+        Authorization: 'Bearer ' + this.refreshToken
+      })
       const timestamp = Math.floor(Date.now() / 1000 / 60).toString()
       this.SET_ACCESS_TOKEN(data.access_token)
       this.SET_REFRESH_TOKEN(data.refresh_token)
@@ -137,21 +144,49 @@ class User extends VuexModule implements UserBean {
   }
 
   @Action
+  public async ResetAll() {
+    this.SET_ACCESS_TOKEN('')
+    this.SET_REFRESH_TOKEN('')
+    this.SET_USERNAME('')
+    this.SET_TIMESTAMP('')
+    this.SET_USE_ID('')
+    this.SET_USER_INFO(undefined)
+  }
+
+  @Action
   public async LogOut() {
     try {
       if (this.accessToken === '') {
         throw Error('LogOut: accessToken is undefined!')
       }
-      this.SET_ACCESS_TOKEN('')
-      this.SET_REFRESH_TOKEN('')
-      this.SET_USERNAME('')
-      this.SET_TIMESTAMP('')
-      this.SET_USE_ID('')
-      this.SET_USER_INFO(undefined)
+      this.ResetAll()
       await signOut()
     } catch (err) {
       console.log(err)
     }
+  }
+
+  @Action
+  public ChangePassword(params: {
+    oldPassword: string
+    newPassword: string
+    success
+    failed
+  }) {
+    changePassword({
+      oldPassword: params.oldPassword,
+      newPassword: params.newPassword
+    }).then(res => {
+      this.ResetAll()
+      if (params.success) {
+        params.success()
+      }
+    }).catch(err => {
+      console.log(err)
+      if (params.failed) {
+        params.failed()
+      }
+    })
   }
 }
 

@@ -36,6 +36,15 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
+    path: '/change-password',
+    name: 'ChangePassword',
+    component: () => import(/* webpackChunkName: "password" */ '../views/ChangePassword.vue'),
+    meta: {
+      requiresAuth: false,
+      title: '修改密码 - 阡陌'
+    }
+  },
+  {
     path: '/op/:operation/resource',
     name: 'ResourceCreate',
     component: () => import(/* webpackChunkName: "resource_create" */ '../views/ResourceCreate.vue'),

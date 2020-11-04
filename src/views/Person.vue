@@ -126,51 +126,54 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items>
-      <v-menu
-        offset-y
-        outline
-        content-class="elevation-1"
-      >
-        <template v-slot:activator="{ on }">
-          <v-btn
-            icon
-            color="primary"
-            v-on="on"
-          >
-            <v-icon
-              v-if="!loggedIn"
+        <v-menu
+          offset-y
+          outline
+          content-class="elevation-1"
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn
+              icon
               color="primary"
-            >mdi-account-outline</v-icon>
-            <div
-              v-if="loggedIn"
-              class="font-weight-bold headline"
-            > {{ capital }} </div>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            dense
-            v-for="(action, index) in actions"
-            :key="index"
-            @click="action.function"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="action.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ action.name }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <ThemeSwitch/>
+              v-on="on"
+            >
+              <v-icon
+                v-if="!loggedIn"
+                color="primary"
+              >mdi-account-outline</v-icon>
+              <div
+                v-if="loggedIn"
+                class="font-weight-bold headline"
+              > {{ capital }} </div>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              dense
+              v-for="(action, index) in actions"
+              :key="index"
+              @click="action.function"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="action.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ action.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <ThemeSwitch />
       </v-toolbar-items>
     </v-app-bar>
     <v-main>
       <keep-alive>
-        <router-view :key="$route.fullPath" :query="query" />
+        <router-view
+          :key="$route.fullPath"
+          :query="query"
+        />
       </keep-alive>
     </v-main>
   </v-app>
@@ -233,6 +236,12 @@ export default Vue.extend({
         this.topNTargetDomain = 1
         this.targetExpanded = false
       }
+    },
+    onClickChangePassword() {
+      this.$router.push({
+        path: '/change-password',
+        nextUrl: this.$route.path
+      })
     }
   },
   data() {
@@ -244,6 +253,11 @@ export default Vue.extend({
       selectedTag: 0,
       action: 1,
       actions: [
+        {
+          name: '修改密码',
+          function: this.onClickChangePassword,
+          icon: 'mdi-lock-outline'
+        },
         {
           name: '退出登录',
           function: this.onClickLogOut,

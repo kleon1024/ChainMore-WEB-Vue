@@ -35,7 +35,7 @@
                       label="密码"
                       v-model="password"
                       min="8"
-                      :append-icon="e1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                      :append-icon="e1 ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                       @click:append="() => (e1 = !e1)"
                       :type="e1 ? 'password' : 'text'"
                       :rules="passwordRules"
@@ -91,12 +91,21 @@ export default Vue.extend({
   methods: {
     async submit() {
       if (this.$refs.form.validate()) {
-        await UserModule.Login({
+        const result = await UserModule.Login({
           username: this.username,
           password: this.password
         })
-        if (UserModule.username !== '' && UserModule.refreshToken !== '') {
-          this.$router.replace(this.$route.query.nextUrl)
+        if (result) {
+          this.$toasted.show('成功登录')
+        } else {
+          this.$toasted.show('登录失败，请稍后再试')
+        }
+        if (UserModule.isLoggedIn) {
+          if (this.$route.query.nextUrl) {
+            this.$router.replace(this.$route.query.nextUrl)
+          } else {
+            this.$router.push({ path: '/' })
+          }
         }
       }
     },

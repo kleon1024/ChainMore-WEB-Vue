@@ -19,3 +19,10 @@ export const refreshToken = (headers: any) =>
     method: 'get',
     headers
   })
+
+export const changePassword = (data: any) =>
+  request({
+    url: '/auth/password',
+    method: 'put',
+    data
+  })
