@@ -87,7 +87,6 @@ export default Vue.extend({
   },
   mounted() {
     this.searchedCollections.push(...PersonModule.collections)
-    document.title = '收藏领域 - 阡陌'
   },
   watch: {
     query(val) {

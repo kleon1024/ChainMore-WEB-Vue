@@ -4,6 +4,7 @@
       v-model="drawer"
       app
       clipped
+      color="appbar"
     >
       <v-list
         flat
@@ -159,7 +160,7 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ action.name }}
+                  {{ actionName(action.name) }}
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -191,6 +192,10 @@ export default Vue.extend({
     source: String
   },
   methods: {
+    actionName(name) {
+      if (typeof name === 'string') return name
+      return name()
+    },
     active(path) {
       return path === this.$route.path
     },
@@ -238,6 +243,13 @@ export default Vue.extend({
         path: '/change-password',
         nextUrl: this.$route.path
       })
+    },
+    onClickChangeTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      GlobalModule.UpdateDarkTheme(this.$vuetify.theme.dark)
+    },
+    dark() {
+      return this.$vuetify.theme.dark ? '普通主题' : '暗黑主题'
     }
   },
   data() {
@@ -249,6 +261,11 @@ export default Vue.extend({
       selectedTag: 0,
       action: 1,
       actions: [
+        {
+          name: this.dark,
+          function: this.onClickChangeTheme,
+          icon: 'mdi-theme-light-dark'
+        },
         {
           name: '修改密码',
           function: this.onClickChangePassword,
@@ -265,6 +282,11 @@ export default Vue.extend({
           icon: 'mdi-infinity',
           text: '个人主页',
           to: '/person'
+        },
+        {
+          icon: 'mdi-format-list-checks',
+          text: '行动计划',
+          to: '/person/action'
         },
         {
           icon: 'mdi-link-variant',

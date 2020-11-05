@@ -10,6 +10,13 @@ import {
   unlearn,
   getMarkedDomains
 } from '@/api/domains'
+import {
+  getUserGroup,
+  createUserGroup,
+  getGroupActions,
+  getGroupClusters,
+  getGroupAggregate
+} from '@/api/groups'
 import { getCollectedCollections } from '@/api/collections'
 import {
   getStaredResources,
@@ -29,6 +36,7 @@ export interface PersonBean {
     domains
     resourceTags
     resourceTagMap
+    userGroup
 }
 
 const name = 'person'
@@ -48,6 +56,9 @@ class Person extends VuexModule implements PersonBean {
     public domains: any[] = []
     public resourceTags: any[] = []
     public resourceTagMap: any = {}
+    public userGroup: any = {
+      created: false
+    }
 
     @Mutation
     REMOVE_RESOURCE_TAG(index) {
@@ -372,6 +383,104 @@ class Person extends VuexModule implements PersonBean {
           if (params.callback) {
             params.callback(resource)
           }
+        }
+      })
+    }
+
+    @Mutation
+    SET_USER_GROUP_CREATED() {
+      this.userGroup.created = true
+    }
+
+    @Mutation
+    SET_USER_GROUP_ACTIONS(actions) {
+      this.userGroup.actions = actions
+      const actionMap = {}
+      for (let i = 0; i < actions.length; i++) {
+        const action = actions[i]
+        actionMap[action.id] = action
+      }
+      this.userGroup.actionMap = actionMap
+    }
+
+    @Mutation
+    SET_USER_GROUP_CLUSTERS(clusters) {
+      this.userGroup.clusters = clusters
+    }
+
+    @Mutation
+    SET_USER_GROUP_AGGREGATES(aggregates) {
+      const aggMap = {}
+      const topActions: any = new Set()
+      for (let i = 0; i < aggregates.length; i++) {
+        const agg = aggregates[i]
+        topActions.add(agg.ancestor_id)
+
+        if (agg.ancestor_id in aggMap) {
+          aggMap[agg.ancestor_id].children.push(agg.descendant_id)
+        } else {
+          aggMap[agg.ancestor_id].children = [agg.descendant_id]
+        }
+      }
+
+      for (let i = 0; i < aggregates.length; i++) {
+        const agg = aggregates[i]
+        if (topActions.has(agg.descendant_id)) {
+          topActions.remove(agg.descendant_id)
+        }
+      }
+
+      function buildActionTree(actions, aggMap) {
+        return actions.map(action => {
+          if (!(action in aggMap)) {
+            return {
+              id: action,
+              children: []
+            }
+          }
+          return {
+            id: action,
+            children: buildActionTree(aggMap[action].children, aggMap)
+          }
+        })
+      }
+
+      const actionTree = {
+        id: 0,
+        children: buildActionTree(topActions, aggMap)
+      }
+      this.userGroup.actionTree = actionTree
+    }
+
+    @Action
+    public UpdateUserGroup() {
+      getUserGroup({}).then((res) => {
+        if (res.items.length === 1) {
+          this.SET_USER_GROUP(res.items[0])
+          this.SET_USER_GROUP_CREATED()
+          getGroupActions({ group: this.userGroup.id, limit: 999 }).then((res) => {
+            this.SET_USER_GROUP_ACTIONS(res.items)
+          })
+          getGroupClusters({ group: this.userGroup.id, limit: 999 }).then((res) => {
+            this.SET_USER_GROUP_CLUSTERS(res.items)
+          })
+          getGroupAggregate({ group: this.userGroup.id, limit: 999 }).then(res => {
+            this.SET_USER_GROUP_AGGREGATES(res.items)
+          })
+        }
+      })
+    }
+
+    @Mutation
+    SET_USER_GROUP(userGroup) {
+      this.userGroup = userGroup
+    }
+
+    @Action
+    public CreateUserGroup() {
+      createUserGroup({}).then((res) => {
+        if (res.items.length === 1) {
+          this.UpdateUserGroup()
         }
       })
     }

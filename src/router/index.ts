@@ -157,6 +157,7 @@ const routes: Array<RouteConfig> = [
         path: '/',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/Home.vue'),
         meta: {
+          title: '个人中心 - 阡陌',
           requiresAuth: true
         }
       },
@@ -165,6 +166,7 @@ const routes: Array<RouteConfig> = [
         name: 'Person\'s Resource',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalResource.vue'),
         meta: {
+          title: '收藏资源 - 阡陌',
           requiresAuth: true
         }
       },
@@ -173,6 +175,7 @@ const routes: Array<RouteConfig> = [
         name: 'Person\'s Collection',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalCollection.vue'),
         meta: {
+          title: '收藏集合 - 阡陌',
           requiresAuth: true
         }
       },
@@ -181,6 +184,16 @@ const routes: Array<RouteConfig> = [
         name: 'Person\'s Domain',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalDomain.vue'),
         meta: {
+          title: '收藏领域 - 阡陌',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'action',
+        name: 'Person\'s Action',
+        component: () => import(/* webpackChunkName: "group-person" */ '../views/PersonalAction.vue'),
+        meta: {
+          title: '行动计划 - 阡陌',
           requiresAuth: true
         }
       },
@@ -189,6 +202,7 @@ const routes: Array<RouteConfig> = [
         name: 'Manage Domain',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/ManageDomain.vue'),
         meta: {
+          title: '领域管理 - 阡陌',
           requiresAuth: true
         }
       },
@@ -197,6 +211,7 @@ const routes: Array<RouteConfig> = [
         name: 'Learn Domain',
         component: () => import(/* webpackChunkName: "group-person" */ '../views/LearnDomain.vue'),
         meta: {
+          title: '正在学习 - 阡陌',
           requiresAuth: true
         }
       }
