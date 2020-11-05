@@ -32,7 +32,6 @@
         class="font-weight-bold headline"
       > {{ capital }} </div>
     </v-btn>
-    <ThemeSwitch />
     </v-toolbar-items>
   </v-app-bar>
 </template>
@@ -41,13 +40,10 @@
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
 import { GlobalModule } from '@/store/modules/global'
-import ThemeSwitch from '@/components/buttons/ThemeSwitch.vue'
 
 export default Vue.extend({
   name: 'AppBar',
-  components: {
-    ThemeSwitch
-  },
+  components: {},
   computed: {
     loggedIn() {
       return UserModule.isLoggedIn

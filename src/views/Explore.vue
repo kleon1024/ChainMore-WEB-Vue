@@ -38,7 +38,6 @@
       >
         登录
       </v-btn>
-      <ThemeSwitch/>
       </v-toolbar-items>
     </v-app-bar>
     <v-main>
@@ -70,13 +69,10 @@
 import Vue from 'vue'
 import { UserModule } from '@/store/modules/user'
 import { GlobalModule } from '@/store/modules/global'
-import ThemeSwitch from '@/components/buttons/ThemeSwitch.vue'
 
 export default Vue.extend({
   name: 'Explore',
-  components: {
-    ThemeSwitch
-  },
+  components: {},
   methods: {
     onClickLogOut() {
       this.$router.replace({ path: '/' })
