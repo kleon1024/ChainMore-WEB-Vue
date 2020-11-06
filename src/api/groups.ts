@@ -14,6 +14,13 @@ export const createUserGroup = (data: any) =>
     data
   })
 
+export const createAction = (data: any) =>
+  request({
+    url: '/group/action',
+    method: 'post',
+    data
+  })
+
 export const getGroupClusters = (params: any) =>
   request({
     url: '/group/clusters',

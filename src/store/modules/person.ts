@@ -11,8 +11,9 @@ import {
   getMarkedDomains
 } from '@/api/domains'
 import {
-  getUserGroup,
+  createAction,
   createUserGroup,
+  getUserGroup,
   getGroupActions,
   getGroupClusters,
   getGroupAggregate
@@ -394,9 +395,10 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     SET_USER_GROUP_ACTIONS(actions) {
-      this.userGroup.actions = actions
+      this.userGroup.actions = []
+      this.userGroup.actions.push(...actions)
       const actionMap = {}
-      for (let i = 0; i < actions.length; i++) {
+      for (let i = 0; i < this.userGroup.actions.length; i++) {
         const action = actions[i]
         actionMap[action.id] = action
       }
@@ -473,7 +475,7 @@ class Person extends VuexModule implements PersonBean {
 
     @Mutation
     SET_USER_GROUP(userGroup) {
-      this.userGroup = userGroup
+      this.userGroup.group = userGroup
     }
 
     @Action
@@ -481,6 +483,27 @@ class Person extends VuexModule implements PersonBean {
       createUserGroup({}).then((res) => {
         if (res.items.length === 1) {
           this.UpdateUserGroup()
+        }
+      })
+    }
+
+    @Mutation
+    public ADD_USER_GROUP_ACTION(action) {
+      this.userGroup.actions.unshift(action)
+      this.userGroup.actionMap[action.id] = action
+    }
+
+    @Action
+    public CreateAction(params) {
+      createAction({ title: params.title, group: params.group }).then((res) => {
+        if (res.items.length === 1) {
+          const action = res.items[0]
+          if (this.userGroup.id === action.group_id) {
+            this.ADD_USER_GROUP_ACTION(action)
+          }
+          if (params.success) {
+            params.success()
+          }
         }
       })
     }

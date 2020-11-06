@@ -150,15 +150,6 @@ export default Vue.extend({
     clear() {
       this.$refs.form.reset()
     }
-  },
-  watch: {
-    oldPassword(val) {
-      console.log('old' + val)
-    },
-    newPassword(val) {
-      console.log('new' + val)
-      console.log(this.newPassword !== this.oldPassword)
-    }
   }
 })
 </script>

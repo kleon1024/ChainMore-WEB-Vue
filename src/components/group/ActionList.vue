@@ -1,14 +1,25 @@
 <template>
-    <div>
-        <v-btn
-          text
-          outlined
-          block
-          color="primary"
-        >
-          添加事项
-        </v-btn>
-    </div>
+  <div>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">
+              行动代号
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="action in actions"
+            :key="action.id"
+          >
+            <td>{{ action.title }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+  </div>
 </template>
 
 <script>
@@ -33,7 +44,10 @@ export default Vue.extend({
   },
   computed: {
     userGroup() {
-      return PersonModule.userGroup
+      return PersonModule.userGroup.group
+    },
+    actions() {
+      return PersonModule.userGroup.actions
     }
   }
 })

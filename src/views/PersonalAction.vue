@@ -1,8 +1,16 @@
 <template>
   <v-container fluid>
-    <v-layout column justify-center align-center v-if="!isGroupCreated">
+    <v-layout
+      column
+      justify-center
+      align-center
+      v-if="!isGroupCreated"
+    >
       <v-row>
-        <v-icon size="360" color="primary">mdi-link-lock</v-icon>
+        <v-icon
+          size="360"
+          color="primary"
+        >mdi-link-lock</v-icon>
       </v-row>
       <v-row>
         <v-card-title>
@@ -10,24 +18,31 @@
         </v-card-title>
       </v-row>
       <v-row>
-        <v-btn text block color="primary" outlined @click="onClickOpenAction">
+        <v-btn
+          text
+          block
+          color="primary"
+          outlined
+          @click="onClickOpenAction"
+        >
           立即开启
         </v-btn>
       </v-row>
     </v-layout>
-    <v-tabs
-      v-model="tab"
-      v-if="isGroupCreated"
-      active-center
-    >
-      <v-tab
-        v-for="(tab, index) in tabs"
-        :key="index"
+    <div v-if="isGroupCreated">
+      <v-tabs
+        v-model="tab"
+        active-center
       >
-        {{ tab.name }}
-      </v-tab>
-    </v-tabs>
-    <ActionTree v-if="tab === 0"/>
+        <v-tab
+          v-for="(tab, index) in tabs"
+          :key="index"
+        >
+          {{ tab.name }}
+        </v-tab>
+      </v-tabs>
+      <ActionTree v-if="tab === 0" />
+    </div>
   </v-container>
 </template>
 
@@ -57,6 +72,9 @@ export default Vue.extend({
     onClickOpenAction() {
       PersonModule.CreateUserGroup()
     }
+  },
+  mounted() {
+    PersonModule.UpdateUserGroup()
   },
   computed: {
     isGroupCreated() {
