@@ -12,7 +12,13 @@ import {
 } from '@/api/domains'
 import {
   createAction,
+  createAttribute,
+  createCluster,
   createUserGroup,
+  setActionAttribute,
+  unsetActionAttribute,
+  deleteAttribute,
+  deleteCluster,
   getUserGroup,
   getGroupActions,
   getGroupClusters,
@@ -493,6 +499,11 @@ class Person extends VuexModule implements PersonBean {
       this.userGroup.actionMap[action.id] = action
     }
 
+    @Mutation
+    public ADD_USER_GROUP_CLUSTER(cluster) {
+      this.userGroup.clusters.push(cluster)
+    }
+
     @Action
     public CreateAction(params) {
       createAction({ title: params.title, group: params.group }).then((res) => {
@@ -503,6 +514,211 @@ class Person extends VuexModule implements PersonBean {
           }
           if (params.success) {
             params.success()
+          }
+        }
+      })
+    }
+
+    @Action
+    public CreateCluster(params) {
+      createCluster({ title: params.title, group: params.group, type: params.type, aggregate: params.aggregate }).then((res) => {
+        if (res.items.length === 1) {
+          const cluster = res.items[0]
+          if (this.userGroup.id === cluster.group_id) {
+            this.ADD_USER_GROUP_CLUSTER(cluster)
+          }
+          if (params.success) {
+            params.success()
+          }
+        }
+      })
+    }
+
+    @Mutation
+    public ADD_USER_GROUP_ATTRIBUTE(params: {cluster, attr}) {
+      for (let i = 0; i < this.userGroup.clusters.length; i++) {
+        if (this.userGroup.clusters[i].id === params.cluster) {
+          this.userGroup.clusters[i].attrs.push(params.attr)
+          break
+        }
+      }
+    }
+
+    @Action
+    public CreateClusterAttribute(params) {
+      createAttribute({
+        cluster: params.cluster,
+        text: params.text
+      }).then((res) => {
+        if (res.items.length === 1) {
+          const attr = res.items[0]
+          if (this.userGroup.id === params.group) {
+            this.ADD_USER_GROUP_ATTRIBUTE({ cluster: params.cluster, attr: attr })
+          }
+          if (params.success) {
+            params.success()
+          }
+        }
+      })
+    }
+
+    @Mutation
+    public ADD_USER_GROUP_ACTION_ATTR(params) {
+      const action = this.userGroup.actionMap[params.action.id]
+      action.attrs.push(params.attr)
+      for (let i = 0; i < this.userGroup.actions.length; i++) {
+        if (this.userGroup.actions[i].id === params.action.id) {
+          this.userGroup.actions[i].attrs.push(params.attr)
+          break
+        }
+      }
+    }
+
+    @Mutation
+    public REMOVE_USER_GROUP_ACTION_ATTR(params) {
+      const action = this.userGroup.actionMap[params.action.id]
+      for (let i = 0; i < action.attrs.length; i++) {
+        if (action.attrs[i].id === params.attr.id) {
+          action.attrs.splice(i, 1)
+        }
+      }
+      let done = false
+      for (let i = 0; i < this.userGroup.actions.length; i++) {
+        if (this.userGroup.actions[i].id === params.action.id) {
+          for (let j = 0; j < this.userGroup.actions[i].attrs.length; j++) {
+            if (this.userGroup.actions[i].attrs[j].id === params.attr.id) {
+              this.userGroup.actions[i].attrs.splice(j, 1)
+              done = true
+              break
+            }
+          }
+          if (done) break
+        }
+      }
+    }
+
+    @Action
+    public SetActionAttribute(params) {
+      setActionAttribute({
+        action: params.action.id,
+        attr: params.attr.id
+      }).then((res) => {
+        if (res.items.length === 1) {
+          const attr = res.items[0]
+          if (this.userGroup.id === params.group.id) {
+            this.ADD_USER_GROUP_ACTION_ATTR({
+              action: params.action,
+              attr: attr
+            })
+          }
+        }
+      })
+    }
+
+    @Action
+    public ReplaceActionAttribute(params) {
+      unsetActionAttribute({
+        action: params.action.id,
+        attr: params.oldAttr.id
+      }).then((res) => {
+        if (res.items.length === 1) {
+          const oldAttr = res.items[0]
+          setActionAttribute({
+            action: params.action.id,
+            attr: params.attr.id
+          }).then((res) => {
+            if (res.items.length === 1) {
+              const attr = res.items[0]
+              if (this.userGroup.id === params.group.id) {
+                this.ADD_USER_GROUP_ACTION_ATTR({
+                  action: params.action,
+                  attr: attr
+                })
+                this.REMOVE_USER_GROUP_ACTION_ATTR({
+                  action: params.action,
+                  attr: oldAttr
+                })
+              }
+            }
+          })
+        }
+      })
+    }
+
+    @Mutation
+    public REMOVE_USER_GROUP_ALL_CLUSTER_ATTR(params) {
+      let done = false
+      for (let i = 0; i < this.userGroup.clusters.length; i++) {
+        if (this.userGroup.clusters[i].id === params.attr.cluster_id) {
+          for (let j = 0; j < this.userGroup.clusters[i].attrs.length; j++) {
+            if (this.userGroup.clusters[i].attrs[j].id === params.attr.id) {
+              this.userGroup.clusters[i].attrs.splice(j, 1)
+              done = true
+              break
+            }
+          }
+          if (done) break
+        }
+      }
+    }
+
+    @Mutation
+    public REMOVE_USER_GROUP_ALL_ACTION_ATTR(params) {
+      for (let i = 0; i < this.userGroup.actions.length; i++) {
+        for (let j = 0; j < this.userGroup.actions[i].attrs.length; j++) {
+          if (this.userGroup.actions[i].attrs[j].id === params.attr.id) {
+            this.userGroup.actions[i].attrs.splice(j, 1)
+          }
+        }
+      }
+    }
+
+    @Action
+    public RemoveClusterAttribute(params) {
+      deleteAttribute({ attr: params.attr.id }).then((res) => {
+        if (res.items.length === 1) {
+          const attr = res.items[0]
+          if (this.userGroup.id === params.group.id) {
+            this.REMOVE_USER_GROUP_ALL_CLUSTER_ATTR({
+              attr: attr
+            })
+            this.REMOVE_USER_GROUP_ALL_ACTION_ATTR({
+              attr: attr
+            })
+          }
+        }
+      })
+    }
+
+    @Mutation
+    public REMOVE_USER_GROUP_CLUSTER(params) {
+      for (let i = 0; i < this.userGroup.clusters.length; i++) {
+        if (this.userGroup.clusters[i].id === params.cluster.id) {
+          this.userGroup.clusters.splice(i, 1)
+          break
+        }
+      }
+    }
+
+    @Mutation
+    public REMOVE_USER_GROUP_ALL_ACTION_CLUSTER(params) {
+      for (let i = 0; i < this.userGroup.actions.length; i++) {
+        for (let j = 0; j < this.userGroup.actions[i].attrs.length; j++) {
+          if (this.userGroup.actions[i].attrs[j].cluster_id === params.cluster.id) {
+            this.userGroup.actions[i].attrs.splice(j, 1)
+          }
+        }
+      }
+    }
+
+    @Action
+    public DeleteCluster(params) {
+      deleteCluster({ cluster: params.cluster.id }).then((res) => {
+        if (res.items.length === 1) {
+          const cluster = res.items[0]
+          if (this.userGroup.id === params.group.id) {
+            this.REMOVE_USER_GROUP_CLUSTER({ cluster: params.cluster })
+            this.REMOVE_USER_GROUP_ALL_ACTION_CLUSTER({ cluster: params.cluster })
           }
         }
       })

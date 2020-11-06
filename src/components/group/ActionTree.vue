@@ -151,9 +151,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped>
-.scroller {
-  max-height: 600px;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <v-layout
       column
       justify-center
@@ -37,26 +37,31 @@
         <v-tab
           v-for="(tab, index) in tabs"
           :key="index"
+          dense
         >
           {{ tab.name }}
         </v-tab>
       </v-tabs>
       <ActionTree v-if="tab === 0" />
+      <ClusterManage v-if="tab === 1"/>
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { PersonModule } from '@/store/modules/person'
+import { GlobalModule } from '@/store/modules/global'
 import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
 import ActionTree from '@/components/group/ActionTree.vue'
+import ClusterManage from '@/components/group/ClusterManage.vue'
 
 export default Vue.extend({
   name: 'ResourcePanel',
   components: {
-    ActionTree
+    ActionTree,
+    ClusterManage
   },
   data() {
     return {
@@ -64,6 +69,9 @@ export default Vue.extend({
       tabs: [
         {
           name: '行动项目'
+        },
+        {
+          name: '行动蓝图'
         }
       ]
     }
@@ -74,6 +82,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    GlobalModule.UpdateClusterTypes()
     PersonModule.UpdateUserGroup()
   },
   computed: {

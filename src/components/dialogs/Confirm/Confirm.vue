@@ -32,6 +32,8 @@
 
 <script>
 import { VCard, VCardActions, VCardText, VDialog, VIcon, VToolbar, VToolbarTitle, VSpacer, VBtn } from 'vuetify/lib'
+import { GlobalModule } from '@/store/modules/global'
+
 export default {
   components: {
     VCard,
@@ -99,6 +101,7 @@ export default {
   },
   mounted () {
     document.addEventListener('keyup', this.onEnterPressed)
+    this.$vuetify.theme.dark = GlobalModule.darkTheme
   },
   destroyed () {
     document.removeEventListener('keyup', this.onEnterPressed)

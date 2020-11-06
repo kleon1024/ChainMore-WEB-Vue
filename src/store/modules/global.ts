@@ -4,6 +4,7 @@ import store from '@/store'
 import { initialUnencryptedStorage } from '@/globals'
 
 import { getResourceType } from '@/api/main'
+import { getGroupClusterTypes } from '@/api/groups'
 
 export interface GlobalBean {
   resourceTypeMap
@@ -14,6 +15,7 @@ export interface GlobalBean {
   resourceMediaNameMap
   resourceTypeCached
   darkTheme
+  clusterTypes
 }
 
 const name = 'global'
@@ -34,6 +36,7 @@ class Global extends VuexModule implements GlobalBean {
   public resourceMediaNameMap = {}
   public resourceTypeCached = false
   public darkTheme = false
+  public clusterTypes: any[] = []
 
   @Mutation
   public SET_RESOURCE_TYPE(types) {
@@ -75,6 +78,19 @@ class Global extends VuexModule implements GlobalBean {
   @Action
   public UpdateDarkTheme(theme) {
     this.SET_DARK_THEME(theme)
+  }
+
+  @Mutation
+  public SET_CLUSTER_TYPE(types) {
+    this.clusterTypes = []
+    this.clusterTypes.push(...types)
+  }
+
+  @Action
+  public UpdateClusterTypes() {
+    getGroupClusterTypes({}).then((res) => {
+      this.SET_CLUSTER_TYPE(res.items)
+    })
   }
 }
 

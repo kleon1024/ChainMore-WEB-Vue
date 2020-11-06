@@ -21,6 +21,34 @@ export const createAction = (data: any) =>
     data
   })
 
+export const createCluster = (data: any) =>
+  request({
+    url: '/group/cluster',
+    method: 'post',
+    data
+  })
+
+export const createAttribute = (data: any) =>
+  request({
+    url: '/group/attr',
+    method: 'post',
+    data
+  })
+
+export const deleteAttribute = (params: any) =>
+  request({
+    url: '/group/attr',
+    method: 'delete',
+    params
+  })
+
+export const deleteCluster = (params: any) =>
+  request({
+    url: '/group/cluster',
+    method: 'delete',
+    params
+  })
+
 export const getGroupClusters = (params: any) =>
   request({
     url: '/group/clusters',
@@ -39,5 +67,26 @@ export const getGroupAggregate = (params: any) =>
   request({
     url: '/group/action/aggregate',
     method: 'get',
+    params
+  })
+
+export const getGroupClusterTypes = (params: any) =>
+  request({
+    url: '/group/cluster/types',
+    method: 'get',
+    params
+  })
+
+export const setActionAttribute = (data: any) =>
+  request({
+    url: '/group/action/belong',
+    method: 'post',
+    data
+  })
+
+export const unsetActionAttribute = (params: any) =>
+  request({
+    url: '/group/action/belong',
+    method: 'delete',
     params
   })
