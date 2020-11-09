@@ -580,7 +580,7 @@ class Person extends VuexModule implements PersonBean {
 
   @Action
   public CreateAction(params) {
-    const p = {
+    const p: any = {
       title: params.title,
       group: params.group.group.id
     }
