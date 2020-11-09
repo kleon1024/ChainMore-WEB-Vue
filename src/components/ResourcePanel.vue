@@ -61,11 +61,10 @@ export default Vue.extend({
   components: {
     TooltipIconButton
   },
-  data: () => ({
-    resources: []
-  }),
-  mounted() {
-    this.resources = PersonModule.resources.slice(0, 3)
+  computed: {
+    resources() {
+      return PersonModule.resources.slice(0, 3)
+    }
   }
 })
 </script>

@@ -47,11 +47,10 @@ export default Vue.extend({
   components: {
     TooltipIconButton
   },
-  data: () => ({
-    domains: []
-  }),
-  mounted() {
-    this.domains = PersonModule.domains.slice(0, 3)
+  computed: {
+    domains(val) {
+      return PersonModule.domains.slice(0, 3)
+    }
   }
 })
 </script>

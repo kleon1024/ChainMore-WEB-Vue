@@ -52,11 +52,10 @@ export default Vue.extend({
   components: {
     TooltipIconButton
   },
-  data: () => ({
-    collections: []
-  }),
-  mounted() {
-    this.collections = PersonModule.collections.slice(0, 3)
+  computed: {
+    collections() {
+      return PersonModule.collections.slice(0, 3)
+    }
   }
 })
 </script>
