@@ -70,6 +70,7 @@ export default Vue.extend({
   },
   methods: {
     group() {
+      if (!PersonModule.groupMap) return {}
       return PersonModule.groupMap[parseInt(this.$route.params.id)]
     }
   }

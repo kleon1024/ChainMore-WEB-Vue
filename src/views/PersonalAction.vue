@@ -87,9 +87,15 @@ export default Vue.extend({
   },
   computed: {
     isGroupCreated() {
-      return PersonModule.userGroup.created
+      return this.group.created
     },
     group() {
+      if (!PersonModule.userGroup) {
+        return {
+          created: false,
+          actions: []
+        }
+      }
       return PersonModule.userGroup
     }
   }

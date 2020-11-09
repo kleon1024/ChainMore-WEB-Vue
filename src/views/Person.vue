@@ -348,6 +348,7 @@ export default Vue.extend({
       return PersonModule.targetDomains
     },
     groups() {
+      if (!PersonModule.groupMap) return []
       return Object.values(PersonModule.groupMap)
     }
   },

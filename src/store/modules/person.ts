@@ -486,26 +486,30 @@ class Person extends VuexModule implements PersonBean {
   public UpdateUserGroup() {
     getUserGroup({}).then((res) => {
       if (res.items.length === 1) {
-        this.SET_USER_GROUP(res.items[0])
+        this.SET_USER_GROUP({
+          group: res.items[0],
+          callback: () => {
+            getGroupActions({ group: this.userGroup.group.id, limit: 999 }).then((res) => {
+              this.SET_GROUP_ACTIONS({
+                group: this.userGroup,
+                actions: res.items
+              })
+            })
+            getGroupClusters({ group: this.userGroup.group.id, limit: 999 }).then((res) => {
+              this.SET_GROUP_CLUSTERS({
+                group: this.userGroup,
+                clusters: res.items
+              })
+            })
+            getGroupAggregate({ group: this.userGroup.group.id, limit: 999 }).then(res => {
+              this.SET_GROUP_AGGREGATES({
+                group: this.userGroup,
+                aggregates: res.items
+              })
+            })
+          }
+        })
         this.SET_USER_GROUP_CREATED()
-        getGroupActions({ group: this.userGroup.id, limit: 999 }).then((res) => {
-          this.SET_GROUP_ACTIONS({
-            group: this.userGroup,
-            actions: res.items
-          })
-        })
-        getGroupClusters({ group: this.userGroup.id, limit: 999 }).then((res) => {
-          this.SET_GROUP_CLUSTERS({
-            group: this.userGroup,
-            clusters: res.items
-          })
-        })
-        getGroupAggregate({ group: this.userGroup.id, limit: 999 }).then(res => {
-          this.SET_GROUP_AGGREGATES({
-            group: this.userGroup,
-            aggregates: res.items
-          })
-        })
       }
     })
   }
@@ -531,6 +535,7 @@ class Person extends VuexModule implements PersonBean {
 
   @Mutation
   public SET_GROUPS(groups) {
+    if (!this.groupMap) this.groupMap = {}
     for (let i = 0; i < groups.length; i++) {
       const index = groups[i].id
       if (index in this.groupMap) {
@@ -551,8 +556,14 @@ class Person extends VuexModule implements PersonBean {
   }
 
   @Mutation
-  SET_USER_GROUP(userGroup) {
-    this.userGroup.group = userGroup
+  SET_USER_GROUP(params) {
+    if (!this.userGroup) {
+      this.userGroup = { created: false }
+    }
+    this.userGroup.group = params.group
+    if (params.callback) {
+      params.callback()
+    }
   }
 
   @Action
@@ -668,12 +679,6 @@ class Person extends VuexModule implements PersonBean {
   public ADD_GROUP_ACTION_ATTR(params) {
     const action = params.group.actionMap[params.action.id]
     action.attrs.push(params.attr)
-    for (let i = 0; i < params.group.actions.length; i++) {
-      if (params.group.actions[i].id === params.action.id) {
-        params.group.actions[i].attrs.push(params.attr)
-        break
-      }
-    }
   }
 
   @Mutation
@@ -682,19 +687,6 @@ class Person extends VuexModule implements PersonBean {
     for (let i = 0; i < action.attrs.length; i++) {
       if (action.attrs[i].id === params.attr.id) {
         action.attrs.splice(i, 1)
-      }
-    }
-    let done = false
-    for (let i = 0; i < params.group.actions.length; i++) {
-      if (params.group.actions[i].id === params.action.id) {
-        for (let j = 0; j < params.group.actions[i].attrs.length; j++) {
-          if (params.group.actions[i].attrs[j].id === params.attr.id) {
-            params.group.actions[i].attrs.splice(j, 1)
-            done = true
-            break
-          }
-        }
-        if (done) break
       }
     }
   }
@@ -736,7 +728,7 @@ class Person extends VuexModule implements PersonBean {
               attr: attr
             })
             this.REMOVE_GROUP_ACTION_ATTR({
-              group: this.userGroup,
+              group: params.group,
               action: params.action,
               attr: oldAttr
             })
