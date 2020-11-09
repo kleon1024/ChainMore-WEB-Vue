@@ -63,6 +63,15 @@ const routes: Array<RouteConfig> = [
     }
   },
   {
+    path: '/op/:operation/group',
+    name: 'DomainCreate',
+    component: () => import(/* webpackChunkName: "group_create" */ '../views/GroupCreate.vue'),
+    meta: {
+      requiresAuth: true,
+      title: '创建团队 - 阡陌'
+    }
+  },
+  {
     path: '/op/:operation/collection',
     name: 'CollectionCreate',
     component: () => import(/* webpackChunkName: "colletion_create" */ '../views/CollectionCreate.vue'),
@@ -212,6 +221,15 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "group-person" */ '../views/LearnDomain.vue'),
         meta: {
           title: '正在学习 - 阡陌',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'group/:id',
+        name: 'Group',
+        component: () => import(/* webpackChunkName: "group-group" */ '../views/Group.vue'),
+        meta: {
+          title: '团队管理 - 阡陌',
           requiresAuth: true
         }
       }

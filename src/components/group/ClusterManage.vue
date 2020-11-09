@@ -116,7 +116,7 @@
             添加预设
           </v-btn>
         </v-list-item>
-        <v-list-item>
+        <v-list-item v-if="!showAddClusterAttribute">
           <v-btn
             block
             outlined
@@ -180,6 +180,9 @@ export default Vue.extend({
     TooltipIconButton
   },
   props: {
+    group: {
+      type: Object
+    },
     query: {
       type: String,
       default: ''
@@ -246,7 +249,7 @@ export default Vue.extend({
           this.locks.addCluster = true
           PersonModule.CreateCluster({
             title: this.form.clusterTitle.trim(),
-            group: this.userGroup.id,
+            group: this.group,
             type: this.form.clusterType,
             aggregate: this.form.clusterAggregate ? 1 : 0,
             success: () => {
@@ -270,7 +273,7 @@ export default Vue.extend({
     onBlurClusterAttributeTextField() {
       if (this.$refs.attrForm.validate()) {
         PersonModule.CreateClusterAttribute({
-          group: this.userGroup.id,
+          group: this.group,
           cluster: this.addingClusterId,
           text: this.form.clusterAttribute,
           success: () => {
@@ -283,14 +286,14 @@ export default Vue.extend({
     onClickDeleteAttributeButton(attr) {
       this.$confirm('确认删除预设？一旦删除将无法恢复').then((res) => {
         if (res) {
-          PersonModule.RemoveClusterAttribute({ attr: attr, group: this.userGroup })
+          PersonModule.RemoveClusterAttribute({ attr: attr, group: this.group })
         }
       })
     },
     onClickDeleteClusterAttributeButton(cluster) {
       this.$confirm('确认删除属性？一旦删除将无法恢复').then((res) => {
         if (res) {
-          PersonModule.DeleteCluster({ cluster: cluster, group: this.userGroup })
+          PersonModule.DeleteCluster({ cluster: cluster, group: this.group })
         }
       })
     },
@@ -310,11 +313,8 @@ export default Vue.extend({
       }
       return {}
     },
-    userGroup() {
-      return PersonModule.userGroup.group
-    },
     clusters() {
-      return PersonModule.userGroup.clusters
+      return this.group.clusters
     },
     clusterTypes() {
       return GlobalModule.clusterTypes

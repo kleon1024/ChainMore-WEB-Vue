@@ -102,6 +102,26 @@
             </v-list-item-content>
           </v-row>
         </v-list-item>
+        <v-subheader class="mx-4 subtitle-2 text--darken-1">我的团队</v-subheader>
+        <v-list-item
+          v-for="item in groups"
+          :key="'group' + item.id"
+          :to="{ path: `/person/group/${item.group.id}` }"
+          :value="item.group.title"
+          :class="activeClass(`/person/group/${item.group.id}`)"
+        >
+          <v-row class="mx-3">
+            <v-list-item-icon>
+              <v-icon :color="activeColor(`/person/group/${item.group.id}`)"> mdi-account-group-outline </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title class="text--primary">
+                {{ item.group.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-row>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -326,6 +346,9 @@ export default Vue.extend({
     },
     targetDomains() {
       return PersonModule.targetDomains
+    },
+    groups() {
+      return Object.values(PersonModule.groupMap)
     }
   },
   mounted() {

@@ -40,6 +40,8 @@ class Global extends VuexModule implements GlobalBean {
 
   @Mutation
   public SET_RESOURCE_TYPE(types) {
+    this.resourceTypeMap = {}
+    this.mediaTypeMap = {}
     types.forEach((type) => {
       if (type.resource.id in this.resourceMediaTypeMap) {
         this.resourceMediaTypeMap[type.resource.id].push(type.media)

@@ -14,6 +14,13 @@ export const createUserGroup = (data: any) =>
     data
   })
 
+export const createGroup = (data: any) =>
+  request({
+    url: '/group',
+    method: 'post',
+    data
+  })
+
 export const createAction = (data: any) =>
   request({
     url: '/group/action',
@@ -63,6 +70,20 @@ export const getGroupActions = (params: any) =>
     params
   })
 
+export const getGroups = (params: any) =>
+  request({
+    url: '/group/all',
+    method: 'get',
+    params
+  })
+
+export const getGroupMembers = (params: any) =>
+  request({
+    url: '/group/member',
+    method: 'get',
+    params
+  })
+
 export const getGroupAggregate = (params: any) =>
   request({
     url: '/group/action/aggregate',
@@ -75,6 +96,13 @@ export const getGroupClusterTypes = (params: any) =>
     url: '/group/cluster/types',
     method: 'get',
     params
+  })
+
+export const addGroupMember = (data: any) =>
+  request({
+    url: '/group/member',
+    method: 'post',
+    data
   })
 
 export const setActionAttribute = (data: any) =>

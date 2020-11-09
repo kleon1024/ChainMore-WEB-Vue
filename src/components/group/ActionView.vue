@@ -38,6 +38,30 @@
               required
             ></v-text-field>
           </v-list-item>
+          <v-list-item>
+            <v-autocomplete
+              v-model="form.agg"
+              :items="group.actions"
+              item-text="title"
+              item-value="id"
+              chips
+              small-chips
+              label="关联上级行动"
+            >
+              <template v-slot:selection="data">
+                <v-chip
+                  :elevation="0"
+                  dense
+                  small
+                  v-bind="data.attrs"
+                  :input-value="data.selected"
+                  @click="data.select"
+                >
+                  <div class="text--primary subtitle-2 display: inline-block text-truncate"> {{ data.item.title }} </div>
+                </v-chip>
+              </template>
+            </v-autocomplete>
+          </v-list-item>
           <div class="pa-8"></div>
         </v-list>
       </v-bottom-sheet>
@@ -60,10 +84,24 @@
           text
           icon
           small
+          :color="showMode === 1 ? 'primary': 'text'"
           @click="showMode = 1"
         />
+        <TooltipIconButton
+          str="mdi-file-tree-outline"
+          tip="树状结构"
+          text
+          icon
+          small
+          :color="showMode === 2 ? 'primary': 'text'"
+          @click="showMode = 2"
+        />
       </v-toolbar>
-      <ActionList v-if="showMode === 1" />
+      <ActionList
+        :group="group"
+        :expandable="showMode === 2"
+        v-if="showMode === 1 || showMode === 2"
+      />
     </v-form>
   </div>
 </template>
@@ -77,12 +115,16 @@ import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 import ActionList from '@/components/group/ActionList.vue'
 
 export default Vue.extend({
-  name: 'ActionTree',
+  name: 'ActionView',
   components: {
     TooltipIconButton,
     ActionList
   },
   props: {
+    group: {
+      type: Object,
+      required: true
+    },
     query: {
       type: String,
       default: ''
@@ -97,7 +139,8 @@ export default Vue.extend({
       showMode: 1,
       showAddAction: false,
       form: {
-        actionTitle: ''
+        actionTitle: '',
+        agg: []
       },
       counter: {
         actionTitle: 32
@@ -121,11 +164,15 @@ export default Vue.extend({
       if (this.$refs.form.validate()) {
         if (!this.locks.addAction) {
           this.locks.addAction = true
+          const aggs = this.form.agg === undefined ? [] : (this.form.agg.length === 0 ? [] : [this.form.agg])
           PersonModule.CreateAction({
             title: this.form.actionTitle.trim(),
-            group: this.userGroup.id,
+            aggs: aggs,
+            group: this.group,
             success: () => {
               this.showAddAction = false
+              this.form.actionTitle = ''
+              this.form.agg = []
               this.locks.addAction = false
             },
             failed: () => {
@@ -134,11 +181,6 @@ export default Vue.extend({
           })
         }
       }
-    }
-  },
-  computed: {
-    userGroup() {
-      return PersonModule.userGroup.group
     }
   },
   watch: {

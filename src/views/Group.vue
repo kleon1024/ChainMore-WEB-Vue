@@ -1,35 +1,6 @@
 <template>
   <div>
-    <v-layout
-      column
-      justify-center
-      align-center
-      v-if="!isGroupCreated"
-    >
-      <v-row>
-        <v-icon
-          size="360"
-          color="primary"
-        >mdi-link-lock</v-icon>
-      </v-row>
-      <v-row>
-        <v-card-title>
-          你还没有开启行动计划
-        </v-card-title>
-      </v-row>
-      <v-row>
-        <v-btn
-          text
-          block
-          color="primary"
-          outlined
-          @click="onClickOpenAction"
-        >
-          立即开启
-        </v-btn>
-      </v-row>
-    </v-layout>
-    <div v-if="isGroupCreated">
+    <div>
       <v-tabs
         v-model="tab"
         active-center
@@ -42,8 +13,18 @@
           {{ tab.name }}
         </v-tab>
       </v-tabs>
-      <ActionView v-if="tab === 0" :group="group" />
-      <ClusterManage v-if="tab === 1" :group="group"/>
+      <ActionView
+        v-if="tab === 0"
+        :group="group()"
+      />
+      <ClusterManage
+        v-if="tab === 1"
+        :group="group()"
+      />
+      <MemberManage
+        v-if="tab === 2"
+        :group="group()"
+      />
     </div>
   </div>
 </template>
@@ -56,12 +37,14 @@ import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
 import ActionView from '@/components/group/ActionView.vue'
 import ClusterManage from '@/components/group/ClusterManage.vue'
+import MemberManage from '@/components/group/MemberMange.vue'
 
 export default Vue.extend({
   name: 'ResourcePanel',
   components: {
     ActionView,
-    ClusterManage
+    ClusterManage,
+    MemberManage
   },
   data() {
     return {
@@ -72,25 +55,22 @@ export default Vue.extend({
         },
         {
           name: '行动蓝图'
+        },
+        {
+          name: '成员管理'
         }
       ]
     }
   },
-  methods: {
-    onClickOpenAction() {
-      PersonModule.CreateUserGroup()
-    }
-  },
   mounted() {
     GlobalModule.UpdateClusterTypes()
-    PersonModule.UpdateUserGroup()
+    PersonModule.UpdateGroupDetail({
+      group: this.group()
+    })
   },
-  computed: {
-    isGroupCreated() {
-      return PersonModule.userGroup.created
-    },
+  methods: {
     group() {
-      return PersonModule.userGroup
+      return PersonModule.groupMap[parseInt(this.$route.params.id)]
     }
   }
 })
