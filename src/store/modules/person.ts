@@ -532,7 +532,14 @@ class Person extends VuexModule implements PersonBean {
   @Mutation
   public SET_GROUPS(groups) {
     for (let i = 0; i < groups.length; i++) {
-      this.groupMap[groups[i].id].group = groups[i]
+      const index = groups[i].id
+      if (index in this.groupMap) {
+        this.groupMap[groups[i].id].group = groups[i]
+      } else {
+        this.groupMap[groups[i].id] = {
+          group: groups[i]
+        }
+      }
     }
   }
 
