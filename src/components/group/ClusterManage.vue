@@ -92,7 +92,7 @@
               outlined
               :color="attrColor(attr.color)"
             >
-              {{ attr.text }}
+              <span class="text--primary"> {{ attr.text }} </span>
             </v-btn>
           </v-list-item-title>
           <v-list-item-action>

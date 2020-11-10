@@ -96,11 +96,24 @@
           :color="showMode === 2 ? 'primary': 'text'"
           @click="showMode = 2"
         />
+        <TooltipIconButton
+          str="mdi-view-dashboard-outline"
+          tip="看板"
+          text
+          icon
+          small
+          :color="showMode === 3 ? 'primary': 'text'"
+          @click="showMode = 3"
+        />
       </v-toolbar>
       <ActionList
         :group="group"
         :expandable="showMode === 2"
         v-if="showMode === 1 || showMode === 2"
+      />
+      <ActionKanBan
+        :group="group"
+        v-if="showMode === 3"
       />
     </v-form>
   </div>
@@ -113,12 +126,14 @@ import { readableTimestamp } from '@/utils/time'
 import { searchQuery } from '@/utils/search'
 import TooltipIconButton from '@/components/buttons/TooltipIconButton.vue'
 import ActionList from '@/components/group/ActionList.vue'
+import ActionKanBan from '@/components/group/ActionKanBan.vue'
 
 export default Vue.extend({
   name: 'ActionView',
   components: {
     TooltipIconButton,
-    ActionList
+    ActionList,
+    ActionKanBan
   },
   props: {
     group: {

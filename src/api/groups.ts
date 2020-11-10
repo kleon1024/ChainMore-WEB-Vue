@@ -112,6 +112,13 @@ export const setActionAttribute = (data: any) =>
     data
   })
 
+export const putActionAttribute = (data: any) =>
+  request({
+    url: '/group/action/belong',
+    method: 'put',
+    data
+  })
+
 export const unsetActionAttribute = (params: any) =>
   request({
     url: '/group/action/belong',

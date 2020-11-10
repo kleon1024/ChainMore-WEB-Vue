@@ -17,31 +17,36 @@
       v-for="cluster in clusters"
       :key="cluster.id"
     >
-      <v-menu>
+      <v-menu
+        offset-y
+      >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            text
             v-bind="attrs"
             v-on="on"
-            left
             x-small
+            class="px-1"
             v-if="cluster.attrs.length > 0"
-            class="pa-0"
             :color="attrColor(actionAttribute(action, cluster).color)"
+            outlined
           >
-            <v-icon small> mdi-chevron-down </v-icon>
-            {{ actionAttribute(action, cluster).text }}
+            <v-icon small class="ma-0"> mdi-chevron-down </v-icon>
+            <span class="text--primary"> {{ actionAttribute(action, cluster).text }} </span>
           </v-btn>
         </template>
-        <v-list>
+        <v-list dense>
           <v-list-item
             v-for="(attr, index) in cluster.attrs"
             :key="index"
-            @click="onSetActionAttribute(action, cluster, attr)"
           >
-            <v-list-item-content class="subtitle-2">
-              {{ attr.text }}
-            </v-list-item-content>
+              <v-btn
+                outlined
+                x-small
+                :color="attrColor(attr.color)"
+                @click="onSetActionAttribute(action, cluster, attr)"
+              >
+                <span class="text--primary"> {{ attr.text }} </span>
+              </v-btn>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -106,10 +111,14 @@ export default Vue.extend({
           group: this.group
         })
       } else if (currentAttr.id !== attr.id) {
-        PersonModule.ReplaceActionAttribute({
+        PersonModule.SetActionAttribute({
           action: action,
           attr: attr,
-          oldAttr: currentAttr,
+          group: this.group
+        })
+        PersonModule.UnsetActionAttribute({
+          action: action,
+          attr: currentAttr,
           group: this.group
         })
       }

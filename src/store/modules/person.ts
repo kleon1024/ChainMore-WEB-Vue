@@ -17,6 +17,7 @@ import {
   createUserGroup,
   setActionAttribute,
   unsetActionAttribute,
+  putActionAttribute,
   deleteAttribute,
   deleteCluster,
   getUserGroup,
@@ -693,48 +694,98 @@ class Person extends VuexModule implements PersonBean {
 
   @Action
   public SetActionAttribute(params) {
-    setActionAttribute({
+    const p: any = {
+      action: params.action.id,
+      attr: params.attr.id
+    }
+    if (params.after) {
+      p.after = params.after
+    }
+    this.ADD_GROUP_ACTION_ATTR({
+      group: params.group,
+      action: params.action,
+      attr: params.attr
+    })
+    setActionAttribute(p).then((res) => {
+      if (res.items.length === 1) {
+        const attr = res.items[0]
+        if (params.success) {
+          params.success()
+        }
+      }
+    }).catch(() => {
+      this.REMOVE_GROUP_ACTION_ATTR({
+        group: params.group,
+        action: params.action,
+        attr: params.attr
+      })
+    })
+  }
+
+  @Action
+  public UnsetActionAttribute(params) {
+    this.REMOVE_GROUP_ACTION_ATTR({
+      group: params.group,
+      action: params.action,
+      attr: params.attr
+    })
+    unsetActionAttribute({
       action: params.action.id,
       attr: params.attr.id
     }).then((res) => {
       if (res.items.length === 1) {
         const attr = res.items[0]
-        this.ADD_GROUP_ACTION_ATTR({
-          group: params.group,
-          action: params.action,
-          attr: attr
-        })
+        if (params.success) {
+          params.success()
+        }
       }
+    }).catch(() => {
+      this.ADD_GROUP_ACTION_ATTR({
+        group: params.group,
+        action: params.action,
+        attr: params.attr
+      })
     })
   }
 
   @Action
-  public ReplaceActionAttribute(params) {
-    unsetActionAttribute({
+  public PutActionAttribute(params) {
+    const p: any = {
       action: params.action.id,
-      attr: params.oldAttr.id
-    }).then((res) => {
+      attr: params.attr.id,
+      oldAttr: params.oldAttr.id
+    }
+    if (params.after) {
+      p.after = params.after
+    }
+    this.REMOVE_GROUP_ACTION_ATTR({
+      group: params.group,
+      action: params.action,
+      attr: params.oldAttr
+    })
+    this.ADD_GROUP_ACTION_ATTR({
+      group: params.group,
+      action: params.action,
+      attr: params.attr
+    })
+    putActionAttribute(p).then((res) => {
       if (res.items.length === 1) {
-        const oldAttr = res.items[0]
-        setActionAttribute({
-          action: params.action.id,
-          attr: params.attr.id
-        }).then((res) => {
-          if (res.items.length === 1) {
-            const attr = res.items[0]
-            this.ADD_GROUP_ACTION_ATTR({
-              group: params.group,
-              action: params.action,
-              attr: attr
-            })
-            this.REMOVE_GROUP_ACTION_ATTR({
-              group: params.group,
-              action: params.action,
-              attr: oldAttr
-            })
-          }
-        })
+        const attr = res.items[0]
+        if (params.success) {
+          params.success()
+        }
       }
+    }).catch(() => {
+      this.REMOVE_GROUP_ACTION_ATTR({
+        group: params.group,
+        action: params.action,
+        attr: params.attr
+      })
+      this.ADD_GROUP_ACTION_ATTR({
+        group: params.group,
+        action: params.action,
+        attr: params.oldAttr
+      })
     })
   }
 
