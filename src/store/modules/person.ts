@@ -26,7 +26,8 @@ import {
   getGroupAggregate,
   getGroups,
   getGroupMembers,
-  addGroupMember
+  addGroupMember,
+  modifyAction
 } from '@/api/groups'
 import { getCollectedCollections } from '@/api/collections'
 import {
@@ -583,6 +584,13 @@ class Person extends VuexModule implements PersonBean {
   }
 
   @Mutation
+  public MODIFY_GROUP_ACTION(params) {
+    for (const k in params.group.actionMap[params.action.id]) {
+      params.group.actionMap[params.action.id][k] = params.action[k]
+    }
+  }
+
+  @Mutation
   public ADD_GROUP_CLUSTER(params) {
     params.group.clusters.push(params.cluster)
   }
@@ -610,6 +618,34 @@ class Person extends VuexModule implements PersonBean {
       if (res.items.length === 1) {
         const action = res.items[0]
         this.ADD_GROUP_ACTION({
+          action: action,
+          group: params.group
+        })
+        this.UpdateGroupAggregate({
+          group: params.group
+        })
+
+        if (params.success) {
+          params.success()
+        }
+      }
+    })
+  }
+
+  @Action
+  public ModifyAction(params) {
+    const p: any = {
+      title: params.title,
+      group: params.group.group.id,
+      action: params.action.id
+    }
+    if (params.aggs && params.aggs.length > 0) {
+      p.aggs = params.aggs
+    }
+    modifyAction(p).then((res) => {
+      if (res.items.length === 1) {
+        const action = res.items[0]
+        this.MODIFY_GROUP_ACTION({
           action: action,
           group: params.group
         })
@@ -708,7 +744,6 @@ class Person extends VuexModule implements PersonBean {
     })
     setActionAttribute(p).then((res) => {
       if (res.items.length === 1) {
-        const attr = res.items[0]
         if (params.success) {
           params.success()
         }
@@ -734,7 +769,6 @@ class Person extends VuexModule implements PersonBean {
       attr: params.attr.id
     }).then((res) => {
       if (res.items.length === 1) {
-        const attr = res.items[0]
         if (params.success) {
           params.success()
         }
@@ -770,7 +804,6 @@ class Person extends VuexModule implements PersonBean {
     })
     putActionAttribute(p).then((res) => {
       if (res.items.length === 1) {
-        const attr = res.items[0]
         if (params.success) {
           params.success()
         }

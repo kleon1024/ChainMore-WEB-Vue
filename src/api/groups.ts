@@ -28,6 +28,13 @@ export const createAction = (data: any) =>
     data
   })
 
+export const modifyAction = (data: any) =>
+  request({
+    url: '/group/action',
+    method: 'put',
+    data
+  })
+
 export const createCluster = (data: any) =>
   request({
     url: '/group/cluster',

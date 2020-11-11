@@ -61,20 +61,21 @@ export default Vue.extend({
     }
   },
   methods: {
-    expandActionTree(actions, ret) {
+    expandActionTree(actions, ret, level) {
       for (let i = 0; i < actions.length; i++) {
         const actionInstance = this.group.actionMap[actions[i].id]
         actionInstance.expandable = actions[i].children.length > 0
+        actionInstance.level = level
         ret.push(actionInstance)
         if (actionInstance.expanded) {
-          this.expandActionTree(actions[i].children, ret)
+          this.expandActionTree(actions[i].children, ret, level + 1)
         }
       }
     },
-    initActions(action) {
+    initActions() {
       if (this.expandable) {
         const actions = []
-        this.expandActionTree(this.group.actionTree.children, actions)
+        this.expandActionTree(this.group.actionTree.children, actions, 0)
         this.expandActions = actions
       }
     },

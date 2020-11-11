@@ -2,6 +2,7 @@
   <tr>
     <td>
       <v-btn
+        :class="`ml-${action.level * 2}`"
         icon
         @click="clickExpand"
         v-if="expandable"
@@ -11,7 +12,19 @@
           {{ actionIcon }}
         </v-icon>
       </v-btn>
-      {{ action.title }}
+      <span v-if="!editing" @click="onClick"> {{ action.title }} </span>
+      <v-form ref="form" v-if="editing">
+      <v-responsive max-width="250pt">
+        <v-text-field
+          dense
+          autofocus
+          v-model="form.actionTitle"
+          :rules="rules.actionTitle"
+          required
+          @blur="onBlur"
+        ></v-text-field>
+      </v-responsive>
+      </v-form>
     </td>
     <td
       v-for="cluster in clusters"
@@ -62,6 +75,23 @@ import { readableTimestamp } from '@/utils/time'
 export default Vue.extend({
   name: 'ActionList',
   components: {},
+  data() {
+    return {
+      editing: false,
+      form: {
+        actionTitle: ''
+      },
+      counter: {
+        actionTitle: 32
+      },
+      rules: {
+        actionTitle: [
+          (v) => !!v.trim() || '不能是空',
+          (v) => v.length < this.counter.actionTitle || '精简代号'
+        ]
+      }
+    }
+  },
   props: {
     action: {
       type: Object,
@@ -126,6 +156,22 @@ export default Vue.extend({
     clickExpand() {
       this.action.expanded = !this.action.expanded
       this.$emit('expand')
+    },
+    onClick() {
+      this.form.actionTitle = this.action.title
+      this.editing = !this.editing
+    },
+    onBlur() {
+      if (this.form.actionTitle.trim() !== this.action.title) {
+        if (this.$refs.form.validate()) {
+          PersonModule.ModifyAction({
+            group: this.group,
+            action: this.action,
+            title: this.form.actionTitle
+          })
+        }
+      }
+      this.editing = false
     }
   },
   computed: {
@@ -136,7 +182,7 @@ export default Vue.extend({
       return this.group.clusters
     },
     actionIcon() {
-      return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
+      return this.expanded ? 'mdi-chevron-down' : 'mdi-chevron-right'
     }
   }
 })
