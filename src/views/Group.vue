@@ -67,6 +67,7 @@ export default Vue.extend({
     PersonModule.UpdateGroupDetail({
       group: this.group()
     })
+    document.title = this.group().group.title + ' - 团队管理 - 阡陌'
   },
   methods: {
     group() {
